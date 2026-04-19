@@ -5,7 +5,7 @@ export interface TokenPayload {
 export abstract class TokenGenerator {
   abstract generate: (
     payload: TokenPayload,
-    duration: number,
+    duration?: number,
   ) => Promise<unknown>;
   abstract validate: (token: string) => Promise<TokenPayload | null>;
 }

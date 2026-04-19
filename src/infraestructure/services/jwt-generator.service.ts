@@ -4,12 +4,12 @@ import { TokenGenerator, type TokenPayload } from "../../domain/services";
 export class JwtGenerator implements TokenGenerator {
   constructor(private readonly seed: string) {}
 
-  public generate = async (payload: TokenPayload, duration: number) => {
+  public generate = async (payload: TokenPayload, duration?: number) => {
     return new Promise((resolve, reject) => {
       jwt.sign(
         payload,
         this.seed,
-        { expiresIn: 60 * duration },
+        { expiresIn: 60 * (duration ?? 30) },
         (err, token) => {
           if (err || !token) {
             return reject(

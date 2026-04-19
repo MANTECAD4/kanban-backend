@@ -6,6 +6,7 @@ import { AuthRepositoryImpl } from "../../infraestructure/repositories/auth.repo
 import { JwtGenerator } from "../../infraestructure/services/jwt-generator.service";
 import { envs } from "../../configs/envs";
 import { BycryptHasher } from "../../infraestructure/services/bycrypt.service";
+import { LoginUserUseCase } from "../../application/use-cases/login-user.use-case";
 
 export class AuthRoutes {
   static get routes(): Router {
@@ -24,7 +25,14 @@ export class AuthRoutes {
       tokenGenerator,
       hashService,
     );
-    const controller = new AuthController(registerUseCase);
+
+    const loginUseCase = new LoginUserUseCase(
+      authRepository,
+      tokenGenerator,
+      hashService,
+    );
+
+    const controller = new AuthController(registerUseCase, loginUseCase);
     router.post("/login", controller.login);
     router.post("/register", controller.register);
     return router;

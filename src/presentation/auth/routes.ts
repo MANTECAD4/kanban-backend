@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "./controller";
 import { RegisterUserUseCase } from "../../application/use-cases/auth/register-user.use-case";
-import { PostgresAuthDatasource } from "../../infraestructure/datasources/postgres-auth.datasource";
-import { AuthRepositoryImpl } from "../../infraestructure/repositories/auth.repository.impl";
+import { PostgresAuthRepository } from "../../infraestructure/repositories/postgres-auth.repository";
 import { JwtGenerator } from "../../infraestructure/services/jwt-generator.service";
 import { envs } from "../../configs/envs";
 import { BycryptHasher } from "../../infraestructure/services/bycrypt.service";
@@ -14,8 +13,7 @@ export class AuthRoutes {
     const { TOKEN_SEED } = envs();
     const router = Router();
 
-    const authDatasource = new PostgresAuthDatasource();
-    const authRepository = new AuthRepositoryImpl(authDatasource);
+    const authRepository = new PostgresAuthRepository();
 
     const tokenGenerator = new JwtGenerator(TOKEN_SEED);
 

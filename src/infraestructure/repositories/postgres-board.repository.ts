@@ -1,10 +1,10 @@
 import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
-import { BoardDatasource } from "../../domain/datasources";
 import { BoardEntity } from "../../domain/entities";
 import { CustomError } from "../../domain/errors/custom-error";
+import { BoardRepository } from "../../domain/repositories";
 
-export class PostgresBoardDatasource implements BoardDatasource {
+export class PostgresBoardRepository implements BoardRepository {
   public findAll = async (userId: number): Promise<BoardEntity[]> => {
     try {
       const rawBoards = await prisma.board.findMany({ where: { userId } });
@@ -16,6 +16,19 @@ export class PostgresBoardDatasource implements BoardDatasource {
       );
     }
   };
+
+  public findByName = async (name: string): Promise<BoardEntity | null> => {
+    try {
+      const board = await prisma.board.findFirst({ where: { name } });
+      return board === null ? null : new BoardEntity(board);
+    } catch (error) {
+      console.log({ ERROR_READING_BOARD_BY_ID: error });
+      throw CustomError.internalServer(
+        "Error while loading board from DB - at PostgresBoardDatasource.ts -> findById",
+      );
+    }
+  };
+
   public create = async (
     createBoardDto: CreateBoardDto,
   ): Promise<BoardEntity> => {

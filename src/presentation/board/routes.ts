@@ -1,21 +1,17 @@
 import { Router } from "express";
 import { BoardController } from "./controller";
-import { PostgresBoardDatasource } from "../../infraestructure/datasources/postgres-board.datasource";
-import { BoardRepositoryImpl } from "../../infraestructure/repositories/board.repository.impl";
+import { PostgresBoardRepository } from "../../infraestructure/repositories/postgres-board.repository";
 import { CreateBoardUseCase } from "../../application/use-cases/board/create-board.use-case";
-import { PostgresAuthDatasource } from "../../infraestructure/datasources/postgres-auth.datasource";
-import { AuthRepositoryImpl } from "../../infraestructure/repositories/auth.repository.impl";
+import { PostgresAuthRepository } from "../../infraestructure/repositories/postgres-auth.repository";
 import { BoardMiddlewares } from "./middlewares";
 
 export class BoardRoutes {
   static get routes() {
     const router = Router();
 
-    const authDatasource = new PostgresAuthDatasource();
-    const authRepository = new AuthRepositoryImpl(authDatasource);
+    const authRepository = new PostgresAuthRepository();
 
-    const boardDatasource = new PostgresBoardDatasource();
-    const boardRepository = new BoardRepositoryImpl(boardDatasource);
+    const boardRepository = new PostgresBoardRepository();
     const createBoardUseCase = new CreateBoardUseCase(
       boardRepository,
       authRepository,

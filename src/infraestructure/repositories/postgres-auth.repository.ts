@@ -1,10 +1,10 @@
 import { LoginUserDto, RegisterUserDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
-import { AuthDatasource } from "../../domain/datasources";
 import { UserEntity } from "../../domain/entities";
 import { CustomError } from "../../domain/errors/custom-error";
+import { AuthRepository } from "../../domain/repositories";
 
-export class PostgresAuthDatasource implements AuthDatasource {
+export class PostgresAuthRepository implements AuthRepository {
   public login = async (loginUserDto: LoginUserDto): Promise<UserEntity> => {
     throw new Error("not implemented yet");
   };

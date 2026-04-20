@@ -15,4 +15,5 @@ export abstract class BoardRepository {
   public abstract delete: (
     boardId: number, // DTO
   ) => Promise<BoardEntity>;
+  public abstract findByName: (name: string) => Promise<BoardEntity | null>;
 }

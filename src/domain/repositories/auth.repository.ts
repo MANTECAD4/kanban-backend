@@ -9,4 +9,5 @@ export abstract class AuthRepository {
     registerUserDto: RegisterUserDto, // RegisterUserDto:RegisterUserDto
   ) => Promise<UserEntity>;
   public abstract getByEmail: (email: string) => Promise<UserEntity | null>;
+  public abstract getById: (userId: number) => Promise<UserEntity | null>;
 }

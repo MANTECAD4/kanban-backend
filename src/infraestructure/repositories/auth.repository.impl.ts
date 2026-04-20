@@ -14,4 +14,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   public getByEmail = async (email: string) => {
     return await this.authDatasource.getByEmail(email);
   };
+  public getById = async (userId: number) => {
+    return await this.authDatasource.getById(userId);
+  };
 }

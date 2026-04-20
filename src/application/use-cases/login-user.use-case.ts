@@ -14,7 +14,7 @@ export class LoginUserUseCase {
     const { email, password: rawPassword } = body;
 
     const existentUser = await this.authRepository.getByEmail(email);
-    if (!existentUser) throw CustomError.badRequest("Invalid login");
+    if (!existentUser) throw CustomError.forbidden("Invalid login");
 
     const passwordMatches = this.hasherService.compare(
       rawPassword,

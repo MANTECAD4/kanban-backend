@@ -7,6 +7,7 @@ import { JwtGenerator } from "../../infraestructure/services/jwt-generator.servi
 import { envs } from "../../configs/envs";
 import { BycryptHasher } from "../../infraestructure/services/bycrypt.service";
 import { LoginUserUseCase } from "../../application/use-cases/login-user.use-case";
+import { AuthMiddlewares } from "./middlewares";
 
 export class AuthRoutes {
   static get routes(): Router {
@@ -32,9 +33,20 @@ export class AuthRoutes {
       hashService,
     );
 
+    const authMiddlewares = new AuthMiddlewares();
+
     const controller = new AuthController(registerUseCase, loginUseCase);
-    router.post("/login", controller.login);
-    router.post("/register", controller.register);
+
+    router.post(
+      "/login",
+      [authMiddlewares.loginDataVaidation],
+      controller.login,
+    );
+    router.post(
+      "/register",
+      [authMiddlewares.registerDataValidation],
+      controller.register,
+    );
     return router;
   }
 }

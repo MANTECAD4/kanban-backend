@@ -1,11 +1,11 @@
-// export interface findAllDto{
-//     userId:number;
-// }
+import z from "zod";
 
-export interface CreateBoardDto {
-  name: string;
-  description: string;
-  userId: number;
-}
+export const CreateBoardSchema = z.strictObject({
+  name: z.string().trim().normalize(),
+  description: z.string().trim().normalize(),
+  userId: z.coerce.number().int().min(1),
+});
+
+export type CreateBoardDto = z.infer<typeof CreateBoardSchema>;
 
 export type UpdateBoardDto = Partial<Omit<CreateBoardDto, "userId">>;

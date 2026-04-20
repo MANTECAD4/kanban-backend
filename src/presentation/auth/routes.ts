@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { AuthController } from "./controller";
-import { RegisterUserUseCase } from "../../application/use-cases/register-user.use-case";
+import { RegisterUserUseCase } from "../../application/use-cases/auth/register-user.use-case";
 import { PostgresAuthDatasource } from "../../infraestructure/datasources/postgres-auth.datasource";
 import { AuthRepositoryImpl } from "../../infraestructure/repositories/auth.repository.impl";
 import { JwtGenerator } from "../../infraestructure/services/jwt-generator.service";
 import { envs } from "../../configs/envs";
 import { BycryptHasher } from "../../infraestructure/services/bycrypt.service";
-import { LoginUserUseCase } from "../../application/use-cases/login-user.use-case";
+import { LoginUserUseCase } from "../../application/use-cases/auth/login-user.use-case";
 import { AuthMiddlewares } from "./middlewares";
 
 export class AuthRoutes {
@@ -33,18 +33,18 @@ export class AuthRoutes {
       hashService,
     );
 
-    const authMiddlewares = new AuthMiddlewares();
+    // const authMiddlewares = new AuthMiddlewares();
 
     const controller = new AuthController(registerUseCase, loginUseCase);
 
     router.post(
       "/login",
-      [authMiddlewares.loginDataVaidation],
+      [AuthMiddlewares.loginDataValidation],
       controller.login,
     );
     router.post(
       "/register",
-      [authMiddlewares.registerDataValidation],
+      [AuthMiddlewares.registerDataValidation],
       controller.register,
     );
     return router;

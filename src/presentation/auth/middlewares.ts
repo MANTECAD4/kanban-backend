@@ -4,14 +4,14 @@ import { dataValidationMiddlewareFactory } from "../shared/factories/data-valida
 import { LoginSchema, RegisterUserSchema } from "./schemas";
 
 export class AuthMiddlewares {
-  constructor() {}
+  // constructor() {}
 
-  public loginDataVaidation = dataValidationMiddlewareFactory(
+  static loginDataValidation = dataValidationMiddlewareFactory(
     LoginSchema,
     "Invalid data recieved. Login denied",
   );
 
-  public registerDataValidation = dataValidationMiddlewareFactory(
+  static registerDataValidation = dataValidationMiddlewareFactory(
     RegisterUserSchema,
     "Invalid data recieved. Register failed",
   );

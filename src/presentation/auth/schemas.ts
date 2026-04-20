@@ -7,7 +7,7 @@ export const RegisterUserSchema = z.strictObject({
     .trim()
     .regex(
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d]{6,}$/,
-      "Invalid password: must contain uppercase & lowercase letters and at least one special character.",
+      "Invalid password: must contain uppercase & lowercase letters and at least one digit.",
     ),
 });
 

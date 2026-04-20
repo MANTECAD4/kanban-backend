@@ -1,12 +1,18 @@
+import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
 import { BoardEntity } from "../entities/board.entity";
 
 export abstract class BoardRepository {
-  public abstract findAll: () // DTO
-  => Promise<BoardEntity[]>;
-  public abstract create: () // DTO
-  => Promise<BoardEntity[]>;
-  public abstract update: () // DTO
-  => Promise<BoardEntity[]>;
-  public abstract delete: () // DTO
-  => Promise<BoardEntity[]>;
+  public abstract findAll: (
+    userId: number, // DTO
+  ) => Promise<BoardEntity[]>;
+  public abstract create: (
+    createBoardDto: CreateBoardDto, // DTO
+  ) => Promise<BoardEntity>;
+  public abstract update: (
+    boardId: number,
+    updateBoardDto: UpdateBoardDto, // DTO
+  ) => Promise<BoardEntity>;
+  public abstract delete: (
+    boardId: number, // DTO
+  ) => Promise<BoardEntity>;
 }

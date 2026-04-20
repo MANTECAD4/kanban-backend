@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RegisterUserUseCase } from "../../application/use-cases";
 import { CustomError } from "../../domain/errors/custom-error";
-import { LoginUserUseCase } from "../../application/use-cases/login-user.use-case";
+import { LoginUserUseCase } from "../../application/use-cases/auth/login-user.use-case";
 
 export class AuthController {
   constructor(

@@ -1,7 +1,7 @@
-import { CustomError } from "../../domain/errors/custom-error";
-import { AuthRepository } from "../../domain/repositories";
-import { HasherService } from "../../domain/services/hasher.service";
-import { TokenGenerator } from "../../domain/services/token-generator.service";
+import { CustomError } from "../../../domain/errors/custom-error";
+import { AuthRepository } from "../../../domain/repositories";
+import { HasherService } from "../../../domain/services/hasher.service";
+import { TokenGenerator } from "../../../domain/services/token-generator.service";
 
 export class LoginUserUseCase {
   constructor(

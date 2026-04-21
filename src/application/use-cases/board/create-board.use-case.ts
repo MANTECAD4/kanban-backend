@@ -9,9 +9,9 @@ export class CreateBoardUseCase {
   ) {}
 
   public execute = async (body: CreateBoardDto) => {
-    const existingBoard = await this.boardRepository.findByName(body.name);
-    if (existingBoard)
-      throw CustomError.badRequest("Board name already registered.");
+    // const existingBoard = await this.boardRepository.findByName(body.name);
+    // if (existingBoard)
+    //   throw CustomError.badRequest("Board name already registered.");
     const existingUser = await this.authRepository.getById(Number(body.userId));
     if (!existingUser)
       throw CustomError.internalServer(

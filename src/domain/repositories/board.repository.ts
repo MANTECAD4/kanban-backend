@@ -10,7 +10,7 @@ export abstract class BoardRepository {
   ) => Promise<BoardEntity>;
   public abstract update: (
     boardId: number,
-    updateBoardDto: UpdateBoardDto, // DTO
+    data: Record<string, any>, // DTO
   ) => Promise<BoardEntity>;
   public abstract delete: (
     boardId: number, // DTO

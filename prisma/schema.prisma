@@ -23,7 +23,7 @@ model User {
 
 model Board{
   id Int @id @default(autoincrement())
-  name String @unique
+  name String
   description String?
   user   User @relation(fields: [user_id], references: [id]) 
   user_id Int
@@ -32,7 +32,7 @@ model Board{
 
 model StatusColumn{
   id Int @id @default(autoincrement())
-  name String @unique
+  name String
   board   Board @relation(fields: [board_id], references: [id]) 
   board_id Int
   tasks Task[]

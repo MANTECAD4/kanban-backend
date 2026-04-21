@@ -52,12 +52,12 @@ export class PostgresBoardRepository implements BoardRepository {
   };
   public update = async (
     boardId: number,
-    updateBoardDto: UpdateBoardDto,
+    data: Record<string, any>,
   ): Promise<BoardEntity> => {
     try {
       const updatedBoard = await prisma.board.update({
         where: { id: boardId },
-        data: updateBoardDto,
+        data,
       });
       return BoardEntity.fromObject(updatedBoard);
     } catch (error) {

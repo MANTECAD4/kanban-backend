@@ -25,16 +25,16 @@ model Board{
   id Int @id @default(autoincrement())
   name String @unique
   description String?
-  user   User @relation(fields: [userId], references: [id]) 
-  userId Int
+  user   User @relation(fields: [user_id], references: [id]) 
+  user_id Int
   colummns StatusColumn[]
 }
 
 model StatusColumn{
   id Int @id @default(autoincrement())
   name String @unique
-  board   Board @relation(fields: [boardId], references: [id]) 
-  boardId Int
+  board   Board @relation(fields: [board_id], references: [id]) 
+  board_id Int
   tasks Task[]
 }
 
@@ -44,6 +44,6 @@ model Task{
   description String
   order Int
   subtasks String[]
-  status StatusColumn @relation(fields: [statusId], references: [id])
-  statusId Int
+  status StatusColumn @relation(fields: [status_id], references: [id])
+  status_id Int
 }

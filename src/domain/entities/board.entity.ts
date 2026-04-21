@@ -19,4 +19,13 @@ export class BoardEntity {
     this.name = name;
     this.userId = userId;
   }
+
+  public static fromObject = (object: Record<string, any>): BoardEntity => {
+    const { id, _id, name, userId, user_id } = object;
+    return new BoardEntity({
+      id: id ?? _id,
+      name,
+      userId: user_id ?? userId,
+    });
+  };
 }

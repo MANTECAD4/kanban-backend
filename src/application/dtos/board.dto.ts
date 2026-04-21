@@ -6,6 +6,10 @@ export const CreateBoardSchema = z.strictObject({
   userId: z.coerce.number().int().min(1),
 });
 
+export const GetBoardsSchema = z.strictObject({
+  userId: z.coerce.number().int().min(1),
+});
+
 export type CreateBoardDto = z.infer<typeof CreateBoardSchema>;
 
 export type UpdateBoardDto = Partial<Omit<CreateBoardDto, "userId">>;

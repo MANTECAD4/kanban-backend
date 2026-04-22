@@ -19,8 +19,7 @@ export const TokenPayloadSchema = z.object({
 export const LoginSchema = RegisterUserSchema.omit({ name: true });
 
 export type LoginUserDto = z.infer<typeof LoginSchema>;
-
 export type RegisterUserDto = z.infer<typeof RegisterUserSchema>;
-export type TokenPayload = z.infer<typeof TokenPayloadSchema>;
 
+export type TokenPayload = z.infer<typeof TokenPayloadSchema>;
 export type TokenReturnDto = TokenPayload & { iat: number; exp: number };

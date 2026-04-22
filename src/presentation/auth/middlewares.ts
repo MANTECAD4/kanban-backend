@@ -40,7 +40,6 @@ export class AuthMiddlewares {
       if (!payload) return res.status(401).json({ error: "Invalid token." });
 
       req.user = payload;
-      // console.log(req.body);
       next();
     } catch (error) {
       console.log({ ERROR_TOKEN_VALIDATION: error });

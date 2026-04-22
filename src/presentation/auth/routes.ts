@@ -1,37 +1,32 @@
 import { Router } from "express";
 import { AuthController } from "./controller";
 import { RegisterUserUseCase } from "../../application/use-cases/auth/register-user.use-case";
-import { PostgresAuthRepository } from "../../infraestructure/repositories/postgres-auth.repository";
-import { JwtGenerator } from "../../infraestructure/services/jwt-generator.service";
-import { envs } from "../../configs/envs";
-import { BycryptHasher } from "../../infraestructure/services/bycrypt.service";
 import { LoginUserUseCase } from "../../application/use-cases/auth/login-user.use-case";
 import { AuthMiddlewares } from "./middlewares";
+import { AuthRepository } from "../../domain/repositories";
+import { TokenGenerator } from "../../domain/services";
+import { HasherService } from "../../domain/services/hasher.service";
 
 export class AuthRoutes {
-  static get routes(): Router {
-    const { TOKEN_SECRET } = envs();
+  constructor(
+    private readonly authRepository: AuthRepository,
+    private readonly tokenGenerator: TokenGenerator,
+    private readonly hashService: HasherService,
+  ) {}
+  public get routes(): Router {
     const router = Router();
 
-    const authRepository = new PostgresAuthRepository();
-
-    const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
-
-    const hashService = new BycryptHasher();
-
     const registerUseCase = new RegisterUserUseCase(
-      authRepository,
-      tokenGenerator,
-      hashService,
+      this.authRepository,
+      this.tokenGenerator,
+      this.hashService,
     );
 
     const loginUseCase = new LoginUserUseCase(
-      authRepository,
-      tokenGenerator,
-      hashService,
+      this.authRepository,
+      this.tokenGenerator,
+      this.hashService,
     );
-
-    // const authMiddlewares = new AuthMiddlewares();
 
     const controller = new AuthController(registerUseCase, loginUseCase);
 

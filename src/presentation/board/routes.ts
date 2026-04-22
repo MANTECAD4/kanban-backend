@@ -1,31 +1,28 @@
 import { Router } from "express";
 import { BoardController } from "./controller";
-import { PostgresBoardRepository } from "../../infraestructure/repositories/postgres-board.repository";
 import { CreateBoardUseCase } from "../../application/use-cases/board/create-board.use-case";
-import { PostgresAuthRepository } from "../../infraestructure/repositories/postgres-auth.repository";
 import { BoardMiddlewares } from "./middlewares";
 import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.use-case";
 import { AuthMiddlewares } from "../auth/middlewares";
-import { JwtGenerator } from "../../infraestructure/services/jwt-generator.service";
-import { envs } from "../../configs/envs";
+import { AuthRepository, BoardRepository } from "../../domain/repositories";
 
 export class BoardRoutes {
-  static get routes() {
-    const { TOKEN_SECRET } = envs();
+  constructor(
+    private readonly authRepository: AuthRepository,
+    private readonly authMiddlewares: AuthMiddlewares,
+    private readonly boardRepository: BoardRepository,
+  ) {}
+  public get routes() {
     const router = Router();
 
-    const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
-    const authRepository = new PostgresAuthRepository();
-
-    const boardRepository = new PostgresBoardRepository();
     const createBoardUseCase = new CreateBoardUseCase(
-      boardRepository,
-      authRepository,
+      this.boardRepository,
+      this.authRepository,
     );
 
     const getBoardsUseCase = new GetBoardsUseCase(
-      authRepository,
-      boardRepository,
+      this.authRepository,
+      this.boardRepository,
     );
 
     const controller = new BoardController(
@@ -33,20 +30,18 @@ export class BoardRoutes {
       getBoardsUseCase,
     );
 
-    const authMiddlewares = new AuthMiddlewares(tokenGenerator);
-
-    router.use(authMiddlewares.validateJwtToken);
+    router.use(this.authMiddlewares.validateJwtToken);
     router.post(
       "/create",
       [
-        authMiddlewares.validateJwtToken,
+        this.authMiddlewares.validateJwtToken,
         BoardMiddlewares.createBoardDataValidation,
       ],
       controller.create,
     );
     router.get(
       "/get-all",
-      [authMiddlewares.validateJwtToken],
+      [this.authMiddlewares.validateJwtToken],
       controller.getBoards,
     );
 

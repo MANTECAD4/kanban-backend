@@ -1,14 +1,22 @@
 import jwt from "jsonwebtoken";
 import { CustomError } from "../../domain/errors/custom-error";
-import { TokenGenerator, type TokenPayload } from "../../domain/services";
-export class JwtGenerator implements TokenGenerator {
-  constructor(private readonly seed: string) {}
+import {
+  TokenGenerator,
+  type TokenReturn,
+  type TokenPayload,
+} from "../../domain/services";
 
-  public generate = async (payload: TokenPayload, duration?: number) => {
+export class JwtGenerator implements TokenGenerator {
+  constructor(private readonly secret: string) {}
+
+  public generate = async (
+    payload: TokenPayload,
+    duration?: number,
+  ): Promise<string> => {
     return new Promise((resolve, reject) => {
       jwt.sign(
         payload,
-        this.seed,
+        this.secret,
         { expiresIn: 60 * (duration ?? 30) },
         (err, token) => {
           if (err || !token) {
@@ -24,14 +32,14 @@ export class JwtGenerator implements TokenGenerator {
     });
   };
 
-  public validate = (token: string): Promise<TokenPayload | null> => {
-    return new Promise((resolve) => {
-      jwt.verify(token, this.seed, (err, decoded) => {
+  public validate = (token: string): Promise<TokenReturn | null> => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, this.secret, (err, decoded) => {
         if (err) {
           // console.log(err);
-          throw CustomError.unauthorized(`Invalid token`);
+          reject(CustomError.unauthorized(`Invalid token`));
         }
-        return resolve(decoded as unknown as TokenPayload);
+        return resolve(decoded as unknown as TokenReturn);
       });
     });
   };

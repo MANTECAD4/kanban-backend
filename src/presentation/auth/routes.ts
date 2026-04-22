@@ -10,12 +10,12 @@ import { AuthMiddlewares } from "./middlewares";
 
 export class AuthRoutes {
   static get routes(): Router {
-    const { TOKEN_SEED } = envs();
+    const { TOKEN_SECRET } = envs();
     const router = Router();
 
     const authRepository = new PostgresAuthRepository();
 
-    const tokenGenerator = new JwtGenerator(TOKEN_SEED);
+    const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
 
     const hashService = new BycryptHasher();
 

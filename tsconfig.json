@@ -15,6 +15,7 @@
     "esModuleInterop": true,
     "ignoreDeprecations": "6.0",
     "types": [],
+    "typeRoots": ["./src/presentation/global/types/express.d.ts"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],

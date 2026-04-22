@@ -1,5 +1,7 @@
 import express, { Router } from "express";
 import cors from "cors";
+import helmet from "helmet";
+
 interface ServerOptions {
   port: number;
 }
@@ -21,6 +23,7 @@ export class Server {
     this.app.use(express.urlencoded());
 
     this.app.use(cors());
+    this.app.use(helmet());
   }
 
   public setRoutes(routes: Router) {

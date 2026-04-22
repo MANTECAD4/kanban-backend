@@ -5,6 +5,8 @@ export abstract class BoardRepository {
   public abstract findAll: (
     userId: number, // DTO
   ) => Promise<BoardEntity[]>;
+  public abstract findByName: (name: string) => Promise<BoardEntity | null>;
+  public abstract findById: (boardId: number) => Promise<BoardEntity | null>;
   public abstract create: (
     createBoardDto: CreateBoardDto, // DTO
   ) => Promise<BoardEntity>;
@@ -15,5 +17,4 @@ export abstract class BoardRepository {
   public abstract delete: (
     boardId: number, // DTO
   ) => Promise<BoardEntity>;
-  public abstract findByName: (name: string) => Promise<BoardEntity | null>;
 }

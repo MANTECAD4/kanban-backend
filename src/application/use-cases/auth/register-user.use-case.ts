@@ -25,7 +25,7 @@ export class RegisterUserUseCase {
       name,
     });
 
-    const token = await this.tokenGenerator.generate({ sub: rest.id });
+    const token = await this.tokenGenerator.generate({ sub: { id: rest.id } });
     return {
       user: rest,
       token,

@@ -23,10 +23,12 @@ export class LoginUserUseCase {
     if (!passwordMatches) throw CustomError.forbidden("Invalid login");
 
     const { password, ...rest } = existentUser;
-    const token = await this.tokenService.generate({ sub: rest.id });
+    const token = await this.tokenService.generate({ sub: { id: rest.id } });
+    const decoded = await this.tokenService.validate(token);
     return {
       user: rest,
       token,
+      decoded,
     };
   };
 }

@@ -1,11 +1,13 @@
 export interface TokenPayload {
-  sub: number;
+  sub: { id: number };
 }
+
+export type TokenReturn = TokenPayload & { iat: number; exp: number };
 
 export abstract class TokenGenerator {
   abstract generate: (
     payload: TokenPayload,
     duration?: number,
-  ) => Promise<unknown>;
-  abstract validate: (token: string) => Promise<TokenPayload | null>;
+  ) => Promise<string>;
+  abstract validate: (token: string) => Promise<TokenReturn | null>;
 }

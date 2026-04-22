@@ -26,6 +26,17 @@ export class PostgresBoardRepository implements BoardRepository {
     } catch (error) {
       console.log({ ERROR_READING_BOARD_BY_NAME: error });
       throw CustomError.internalServer(
+        "Error while loading board from DB - at PostgresBoardDatasource.ts -> findByName",
+      );
+    }
+  };
+  public findById = async (boardId: number): Promise<BoardEntity | null> => {
+    try {
+      const board = await prisma.board.findFirst({ where: { id: boardId } });
+      return board === null ? null : BoardEntity.fromObject(board);
+    } catch (error) {
+      console.log({ ERROR_READING_BOARD_BY_ID: error });
+      throw CustomError.internalServer(
         "Error while loading board from DB - at PostgresBoardDatasource.ts -> findById",
       );
     }

@@ -1,9 +1,9 @@
-import { TokenPayload } from "../../../domain/services";
+import { TokenReturnDto } from "../../../application/dtos";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: TokenPayload;
+      user?: TokenReturnDto;
     }
   }
 }

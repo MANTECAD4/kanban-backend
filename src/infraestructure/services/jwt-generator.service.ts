@@ -1,10 +1,7 @@
 import jwt from "jsonwebtoken";
 import { CustomError } from "../../domain/errors/custom-error";
-import {
-  TokenGenerator,
-  type TokenReturn,
-  type TokenPayload,
-} from "../../domain/services";
+import { TokenGenerator } from "../../domain/services";
+import { TokenPayload, TokenReturnDto } from "../../application/dtos";
 
 export class JwtGenerator implements TokenGenerator {
   constructor(private readonly secret: string) {}
@@ -32,14 +29,14 @@ export class JwtGenerator implements TokenGenerator {
     });
   };
 
-  public validate = (token: string): Promise<TokenReturn | null> => {
+  public validate = (token: string): Promise<TokenReturnDto | null> => {
     return new Promise((resolve, reject) => {
       jwt.verify(token, this.secret, (err, decoded) => {
         if (err) {
           // console.log(err);
           reject(CustomError.unauthorized(`Invalid token`));
         }
-        return resolve(decoded as unknown as TokenReturn);
+        return resolve(decoded as unknown as TokenReturnDto);
       });
     });
   };

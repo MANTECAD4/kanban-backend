@@ -11,14 +11,14 @@ export class BoardController {
 
   public create = (req: Request, res: Response) => {
     this.createBoardUseCase
-      .execute(req.body)
+      .execute(req.user!, req.body)
       .then((result) => res.status(201).json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
 
   public getBoards = (req: Request, res: Response) => {
     this.getBoardsUseCase
-      .execute(req.body)
+      .execute(req.user!)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

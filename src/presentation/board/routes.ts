@@ -11,10 +11,10 @@ import { envs } from "../../configs/envs";
 
 export class BoardRoutes {
   static get routes() {
-    const { TOKEN_SEED } = envs();
+    const { TOKEN_SECRET } = envs();
     const router = Router();
 
-    const tokenGenerator = new JwtGenerator(TOKEN_SEED);
+    const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
     const authRepository = new PostgresAuthRepository();
 
     const boardRepository = new PostgresBoardRepository();
@@ -38,12 +38,15 @@ export class BoardRoutes {
     router.use(authMiddlewares.validateJwtToken);
     router.post(
       "/create",
-      [BoardMiddlewares.createBoardDataValidation],
+      [
+        authMiddlewares.validateJwtToken,
+        BoardMiddlewares.createBoardDataValidation,
+      ],
       controller.create,
     );
     router.get(
       "/get-all",
-      [BoardMiddlewares.getBoardsDataValidation],
+      [authMiddlewares.validateJwtToken],
       controller.getBoards,
     );
 

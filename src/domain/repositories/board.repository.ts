@@ -8,6 +8,7 @@ export abstract class BoardRepository {
   public abstract findByName: (name: string) => Promise<BoardEntity | null>;
   public abstract findById: (boardId: number) => Promise<BoardEntity | null>;
   public abstract create: (
+    userId: number,
     createBoardDto: CreateBoardDto, // DTO
   ) => Promise<BoardEntity>;
   public abstract update: (

@@ -43,13 +43,13 @@ export class PostgresBoardRepository implements BoardRepository {
   };
 
   public create = async (
+    userId: number,
     createBoardDto: CreateBoardDto,
   ): Promise<BoardEntity> => {
     try {
-      const { userId, ...rest } = createBoardDto;
       const createdBoard = await prisma.board.create({
         data: {
-          ...rest,
+          ...createBoardDto,
           user_id: userId,
         },
       });

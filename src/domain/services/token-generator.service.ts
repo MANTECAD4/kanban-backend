@@ -1,13 +1,9 @@
-export interface TokenPayload {
-  sub: { id: number };
-}
-
-export type TokenReturn = TokenPayload & { iat: number; exp: number };
+import { TokenPayload, TokenReturnDto } from "../../application/dtos";
 
 export abstract class TokenGenerator {
   abstract generate: (
     payload: TokenPayload,
     duration?: number,
   ) => Promise<string>;
-  abstract validate: (token: string) => Promise<TokenReturn | null>;
+  abstract validate: (token: string) => Promise<TokenReturnDto | null>;
 }

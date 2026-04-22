@@ -1,4 +1,4 @@
-import { CreateBoardSchema } from "../../application/dtos";
+import { CreateBoardSchema, UpdateBoardSchema } from "../../application/dtos";
 import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
@@ -9,6 +9,11 @@ export class BoardMiddlewares {
   public static createBoardDataValidation = dataValidationMiddlewareFactory(
     CreateBoardSchema,
     "Invalid data recieved. Board creation failed.",
+    RequestValidationTarget.BODY,
+  );
+  public static updateBoardDataValidation = dataValidationMiddlewareFactory(
+    UpdateBoardSchema,
+    "Invalid data recieved. Board update failed.",
     RequestValidationTarget.BODY,
   );
 

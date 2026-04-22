@@ -45,7 +45,10 @@ export class BoardRoutes {
 
     router.put(
       "/update/:id",
-      [BoardMiddlewares.existingBoardId],
+      [
+        BoardMiddlewares.existingBoardId,
+        BoardMiddlewares.updateBoardDataValidation,
+      ],
       controller.updateBoard,
     );
 

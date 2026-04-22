@@ -6,12 +6,15 @@ export const CreateBoardSchema = z.strictObject({
   description: z.string().trim().normalize().nonempty(),
 });
 
-export const UpdateBoardSchema = CreateBoardSchema.partial().refine(
-  (data) => Object.values(data).some((value) => value !== undefined),
-  {
-    error: "At least one field must be provided",
-  },
-);
+export const UpdateBoardSchema = CreateBoardSchema.partial();
+// .refine(
+//   (data) => {
+//     return Object.values(data).some((value) => value !== undefined);
+//   },
+//   {
+//     error: "At least one field must be provided",
+//   },
+// );
 
 // DTOS - These should be traditional interfaces/types according to clean architecture
 export type CreateBoardDto = z.infer<typeof CreateBoardSchema>;

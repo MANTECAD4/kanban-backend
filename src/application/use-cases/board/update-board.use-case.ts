@@ -10,7 +10,6 @@ export class UpdateBoardUseCase {
       throw CustomError.badRequest(
         "At least one property is required. Received none.",
       );
-
     const existingBoard = await this.boardRepository.findById(boardId);
 
     if (!existingBoard)

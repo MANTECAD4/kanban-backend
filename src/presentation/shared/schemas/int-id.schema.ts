@@ -1,5 +1,5 @@
 import z from "zod";
 
-export const intIdSchema = z.object({
+export const ParamsWithIdSchema = z.object({
   id: z.coerce.number().int().min(1),
 });

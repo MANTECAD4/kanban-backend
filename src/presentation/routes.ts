@@ -37,8 +37,7 @@ export class AppRoutes {
 
     router.use("/api/auth", authRoutes.routes);
     router.use("/api/boards", boardRoutes.routes);
-    // router.use("/api/columns");
-    // router.use("/api/tasks");
+
     return router;
   }
 }

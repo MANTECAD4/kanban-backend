@@ -5,6 +5,7 @@ import { BoardMiddlewares } from "./middlewares";
 import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.use-case";
 import { AuthMiddlewares } from "../auth/middlewares";
 import { AuthRepository, BoardRepository } from "../../domain/repositories";
+import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
 
 export class BoardRoutes {
   constructor(
@@ -25,27 +26,28 @@ export class BoardRoutes {
       this.boardRepository,
     );
 
+    const updateBoardUseCase = new UpdateBoardUseCase(this.boardRepository);
+
     const controller = new BoardController(
       createBoardUseCase,
       getBoardsUseCase,
+      updateBoardUseCase,
     );
 
     router.use(this.authMiddlewares.validateJwtToken);
+
     router.post(
       "/create",
-      [
-        this.authMiddlewares.validateJwtToken,
-        BoardMiddlewares.createBoardDataValidation,
-      ],
+      [BoardMiddlewares.createBoardDataValidation],
       controller.create,
     );
-    router.get(
-      "/get-all",
-      [this.authMiddlewares.validateJwtToken],
-      controller.getBoards,
-    );
+    router.get("/get-all", controller.getBoards);
 
-    // router.put("update/:id");
+    router.put(
+      "/update/:id",
+      [BoardMiddlewares.existingBoardId],
+      controller.updateBoard,
+    );
 
     return router;
   }

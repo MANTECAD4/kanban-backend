@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
-} from "../global/factories/data-validation-middleware";
+} from "../shared/factories/data-validation-middleware";
 import { LoginSchema, RegisterUserSchema } from "../../application/dtos";
 import { TokenGenerator } from "../../domain/services";
 import { CustomError } from "../../domain/errors/custom-error";
@@ -42,7 +42,7 @@ export class AuthMiddlewares {
       req.user = payload;
       next();
     } catch (error) {
-      console.log({ ERROR_TOKEN_VALIDATION: error });
+      // console.log({ ERROR_TOKEN_VALIDATION: error });
       res.status(401).json({ error: "Invalid bearer token" });
     }
   };

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import z, { ZodObject } from "zod";
-import { TokenPayload } from "../../../domain/services";
 
 export enum RequestValidationTarget {
   BODY = "body",

@@ -78,6 +78,7 @@ export class PostgresBoardRepository implements BoardRepository {
       );
     }
   };
+
   public delete = async (boardId: number): Promise<BoardEntity> => {
     try {
       const deletedBoard = await prisma.board.delete({

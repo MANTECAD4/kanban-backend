@@ -25,7 +25,7 @@ model Board{
   id Int @id @default(autoincrement())
   name String
   description String?
-  user   User @relation(fields: [user_id], references: [id]) 
+  user   User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
   user_id Int
   colummns StatusColumn[]
 }
@@ -33,7 +33,7 @@ model Board{
 model StatusColumn{
   id Int @id @default(autoincrement())
   name String
-  board   Board @relation(fields: [board_id], references: [id]) 
+  board   Board @relation(fields: [board_id], references: [id], onDelete: Cascade) 
   board_id Int
   tasks Task[]
 }
@@ -44,6 +44,6 @@ model Task{
   description String
   order Int
   subtasks String[]
-  status StatusColumn @relation(fields: [status_id], references: [id])
+  status StatusColumn @relation(fields: [status_id], references: [id], onDelete: Cascade)
   status_id Int
 }

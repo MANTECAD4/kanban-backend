@@ -5,9 +5,6 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { AuthRepository } from "../../domain/repositories";
 
 export class PostgresAuthRepository implements AuthRepository {
-  public login = async (loginUserDto: LoginUserDto): Promise<UserEntity> => {
-    throw new Error("not implemented yet");
-  };
   public register = async (registerUserDto: RegisterUserDto) => {
     try {
       const registeredUser = await prisma.user.create({

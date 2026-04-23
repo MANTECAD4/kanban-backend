@@ -2,6 +2,7 @@ import { CustomError } from "../../../domain/errors/custom-error";
 import { AuthRepository } from "../../../domain/repositories";
 import { TokenGenerator } from "../../../domain/services";
 import { HasherService } from "../../../domain/services/hasher.service";
+import { RegisterUserDto } from "../../dtos";
 
 export class RegisterUserUseCase {
   constructor(
@@ -10,8 +11,8 @@ export class RegisterUserUseCase {
     private readonly hasherService: HasherService,
   ) {}
 
-  public async execute(body: Record<string, any>) {
-    const { email, password: rawPassword, name } = body;
+  public async execute(data: RegisterUserDto) {
+    const { email, password: rawPassword, name } = data;
 
     const existentUser = await this.authRepository.getByEmail(email);
 

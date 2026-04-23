@@ -43,7 +43,7 @@ export class AppRoutes {
       boardRoutes.routes,
     );
     router.use(
-      "/api/boards/:boardId/tasks",
+      "/api/boards/:boardId/status-columns",
       [
         authMiddlewares.validateJwtToken,
         BoardsMiddlewares.boardIdParamValidation,

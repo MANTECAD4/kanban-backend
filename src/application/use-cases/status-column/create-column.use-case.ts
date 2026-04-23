@@ -9,7 +9,7 @@ export class CreateStatusColumnUseCase {
 
   public execute = async (
     boardId: number,
-    createStatusColumnDto: Record<string, unknown>,
+    createStatusColumnDto: CreateStatusColumnDto,
   ) => {
     const existingColumnInBoard =
       await this.statusColumnRepository.findByBoardAndName(

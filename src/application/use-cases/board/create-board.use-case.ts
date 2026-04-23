@@ -8,16 +8,24 @@ export class CreateBoardUseCase {
     private readonly authRepository: AuthRepository,
   ) {}
 
-  public execute = async (user: TokenReturnDto, body: CreateBoardDto) => {
+  public execute = async (
+    user: Record<string, unknown>,
+    body: CreateBoardDto,
+  ) => {
     // const existingBoard = await this.boardRepository.findByName(body.name);
     // if (existingBoard)
     //   throw CustomError.badRequest("Board name already registered.");
-    const existingUser = await this.authRepository.getById(user.sub.id);
+    const existingUser = await this.authRepository.getById(
+      (user as TokenReturnDto).sub.id,
+    );
     if (!existingUser)
       throw CustomError.internalServer(
-        `User with id ${user.sub.id} not found.`,
+        `User with id ${(user as TokenReturnDto).sub.id} not found.`,
       );
-    const createdBoard = await this.boardRepository.create(user.sub.id, body);
+    const createdBoard = await this.boardRepository.create(
+      (user as TokenReturnDto).sub.id,
+      body,
+    );
     return {
       board: createdBoard,
     };

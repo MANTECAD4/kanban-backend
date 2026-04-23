@@ -1,7 +1,4 @@
 import z from "zod";
-import { ParamsWithIdSchema } from "../../presentation/shared/schemas/int-id.schema";
-
-export const GetTasksSchema = ParamsWithIdSchema("boardId");
 export interface GetTasksDto {
   boardId: number;
 }

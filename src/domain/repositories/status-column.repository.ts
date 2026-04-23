@@ -5,7 +5,7 @@ export abstract class StatusColumnRepository {
   public abstract findAll: (
     boardId: number, // DTO
   ) => Promise<StatusColumnEntity[]>;
-  public abstract findByName: (
+  public abstract findByBoardAndName: (
     boardId: number,
     name: string,
   ) => Promise<StatusColumnEntity | null>;

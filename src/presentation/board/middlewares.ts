@@ -5,7 +5,7 @@ import {
 } from "../shared/factories/data-validation-middleware";
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
-export class BoardMiddlewares {
+export class BoardsMiddlewares {
   public static createBoardDataValidation = dataValidationMiddlewareFactory(
     CreateBoardSchema,
     "Invalid data recieved. Board creation failed.",
@@ -17,9 +17,9 @@ export class BoardMiddlewares {
     RequestValidationTarget.BODY,
   );
 
-  public static existingBoardId = dataValidationMiddlewareFactory(
+  public static boardIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("boardId"),
-    "Invalid board id provided. Board update failed.",
+    "Invalid board id provided.",
     RequestValidationTarget.PARAMS,
   );
 }

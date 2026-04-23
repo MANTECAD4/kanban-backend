@@ -11,13 +11,13 @@ export class AuthController {
 
   public login = (req: Request, res: Response) => {
     this.loginUserUseCase
-      .execute(req.body)
+      .execute(req.validatedBody!)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
   public register = (req: Request, res: Response) => {
     this.registerUserUseCase
-      .execute(req.body)
+      .execute(req.validatedBody!)
       .then((result) => res.status(201).json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

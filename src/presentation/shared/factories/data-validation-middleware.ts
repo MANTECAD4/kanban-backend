@@ -14,26 +14,7 @@ export const dataValidationMiddlewareFactory = (
   target: RequestValidationTarget,
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    let targetObject: Record<string, any>;
-
-    switch (target) {
-      case RequestValidationTarget.BODY:
-        targetObject = req.body;
-        break;
-      case RequestValidationTarget.PARAMS:
-        targetObject = req.params;
-        break;
-      case RequestValidationTarget.QUERY:
-        targetObject = req.query;
-        break;
-      case RequestValidationTarget.USER:
-        targetObject = req.user!;
-        break;
-
-      default:
-        targetObject = req.body;
-        break;
-    }
+    const targetObject = req[target];
 
     const result = schema.safeParse(targetObject);
     if (!result.success)
@@ -45,7 +26,24 @@ export const dataValidationMiddlewareFactory = (
         },
       });
 
-    req[target] = result.data;
+    switch (target) {
+      case RequestValidationTarget.BODY:
+        req.validatedBody = result.data;
+        break;
+      case RequestValidationTarget.PARAMS:
+        req.validatedParams = result.data;
+        break;
+      case RequestValidationTarget.QUERY:
+        req.validatedQuery = result.data;
+        break;
+      case RequestValidationTarget.USER:
+        req.validatedUser = result.data;
+        break;
+
+      default:
+        req.validatedBody = result.data;
+        break;
+    }
     next();
   };
 };

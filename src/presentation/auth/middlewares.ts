@@ -6,7 +6,6 @@ import {
 } from "../shared/factories/data-validation-middleware";
 import { LoginSchema, RegisterUserSchema } from "../../application/dtos";
 import { TokenGenerator } from "../../domain/services";
-import { CustomError } from "../../domain/errors/custom-error";
 
 export class AuthMiddlewares {
   constructor(private readonly tokenGenerator: TokenGenerator) {}

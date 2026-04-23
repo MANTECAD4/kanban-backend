@@ -22,7 +22,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
     }
   };
 
-  public findByName = async (
+  public findByBoardAndName = async (
     boardId: number,
     name: string,
   ): Promise<StatusColumnEntity | null> => {

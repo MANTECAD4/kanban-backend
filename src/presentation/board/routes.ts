@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { BoardController } from "./controller";
+import { BoardsController } from "./controller";
 import { CreateBoardUseCase } from "../../application/use-cases/board/create-board.use-case";
-import { BoardMiddlewares } from "./middlewares";
+import { BoardsMiddlewares } from "./middlewares";
 import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.use-case";
 import { AuthMiddlewares } from "../auth/middlewares";
 import { AuthRepository, BoardRepository } from "../../domain/repositories";
 import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
 import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
 
-export class BoardRoutes {
+export class BoardsRoutes {
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly boardRepository: BoardRepository,
@@ -30,32 +30,32 @@ export class BoardRoutes {
 
     const deleteBoardUseCase = new DeleteBoardUseCase(this.boardRepository);
 
-    const controller = new BoardController(
+    const controller = new BoardsController(
       createBoardUseCase,
       getBoardsUseCase,
       updateBoardUseCase,
       deleteBoardUseCase,
     );
 
-    router.get("/", controller.getBoards);
+    router.get("/", controller.getAll);
     router.post(
       "/",
-      [BoardMiddlewares.createBoardDataValidation],
+      [BoardsMiddlewares.createBoardDataValidation],
       controller.create,
     );
 
     router.put(
       "/:boardId",
       [
-        BoardMiddlewares.existingBoardId,
-        BoardMiddlewares.updateBoardDataValidation,
+        BoardsMiddlewares.boardIdParamValidation,
+        BoardsMiddlewares.updateBoardDataValidation,
       ],
-      controller.updateBoard,
+      controller.update,
     );
     router.delete(
       "/:boardId",
-      [BoardMiddlewares.existingBoardId],
-      controller.deleteBoard,
+      [BoardsMiddlewares.boardIdParamValidation],
+      controller.delete,
     );
 
     return router;

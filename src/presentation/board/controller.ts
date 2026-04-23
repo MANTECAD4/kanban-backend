@@ -5,7 +5,7 @@ import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.u
 import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
 import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
 
-export class BoardController {
+export class BoardsController {
   constructor(
     private readonly createBoardUseCase: CreateBoardUseCase,
     private readonly getBoardsUseCase: GetBoardsUseCase,
@@ -20,23 +20,23 @@ export class BoardController {
       .catch((error) => CustomError.handleError(error, res));
   };
 
-  public getBoards = (req: Request, res: Response) => {
+  public getAll = (req: Request, res: Response) => {
     this.getBoardsUseCase
       .execute(req.user!)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
 
-  public updateBoard = (req: Request, res: Response) => {
+  public update = (req: Request, res: Response) => {
     this.updateBoardUseCase
-      .execute(req.params.boardId as unknown as number, req.body)
+      .execute(req.validatedParams!.boardId as number, req.validatedBody!)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
 
-  public deleteBoard = (req: Request, res: Response) => {
+  public delete = (req: Request, res: Response) => {
     this.deleteBoardUseCase
-      .execute(req.params.boardId as unknown as number)
+      .execute(req.validatedParams!.boardId as number)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

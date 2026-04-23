@@ -18,7 +18,7 @@ export class BoardMiddlewares {
   );
 
   public static existingBoardId = dataValidationMiddlewareFactory(
-    ParamsWithIdSchema,
+    ParamsWithIdSchema("boardId"),
     "Invalid board id provided. Board update failed.",
     RequestValidationTarget.PARAMS,
   );

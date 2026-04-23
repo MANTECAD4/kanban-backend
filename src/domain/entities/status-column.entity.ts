@@ -23,4 +23,13 @@ export class StatusColumnEntity {
     // this.board = board;
     // this.tasks = tasks;
   }
+
+  static fromObject = (object: Record<string, any>) => {
+    const { id, _id, name, boardId, board_id } = object;
+    return new StatusColumnEntity({
+      id: id ?? _id,
+      name,
+      boardId: board_id ?? boardId,
+    });
+  };
 }

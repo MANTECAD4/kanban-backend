@@ -29,14 +29,14 @@ export class BoardController {
 
   public updateBoard = (req: Request, res: Response) => {
     this.updateBoardUseCase
-      .execute(req.params.id as unknown as number, req.body)
+      .execute(req.params.boardId as unknown as number, req.body)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
 
   public deleteBoard = (req: Request, res: Response) => {
     this.deleteBoardUseCase
-      .execute(req.params.id as unknown as number)
+      .execute(req.params.boardId as unknown as number)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

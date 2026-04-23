@@ -9,6 +9,7 @@ import {
 import { JwtGenerator } from "../infraestructure/services/jwt-generator.service";
 import { BycryptHasher } from "../infraestructure/services/bycrypt.service";
 import { AuthMiddlewares } from "./auth/middlewares";
+import { TaskRoutes } from "./task/routes";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -23,20 +24,26 @@ export class AppRoutes {
 
     const authMiddlewares = new AuthMiddlewares(tokenGenerator);
 
+    const boardRoutes = new BoardRoutes(authRepository, boardRepository);
+
     const authRoutes = new AuthRoutes(
       authRepository,
       tokenGenerator,
       hashService,
     );
-
-    const boardRoutes = new BoardRoutes(
-      authRepository,
-      authMiddlewares,
-      boardRepository,
-    );
+    const taskRoutes = new TaskRoutes();
 
     router.use("/api/auth", authRoutes.routes);
-    router.use("/api/boards", boardRoutes.routes);
+    router.use(
+      "/api/boards",
+      [authMiddlewares.validateJwtToken],
+      boardRoutes.routes,
+    );
+    router.use(
+      "/api/boards/:boardId/tasks",
+      [authMiddlewares.validateJwtToken],
+      taskRoutes.routes,
+    );
 
     return router;
   }

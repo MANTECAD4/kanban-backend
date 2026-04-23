@@ -11,7 +11,6 @@ import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-boa
 export class BoardRoutes {
   constructor(
     private readonly authRepository: AuthRepository,
-    private readonly authMiddlewares: AuthMiddlewares,
     private readonly boardRepository: BoardRepository,
   ) {}
   public get routes() {
@@ -38,17 +37,15 @@ export class BoardRoutes {
       deleteBoardUseCase,
     );
 
-    router.use(this.authMiddlewares.validateJwtToken);
-
+    router.get("/", controller.getBoards);
     router.post(
-      "/create",
+      "/",
       [BoardMiddlewares.createBoardDataValidation],
       controller.create,
     );
-    router.get("/get-all", controller.getBoards);
 
     router.put(
-      "/:id",
+      "/:boardId",
       [
         BoardMiddlewares.existingBoardId,
         BoardMiddlewares.updateBoardDataValidation,
@@ -56,7 +53,7 @@ export class BoardRoutes {
       controller.updateBoard,
     );
     router.delete(
-      "/:id",
+      "/:boardId",
       [BoardMiddlewares.existingBoardId],
       controller.deleteBoard,
     );

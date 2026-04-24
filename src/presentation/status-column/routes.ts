@@ -6,6 +6,7 @@ import {
   BoardRepository,
   StatusColumnRepository,
 } from "../../domain/repositories";
+import { GetStatusColumnsUseCase } from "../../application/use-cases/status-column/get-columns.use-case";
 
 export class StatusColumnsRoutes {
   constructor(
@@ -20,7 +21,15 @@ export class StatusColumnsRoutes {
       this.boardRepository,
     );
 
-    const controller = new StatusColumnsController(creatStatusColumnUseCase);
+    const getStatusColumnsUseCase = new GetStatusColumnsUseCase(
+      this.statusColumnRepository,
+      this.boardRepository,
+    );
+
+    const controller = new StatusColumnsController(
+      creatStatusColumnUseCase,
+      getStatusColumnsUseCase,
+    );
     router.get("/", [], controller.findAll);
 
     router.post(

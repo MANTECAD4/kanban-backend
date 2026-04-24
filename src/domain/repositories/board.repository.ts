@@ -2,7 +2,7 @@ import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
 import { BoardEntity } from "../entities/board.entity";
 
 export abstract class BoardRepository {
-  public abstract findAll: (
+  public abstract getAll: (
     userId: number, // DTO
   ) => Promise<BoardEntity[]>;
   public abstract findByName: (name: string) => Promise<BoardEntity | null>;

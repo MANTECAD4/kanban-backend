@@ -5,7 +5,7 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { BoardRepository } from "../../domain/repositories";
 
 export class PostgresBoardRepository implements BoardRepository {
-  public findAll = async (userId: number): Promise<BoardEntity[]> => {
+  public getAll = async (userId: number): Promise<BoardEntity[]> => {
     try {
       const rawBoards = await prisma.board.findMany({
         where: { user_id: userId },

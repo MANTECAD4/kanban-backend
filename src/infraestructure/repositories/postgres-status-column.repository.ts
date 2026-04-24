@@ -5,7 +5,7 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../domain/repositories";
 
 export class PostgresStatusColumnRepository implements StatusColumnRepository {
-  public findAll = async (boardId: number): Promise<StatusColumnEntity[]> => {
+  public getAll = async (boardId: number): Promise<StatusColumnEntity[]> => {
     try {
       const rawColumns = await prisma.statusColumn.findMany({
         where: {

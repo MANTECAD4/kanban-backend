@@ -2,7 +2,7 @@ import { CreateStatusColumnDto } from "../../application/dtos";
 import { StatusColumnEntity } from "../entities/status-column.entity";
 
 export abstract class StatusColumnRepository {
-  public abstract findAll: (
+  public abstract getAll: (
     boardId: number, // DTO
   ) => Promise<StatusColumnEntity[]>;
   public abstract findByBoardAndName: (

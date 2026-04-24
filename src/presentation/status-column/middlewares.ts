@@ -15,7 +15,7 @@ export class StatusColumnsMiddlewares {
     RequestValidationTarget.BODY,
   );
 
-  static updateStatusCOlumnDataValidation = dataValidationMiddlewareFactory(
+  static updateStatusColumnDataValidation = dataValidationMiddlewareFactory(
     UpdateStatusColumnSchema,
     "Invalid data for updating status column",
     RequestValidationTarget.BODY,

@@ -8,6 +8,7 @@ import {
 } from "../../domain/repositories";
 import { GetStatusColumnsUseCase } from "../../application/use-cases/status-column/get-columns.use-case";
 import { UpdateStatusColumnUseCase } from "../../application/use-cases/status-column/update-column.use-case";
+import { DeleteStatusColumnUseCase } from "../../application/use-cases/status-column/delete-column.use-case";
 
 export class StatusColumnsRoutes {
   constructor(
@@ -30,11 +31,15 @@ export class StatusColumnsRoutes {
     const updateStatusColumnUsecase = new UpdateStatusColumnUseCase(
       this.statusColumnRepository,
     );
+    const deleteStatusColumnUsecase = new DeleteStatusColumnUseCase(
+      this.statusColumnRepository,
+    );
 
     const controller = new StatusColumnsController(
       getStatusColumnsUseCase,
       createStatusColumnUseCase,
       updateStatusColumnUsecase,
+      deleteStatusColumnUsecase,
     );
     router.get("/", controller.findAll);
 
@@ -48,9 +53,15 @@ export class StatusColumnsRoutes {
       "/:columnId",
       [
         StatusColumnsMiddlewares.columnIdParamValidation,
-        StatusColumnsMiddlewares.updateStatusCOlumnDataValidation,
+        StatusColumnsMiddlewares.updateStatusColumnDataValidation,
       ],
       controller.update,
+    );
+
+    router.delete(
+      "/:columnId",
+      [StatusColumnsMiddlewares.columnIdParamValidation],
+      controller.delete,
     );
     return router;
   }

@@ -7,12 +7,14 @@ import {
 } from "../../application/dtos";
 import { GetStatusColumnsUseCase } from "../../application/use-cases/status-column/get-columns.use-case";
 import { UpdateStatusColumnUseCase } from "../../application/use-cases/status-column/update-column.use-case";
+import { DeleteStatusColumnUseCase } from "../../application/use-cases/status-column/delete-column.use-case";
 
 export class StatusColumnsController {
   constructor(
     private readonly getStatusColumnsUsecase: GetStatusColumnsUseCase,
     private readonly createStatusColumnUsecase: CreateStatusColumnUseCase,
     private readonly updateStatusColumnsUsecase: UpdateStatusColumnUseCase,
+    private readonly deleteStatusColumnsUsecase: DeleteStatusColumnUseCase,
   ) {}
 
   public findAll = (req: Request, res: Response) => {
@@ -37,6 +39,13 @@ export class StatusColumnsController {
         req.validatedParams!.columnId,
         req.validatedBody as UpdateStatusColumnDto,
       )
+      .then((result) => res.json(result))
+      .catch((error) => CustomError.handleError(error, res));
+  };
+
+  public delete = (req: Request, res: Response) => {
+    this.deleteStatusColumnsUsecase
+      .execute(req.validatedParams!.columnId)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

@@ -21,7 +21,7 @@ export class CreateStatusColumnUseCase {
         `Board with id ${boardId} not found for status column creation.`,
       );
     const existingColumnInBoard =
-      await this.statusColumnRepository.findByBoardAndName(
+      await this.statusColumnRepository.getByBoardAndName(
         boardId,
         createStatusColumnDto.name,
       );

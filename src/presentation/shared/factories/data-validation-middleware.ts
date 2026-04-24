@@ -27,17 +27,21 @@ export const dataValidationMiddlewareFactory = (
 
     switch (target) {
       case RequestValidationTarget.BODY:
-        req.validatedBody = result.data;
+        req.validatedBody = { ...req.validatedBody, ...result.data };
+
         break;
       case RequestValidationTarget.PARAMS:
-        req.validatedParams = result.data;
+        req.validatedParams = { ...req.validatedParams, ...result.data };
+
         break;
       case RequestValidationTarget.QUERY:
-        req.validatedQuery = result.data;
+        req.validatedQuery = { ...req.validatedQuery, ...result.data };
+
         break;
 
       default:
-        req.validatedBody = result.data;
+        req.validatedBody = { ...req.validatedBody, ...result.data };
+
         break;
     }
     next();

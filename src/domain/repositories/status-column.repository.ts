@@ -5,9 +5,12 @@ export abstract class StatusColumnRepository {
   public abstract getAll: (
     boardId: number, // DTO
   ) => Promise<StatusColumnEntity[]>;
-  public abstract findByBoardAndName: (
+  public abstract getByBoardAndName: (
     boardId: number,
     name: string,
+  ) => Promise<StatusColumnEntity | null>;
+  public abstract getById: (
+    columnId: number,
   ) => Promise<StatusColumnEntity | null>;
   public abstract create: (
     boardId: number,

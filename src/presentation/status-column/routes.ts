@@ -7,6 +7,7 @@ import {
   StatusColumnRepository,
 } from "../../domain/repositories";
 import { GetStatusColumnsUseCase } from "../../application/use-cases/status-column/get-columns.use-case";
+import { UpdateStatusColumnUseCase } from "../../application/use-cases/status-column/update-column.use-case";
 
 export class StatusColumnsRoutes {
   constructor(
@@ -16,7 +17,7 @@ export class StatusColumnsRoutes {
   public get routes() {
     const router = Router({ mergeParams: true });
 
-    const creatStatusColumnUseCase = new CreateStatusColumnUseCase(
+    const createStatusColumnUseCase = new CreateStatusColumnUseCase(
       this.statusColumnRepository,
       this.boardRepository,
     );
@@ -26,16 +27,30 @@ export class StatusColumnsRoutes {
       this.boardRepository,
     );
 
-    const controller = new StatusColumnsController(
-      creatStatusColumnUseCase,
-      getStatusColumnsUseCase,
+    const updateStatusColumnUsecase = new UpdateStatusColumnUseCase(
+      this.statusColumnRepository,
     );
-    router.get("/", [], controller.findAll);
+
+    const controller = new StatusColumnsController(
+      getStatusColumnsUseCase,
+      createStatusColumnUseCase,
+      updateStatusColumnUsecase,
+    );
+    router.get("/", controller.findAll);
 
     router.post(
       "/",
       [StatusColumnsMiddlewares.createStatusColumnDataValidation],
       controller.create,
+    );
+
+    router.put(
+      "/:columnId",
+      [
+        StatusColumnsMiddlewares.columnIdParamValidation,
+        StatusColumnsMiddlewares.updateStatusCOlumnDataValidation,
+      ],
+      controller.update,
     );
     return router;
   }

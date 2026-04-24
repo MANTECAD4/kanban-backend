@@ -4,7 +4,7 @@ export interface GetTasksDto {
 }
 
 export const CreateStatusColumnSchema = z.strictObject({
-  name: z.string().trim().normalize().nonempty(),
+  name: z.string().trim().normalize().min(3),
 });
 
 export const UpdateStatusColumnSchema = CreateStatusColumnSchema.partial();

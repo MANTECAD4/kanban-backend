@@ -22,7 +22,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
     }
   };
 
-  public findByBoardAndName = async (
+  public getByBoardAndName = async (
     boardId: number,
     name: string,
   ): Promise<StatusColumnEntity | null> => {
@@ -35,6 +35,21 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       console.log({ ERROR_FIND_BY_NAME_COLUMN: error });
       throw CustomError.internalServer(
         `Error while loading column ${name} from board with id ${boardId}`,
+      );
+    }
+  };
+  public getById = async (
+    columnId: number,
+  ): Promise<StatusColumnEntity | null> => {
+    try {
+      const column = await prisma.statusColumn.findFirst({
+        where: { id: columnId },
+      });
+      return !column ? null : StatusColumnEntity.fromObject(column);
+    } catch (error) {
+      console.log({ ERROR_FIND_BY_ID_COLUMN: error });
+      throw CustomError.internalServer(
+        `Error while loading column with id ${columnId}`,
       );
     }
   };

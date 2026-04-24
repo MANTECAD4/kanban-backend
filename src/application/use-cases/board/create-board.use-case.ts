@@ -10,7 +10,7 @@ export class CreateBoardUseCase {
 
   public execute = async (
     user: Record<string, unknown>,
-    body: CreateBoardDto,
+    data: CreateBoardDto,
   ) => {
     // const existingBoard = await this.boardRepository.findByName(body.name);
     // if (existingBoard)
@@ -24,7 +24,7 @@ export class CreateBoardUseCase {
       );
     const createdBoard = await this.boardRepository.create(
       (user as TokenReturnDto).sub.id,
-      body,
+      data,
     );
     return {
       board: createdBoard,

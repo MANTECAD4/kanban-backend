@@ -5,7 +5,6 @@ export enum RequestValidationTarget {
   BODY = "body",
   QUERY = "query",
   PARAMS = "params",
-  USER = "user",
 }
 
 export const dataValidationMiddlewareFactory = (
@@ -35,9 +34,6 @@ export const dataValidationMiddlewareFactory = (
         break;
       case RequestValidationTarget.QUERY:
         req.validatedQuery = result.data;
-        break;
-      case RequestValidationTarget.USER:
-        req.validatedUser = result.data;
         break;
 
       default:

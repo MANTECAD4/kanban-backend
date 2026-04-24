@@ -34,7 +34,10 @@ export class AppRoutes {
       tokenGenerator,
       hashService,
     );
-    const taskRoutes = new StatusColumnsRoutes(statusColumnRepository);
+    const taskRoutes = new StatusColumnsRoutes(
+      statusColumnRepository,
+      boardRepository,
+    );
 
     router.use("/api/auth", authRoutes.routes);
     router.use(

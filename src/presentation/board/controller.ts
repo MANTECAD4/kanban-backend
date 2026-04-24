@@ -4,6 +4,7 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.use-case";
 import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
 import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
+import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
 
 export class BoardsController {
   constructor(
@@ -15,7 +16,7 @@ export class BoardsController {
 
   public create = (req: Request, res: Response) => {
     this.createBoardUseCase
-      .execute(req.user!, req.body)
+      .execute(req.user!, req.validatedBody! as CreateBoardDto)
       .then((result) => res.status(201).json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
@@ -29,7 +30,10 @@ export class BoardsController {
 
   public update = (req: Request, res: Response) => {
     this.updateBoardUseCase
-      .execute(req.validatedParams!.boardId as number, req.validatedBody!)
+      .execute(
+        req.validatedParams!.boardId as number,
+        req.validatedBody! as UpdateBoardDto,
+      )
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

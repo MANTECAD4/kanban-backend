@@ -8,10 +8,10 @@ export class GetBoardsUseCase {
     private readonly boardRepository: BoardRepository,
   ) {}
 
-  public execute = async (user: Record<string, unknown>) => {
+  public execute = async (user: TokenReturnDto) => {
     const {
       sub: { id },
-    } = user as TokenReturnDto;
+    } = user;
     const existingUser = await this.authRepository.getById(id);
     if (!existingUser)
       throw CustomError.internalServer(`User with id ${id} not found.`);

@@ -2,17 +2,22 @@ import { Router } from "express";
 import { StatusColumnsController } from "./controller";
 import { StatusColumnsMiddlewares } from "./middlewares";
 import { CreateStatusColumnUseCase } from "../../application/use-cases/status-column/create-column.use-case";
-import { StatusColumnRepository } from "../../domain/repositories";
+import {
+  BoardRepository,
+  StatusColumnRepository,
+} from "../../domain/repositories";
 
 export class StatusColumnsRoutes {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
+    private readonly boardRepository: BoardRepository,
   ) {}
   public get routes() {
     const router = Router({ mergeParams: true });
 
     const creatStatusColumnUseCase = new CreateStatusColumnUseCase(
       this.statusColumnRepository,
+      this.boardRepository,
     );
 
     const controller = new StatusColumnsController(creatStatusColumnUseCase);

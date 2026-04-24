@@ -5,6 +5,7 @@ import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.u
 import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
 import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
 import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
+import { read } from "node:fs";
 
 export class BoardsController {
   constructor(
@@ -31,6 +32,7 @@ export class BoardsController {
   public update = (req: Request, res: Response) => {
     this.updateBoardUseCase
       .execute(
+        req.user!,
         req.validatedParams!.boardId as number,
         req.validatedBody! as UpdateBoardDto,
       )
@@ -40,7 +42,7 @@ export class BoardsController {
 
   public delete = (req: Request, res: Response) => {
     this.deleteBoardUseCase
-      .execute(req.validatedParams!.boardId as number)
+      .execute(req.user!, req.validatedParams!.boardId as number)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

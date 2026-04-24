@@ -15,7 +15,7 @@ export class CreateStatusColumnUseCase {
     boardId: number,
     createStatusColumnDto: CreateStatusColumnDto,
   ) => {
-    const existingBoard = await this.boardRepository.findById(boardId);
+    const existingBoard = await this.boardRepository.getById(boardId);
     if (!existingBoard)
       throw CustomError.internalServer(
         `Board with id ${boardId} not found for status column creation.`,

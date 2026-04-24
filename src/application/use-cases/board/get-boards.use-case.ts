@@ -14,7 +14,9 @@ export class GetBoardsUseCase {
     } = user;
     const existingUser = await this.authRepository.getById(id);
     if (!existingUser)
-      throw CustomError.internalServer(`User with id ${id} not found.`);
+      throw CustomError.internalServer(
+        `User with id ${id} not found. Should exist.`,
+      );
     const boards = await this.boardRepository.getAll(id);
     return {
       total: boards.length,

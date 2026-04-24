@@ -19,7 +19,7 @@ export class PostgresBoardRepository implements BoardRepository {
     }
   };
 
-  public findByName = async (name: string): Promise<BoardEntity | null> => {
+  public getByName = async (name: string): Promise<BoardEntity | null> => {
     try {
       const board = await prisma.board.findFirst({ where: { name } });
       return board === null ? null : BoardEntity.fromObject(board);
@@ -30,7 +30,7 @@ export class PostgresBoardRepository implements BoardRepository {
       );
     }
   };
-  public findById = async (boardId: number): Promise<BoardEntity | null> => {
+  public getById = async (boardId: number): Promise<BoardEntity | null> => {
     try {
       const board = await prisma.board.findFirst({ where: { id: boardId } });
       return board === null ? null : BoardEntity.fromObject(board);
@@ -38,6 +38,39 @@ export class PostgresBoardRepository implements BoardRepository {
       console.log({ ERROR_READING_BOARD_BY_ID: error });
       throw CustomError.internalServer(
         "Error while loading board from DB - at PostgresBoardDatasource.ts -> findById",
+      );
+    }
+  };
+  public getByUserAndBoardName = async (
+    userId: number,
+    boardName: string,
+  ): Promise<BoardEntity | null> => {
+    try {
+      const board = await prisma.board.findFirst({
+        where: { name: boardName, user_id: userId },
+      });
+      return board === null ? null : BoardEntity.fromObject(board);
+    } catch (error) {
+      console.log({ ERROR_READING_BOARD_BY_USER_BOARD: error });
+      throw CustomError.internalServer(
+        "Error while loading board from DB - at PostgresBoardDatasource.ts -> findByUserAndBoard",
+      );
+    }
+  };
+
+  public checkRelationship = async (
+    userId: number,
+    boardId: number,
+  ): Promise<boolean> => {
+    try {
+      const board = await prisma.board.findFirst({
+        where: { id: boardId, user: { id: userId } },
+      });
+      return board ? true : false;
+    } catch (error) {
+      console.log({ ERROR_CHECKING_RELATIOSHIPN_USER_BOARD: error });
+      throw CustomError.internalServer(
+        `Error while checking relation between board no. ${boardId} and user ${userId}- at PostgresBoardDatasource.ts -> checkRelationship`,
       );
     }
   };

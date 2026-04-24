@@ -1,20 +1,25 @@
 import { CustomError } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateBoardDto } from "../../dtos";
+import { TokenReturnDto, UpdateBoardDto } from "../../dtos";
 
 export class UpdateBoardUseCase {
   constructor(private readonly boardRepository: BoardRepository) {}
 
-  public execute = async (boardId: number, data: UpdateBoardDto) => {
-    if (!data)
-      throw CustomError.badRequest(
-        "At least one property is required. Received none.",
-      );
-    const existingBoard = await this.boardRepository.findById(boardId);
+  public execute = async (
+    user: TokenReturnDto,
+    boardId: number,
+    data: UpdateBoardDto,
+  ) => {
+    const existsRelationship = await this.boardRepository.checkRelationship(
+      user.sub.id,
+      boardId,
+    );
 
-    if (!existingBoard)
-      throw CustomError.internalServer(`Board with id ${boardId} not found.`);
+    if (!existsRelationship)
+      throw CustomError.forbidden(
+        `Doesn't exist relation between user and board.`,
+      );
 
     const definedFields = getDefinedFields(data);
 

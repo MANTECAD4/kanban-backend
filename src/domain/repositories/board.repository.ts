@@ -5,8 +5,16 @@ export abstract class BoardRepository {
   public abstract getAll: (
     userId: number, // DTO
   ) => Promise<BoardEntity[]>;
-  public abstract findByName: (name: string) => Promise<BoardEntity | null>;
-  public abstract findById: (boardId: number) => Promise<BoardEntity | null>;
+  public abstract getByName: (name: string) => Promise<BoardEntity | null>;
+  public abstract getById: (boardId: number) => Promise<BoardEntity | null>;
+  public abstract getByUserAndBoardName: (
+    userId: number,
+    boardName: string,
+  ) => Promise<BoardEntity | null>;
+  public abstract checkRelationship: (
+    userId: number,
+    boardId: number,
+  ) => Promise<boolean>;
   public abstract create: (
     userId: number,
     createBoardDto: CreateBoardDto, // DTO

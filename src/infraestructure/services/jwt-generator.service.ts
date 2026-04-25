@@ -29,7 +29,6 @@ export class JwtGenerator implements TokenGenerator {
     return new Promise((resolve, reject) => {
       jwt.verify(token, this.secret, (err, decoded) => {
         if (err) {
-          // console.log(err);
           return reject(
             CustomError.unauthorized(`Invalid token`, ErrorCodes.UNAUTHORIZED),
           );

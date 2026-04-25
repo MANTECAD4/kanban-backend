@@ -33,7 +33,7 @@ export class CreateStatusColumnUseCase {
 
     if (existingColumnInBoard)
       throw CustomError.badRequest(
-        "Name already registered in this board collection.",
+        "Name already registered in this board collection",
       );
 
     const createdColumn = await this.statusColumnRepository.create(
@@ -42,7 +42,8 @@ export class CreateStatusColumnUseCase {
     );
 
     return {
-      column: createdColumn,
+      data: createdColumn,
+      message: `Status column created succesfully`,
     };
   };
 }

@@ -24,9 +24,9 @@ export class DeleteStatusColumnUseCase {
     );
     if (!existRelation)
       throw CustomError.forbidden(
-        `Relation between user - board - status column doesn't exist.`,
+        `Relation between user - board - status column doesn't exist`,
       );
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
-    return { column: deletedColumn };
+    return { data: deletedColumn, message: `` };
   };
 }

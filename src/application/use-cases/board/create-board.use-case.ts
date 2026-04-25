@@ -23,7 +23,8 @@ export class CreateBoardUseCase {
       );
     const createdBoard = await this.boardRepository.create(user.sub.id, data);
     return {
-      board: createdBoard,
+      data: createdBoard,
+      message: "Board created succesfully",
     };
   };
 }

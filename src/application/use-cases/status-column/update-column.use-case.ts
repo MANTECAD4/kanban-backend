@@ -27,14 +27,15 @@ export class UpdateStatusColumnUseCase {
       columnId,
     );
     if (!existRelation)
-      throw CustomError.forbidden(`Realtion between entities doesn't match`);
+      throw CustomError.forbidden(`Relation between entities doesn't match`);
     const definedProperties = getDefinedFields(data);
     const updatedColumn = await this.statusColumnRepository.update(
       columnId,
       definedProperties,
     );
     return {
-      column: updatedColumn,
+      data: updatedColumn,
+      message: `Column with id ${columnId} updated succesfully`,
     };
   };
 }

@@ -17,12 +17,13 @@ export class GetStatusColumnsUseCase {
     );
     if (!existRelationship)
       throw CustomError.forbidden(
-        `User does not have access to columns in this board.`,
+        `User does not have access to columns in this board`,
       );
     const columns = await this.statusColumnRepository.getAll(boardId);
     return {
-      total: columns.length,
-      columns,
+      data: columns,
+      message: `Status columns loaded succesfully`,
+      meta: { total: columns.length },
     };
   };
 }

@@ -27,9 +27,8 @@ export class LoginUserUseCase {
     const token = await this.tokenService.generate({ sub: { id: rest.id } });
     // const decoded = await this.tokenService.validate(token);
     return {
-      user: rest,
-      token,
-      // decoded,
+      data: { user: rest, token },
+      message: "Login succesful!",
     };
   };
 }

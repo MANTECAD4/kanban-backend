@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import z, { ZodObject } from "zod";
+import z, { ZodObject, ZodError } from "zod";
 
 export enum RequestValidationTarget {
   BODY = "body",

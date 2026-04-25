@@ -14,13 +14,12 @@ export class GetBoardsUseCase {
     } = user;
     const existingUser = await this.authRepository.getById(id);
     if (!existingUser)
-      throw CustomError.internalServer(
-        `User with id ${id} not found. Should exist.`,
-      );
+      throw CustomError.internalServer(`User with id ${id} not found`);
     const boards = await this.boardRepository.getAll(id);
     return {
-      total: boards.length,
-      boards,
+      data: boards,
+      message: `Boards loaded succesfully`,
+      meta: { total: boards.length },
     };
   };
 }

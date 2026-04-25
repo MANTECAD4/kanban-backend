@@ -28,7 +28,8 @@ export class UpdateBoardUseCase {
       definedFields,
     );
     return {
-      board: rest,
+      data: rest,
+      message: `Board with id ${boardId} updated succesfully`,
     };
   };
 }

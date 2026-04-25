@@ -21,7 +21,7 @@ export class StatusColumnsController {
     this.getStatusColumnsUsecase
       .execute(req.user!, req.validatedParams!.boardId)
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
   public create = (req: Request, res: Response) => {
     this.createStatusColumnUsecase
@@ -31,7 +31,7 @@ export class StatusColumnsController {
         req.validatedBody! as CreateStatusColumnDto,
       )
       .then((result) => res.status(201).json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public update = (req: Request, res: Response) => {
@@ -44,7 +44,7 @@ export class StatusColumnsController {
         data: req.validatedBody as UpdateStatusColumnDto,
       })
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public delete = (req: Request, res: Response) => {
@@ -55,6 +55,6 @@ export class StatusColumnsController {
         columnId: req.validatedParams!.columnId,
       })
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 }

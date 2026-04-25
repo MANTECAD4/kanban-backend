@@ -4,8 +4,14 @@ import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
 } from "../shared/factories/data-validation-middleware";
-import { LoginSchema, RegisterUserSchema } from "../../application/dtos";
+import {
+  LoginSchema,
+  RegisterUserSchema,
+  TokenPayloadSchema,
+  TokenReturnSchema,
+} from "../../application/dtos";
 import { TokenGenerator } from "../../domain/services";
+import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 
 export class AuthMiddlewares {
   constructor(private readonly tokenGenerator: TokenGenerator) {}
@@ -27,22 +33,42 @@ export class AuthMiddlewares {
     next: NextFunction,
   ) => {
     const authorization = req.header("authorization");
-    if (!authorization)
-      return res.status(401).json({ error: "No token provided" });
-    if (!authorization.startsWith("Bearer "))
-      return res.status(401).json({ error: "Invalid bearer token" });
+    if (!authorization) {
+      const error = CustomError.unauthorized(
+        "No token provided",
+        ErrorCodes.UNAUTHORIZED,
+      );
+      return CustomError.handleError(error, req, res);
+    }
+    if (!authorization.startsWith("Bearer ")) {
+      const error = CustomError.unauthorized(
+        "Invalid token",
+        ErrorCodes.UNAUTHORIZED,
+      );
+      return CustomError.handleError(error, req, res);
+    }
 
     const token = authorization.split(" ").at(1) ?? "";
 
     try {
       const payload = await this.tokenGenerator.validate(token);
-      if (!payload) return res.status(401).json({ error: "Invalid token." });
+      const result = TokenReturnSchema.safeParse(payload);
+      if (!result.success) {
+        const error = CustomError.unauthorized(
+          "Invalid token",
+          ErrorCodes.UNAUTHORIZED,
+        );
+        return CustomError.handleError(error, req, res);
+      }
 
-      req.user = payload;
+      req.user = result.data;
       next();
     } catch (error) {
-      // console.log({ ERROR_TOKEN_VALIDATION: error });
-      res.status(401).json({ error: "Invalid bearer token" });
+      const errorInstance = CustomError.unauthorized(
+        "Invalid token",
+        ErrorCodes.UNAUTHORIZED,
+      );
+      return CustomError.handleError(errorInstance, req, res);
     }
   };
 }

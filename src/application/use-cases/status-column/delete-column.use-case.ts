@@ -28,6 +28,9 @@ export class DeleteStatusColumnUseCase {
         ErrorCodes["NO_RELATION"],
       );
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
-    return { data: deletedColumn, message: `` };
+    return {
+      data: deletedColumn,
+      message: `Status column with id ${columnId} deleted succesfully`,
+    };
   };
 }

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { CustomError } from "../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 import { TokenGenerator } from "../../domain/services";
 import { TokenPayload, TokenReturnDto } from "../../application/dtos";
 
@@ -17,11 +17,7 @@ export class JwtGenerator implements TokenGenerator {
         { expiresIn: 60 * (duration ?? 30) },
         (err, token) => {
           if (err || !token) {
-            return reject(
-              CustomError.internalServer(
-                "Internal server error (error in jwt generator). Check logs.",
-              ),
-            );
+            return reject(err);
           }
           return resolve(token);
         },
@@ -34,7 +30,9 @@ export class JwtGenerator implements TokenGenerator {
       jwt.verify(token, this.secret, (err, decoded) => {
         if (err) {
           // console.log(err);
-          reject(CustomError.unauthorized(`Invalid token`));
+          return reject(
+            CustomError.unauthorized(`Invalid token`, ErrorCodes.UNAUTHORIZED),
+          );
         }
         return resolve(decoded as unknown as TokenReturnDto);
       });

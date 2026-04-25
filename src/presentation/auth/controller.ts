@@ -14,12 +14,12 @@ export class AuthController {
     this.loginUserUseCase
       .execute(req.validatedBody! as LoginUserDto)
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
   public register = (req: Request, res: Response) => {
     this.registerUserUseCase
       .execute(req.validatedBody! as RegisterUserDto)
       .then((result) => res.status(201).json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 }

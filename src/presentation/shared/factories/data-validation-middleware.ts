@@ -17,22 +17,18 @@ export const dataValidationMiddlewareFactory = (
     const targetObject = req[target];
 
     const result = schema.safeParse(targetObject);
-    if (!result.success)
-      return CustomError.handleError(
-        CustomError.badRequest(mainErrorMsg, ErrorCodes.INVALID_DATA, {
+    if (!result.success) {
+      const error = CustomError.badRequest(
+        mainErrorMsg,
+        ErrorCodes.INVALID_DATA,
+        {
           ...z.flattenError(result.error).fieldErrors,
           formErrors: z.flattenError(result.error).formErrors,
-        }),
-        req,
-        res,
+        },
       );
-    // return res.status(400).json({
-    //   message: mainErrorMsg,
-    //   error: {
-    //     prettify: z.prettifyError(result.error),
-    //     flatten: z.flattenError(result.error),
-    //   },
-    // });
+
+      return CustomError.handleError(error, req, res);
+    }
 
     switch (target) {
       case RequestValidationTarget.BODY:

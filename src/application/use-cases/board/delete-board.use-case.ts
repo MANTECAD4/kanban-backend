@@ -13,9 +13,6 @@ export class DeleteBoardUseCase {
       throw CustomError.forbidden(
         `Relation between user & board doesn't exist.`,
       );
-    // const existingBoard = await this.boardRepository.getById(boarId);
-    // if (!existingBoard)
-    //   throw CustomError.internalServer(`Board with id ${boarId} not found.`);
     const deletedBoard = await this.boardRepository.delete(boarId);
     return {
       board: deletedBoard,

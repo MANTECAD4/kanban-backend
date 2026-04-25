@@ -17,15 +17,16 @@ export class StatusColumnsController {
     private readonly deleteStatusColumnsUsecase: DeleteStatusColumnUseCase,
   ) {}
 
-  public findAll = (req: Request, res: Response) => {
+  public getAll = (req: Request, res: Response) => {
     this.getStatusColumnsUsecase
-      .execute(req.validatedParams!.boardId)
+      .execute(req.user!, req.validatedParams!.boardId)
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
   public create = (req: Request, res: Response) => {
     this.createStatusColumnUsecase
       .execute(
+        req.user!,
         req.validatedParams!.boardId,
         req.validatedBody! as CreateStatusColumnDto,
       )
@@ -35,17 +36,24 @@ export class StatusColumnsController {
 
   public update = (req: Request, res: Response) => {
     this.updateStatusColumnsUsecase
-      .execute(
-        req.validatedParams!.columnId,
-        req.validatedBody as UpdateStatusColumnDto,
-      )
+      .execute({
+        userId: req.user!.sub.id,
+        boardId: req.validatedParams!.boardId,
+        columnId: req.validatedParams!.columnId,
+
+        data: req.validatedBody as UpdateStatusColumnDto,
+      })
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };
 
   public delete = (req: Request, res: Response) => {
     this.deleteStatusColumnsUsecase
-      .execute(req.validatedParams!.columnId)
+      .execute({
+        userId: req.user!.sub.id,
+        boardId: req.validatedParams!.boardId,
+        columnId: req.validatedParams!.columnId,
+      })
       .then((result) => res.json(result))
       .catch((error) => CustomError.handleError(error, res));
   };

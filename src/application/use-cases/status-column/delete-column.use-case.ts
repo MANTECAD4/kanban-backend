@@ -1,16 +1,30 @@
 import { CustomError } from "../../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../../domain/repositories";
 
+interface DeleteStatusOptions {
+  userId: number;
+  boardId: number;
+  columnId: number;
+}
+
 export class DeleteStatusColumnUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
   ) {}
 
-  public execute = async (columnId: number) => {
-    const existingColumn = await this.statusColumnRepository.getById(columnId);
-    if (!existingColumn)
-      throw CustomError.internalServer(
-        `Status column with id ${columnId} not found. Should exist.`,
+  public execute = async ({
+    boardId,
+    columnId,
+    userId,
+  }: DeleteStatusOptions) => {
+    const existRelation = await this.statusColumnRepository.checkRelationship(
+      userId,
+      boardId,
+      columnId,
+    );
+    if (!existRelation)
+      throw CustomError.forbidden(
+        `Relation between user - board - status column doesn't exist.`,
       );
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
     return { column: deletedColumn };

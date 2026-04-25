@@ -41,7 +41,7 @@ export class StatusColumnsRoutes {
       updateStatusColumnUsecase,
       deleteStatusColumnUsecase,
     );
-    router.get("/", controller.findAll);
+    router.get("/", controller.getAll);
 
     router.post(
       "/",

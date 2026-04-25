@@ -3,6 +3,7 @@ import {
   BoardRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
+import { TokenReturnDto } from "../../dtos";
 import { CreateStatusColumnDto } from "../../dtos/status-column.dto";
 
 export class CreateStatusColumnUseCase {
@@ -12,13 +13,17 @@ export class CreateStatusColumnUseCase {
   ) {}
 
   public execute = async (
+    user: TokenReturnDto,
     boardId: number,
     createStatusColumnDto: CreateStatusColumnDto,
   ) => {
-    const existingBoard = await this.boardRepository.getById(boardId);
-    if (!existingBoard)
-      throw CustomError.internalServer(
-        `Board with id ${boardId} not found for status column creation.`,
+    const existsRelationship = await this.boardRepository.checkRelationship(
+      user.sub.id,
+      boardId,
+    );
+    if (!existsRelationship)
+      throw CustomError.forbidden(
+        `Relation doesn't exist between provided board and user.`,
       );
     const existingColumnInBoard =
       await this.statusColumnRepository.getByBoardAndName(

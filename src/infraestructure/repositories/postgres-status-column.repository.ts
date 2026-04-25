@@ -5,6 +5,25 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../domain/repositories";
 
 export class PostgresStatusColumnRepository implements StatusColumnRepository {
+  public checkRelationship = async (
+    userId: number,
+    boardId: number,
+    columnId: number,
+  ): Promise<boolean> => {
+    try {
+      const column = await prisma.statusColumn.findFirst({
+        where: { id: columnId, board: { id: boardId, user: { id: userId } } },
+      });
+
+      return column ? true : false;
+    } catch (error) {
+      console.log({ ERROR_CHECKING_COLUMN_RELATIONS: error });
+      throw CustomError.internalServer(
+        `Error checking relationship between user - board - column.`,
+      );
+    }
+  };
+
   public getAll = async (boardId: number): Promise<StatusColumnEntity[]> => {
     try {
       const rawColumns = await prisma.statusColumn.findMany({
@@ -53,6 +72,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       );
     }
   };
+
   public create = async (
     boardId: number,
     data: CreateStatusColumnDto,

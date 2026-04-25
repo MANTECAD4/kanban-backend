@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
 import { TokenReturnDto } from "../../dtos";
 
@@ -11,7 +11,8 @@ export class DeleteBoardUseCase {
     );
     if (!existRelationship)
       throw CustomError.forbidden(
-        `Relation between user & board doesn't exist`,
+        `Relation between entities doesn't exist`,
+        ErrorCodes.NO_RELATION,
       );
     const deletedBoard = await this.boardRepository.delete(boardId);
     return {

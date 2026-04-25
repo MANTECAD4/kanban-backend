@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository } from "../../../domain/repositories";
 import { HasherService } from "../../../domain/services/hasher.service";
 import { TokenGenerator } from "../../../domain/services/token-generator.service";
@@ -15,17 +15,18 @@ export class LoginUserUseCase {
     const { email, password: rawPassword } = data;
 
     const existentUser = await this.authRepository.getByEmail(email);
-    if (!existentUser) throw CustomError.forbidden("Invalid login");
+    if (!existentUser)
+      throw CustomError.unauthorized("Invalid login", ErrorCodes.UNAUTHORIZED);
 
     const passwordMatches = this.hasherService.compare(
       rawPassword,
       existentUser.password,
     );
-    if (!passwordMatches) throw CustomError.forbidden("Invalid login");
+    if (!passwordMatches)
+      throw CustomError.unauthorized("Invalid login", ErrorCodes.UNAUTHORIZED);
 
     const { password, ...rest } = existentUser;
     const token = await this.tokenService.generate({ sub: { id: rest.id } });
-    // const decoded = await this.tokenService.validate(token);
     return {
       data: { user: rest, token },
       message: "Login succesful!",

@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../../domain/repositories";
 
 interface DeleteStatusOptions {
@@ -24,7 +24,8 @@ export class DeleteStatusColumnUseCase {
     );
     if (!existRelation)
       throw CustomError.forbidden(
-        `Relation between user - board - status column doesn't exist`,
+        `Relation between entities doesn't exist`,
+        ErrorCodes["NO_RELATION"],
       );
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
     return { data: deletedColumn, message: `` };

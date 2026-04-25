@@ -12,10 +12,7 @@ export class PostgresBoardRepository implements BoardRepository {
       });
       return rawBoards.map((board) => BoardEntity.fromObject(board));
     } catch (error) {
-      console.log({ ERROR_READING_BOARDS: error });
-      throw CustomError.internalServer(
-        "Error while loading boards from DB - at PostgresBoardDatasource.ts",
-      );
+      throw error;
     }
   };
 
@@ -24,10 +21,7 @@ export class PostgresBoardRepository implements BoardRepository {
       const board = await prisma.board.findFirst({ where: { name } });
       return board === null ? null : BoardEntity.fromObject(board);
     } catch (error) {
-      console.log({ ERROR_READING_BOARD_BY_NAME: error });
-      throw CustomError.internalServer(
-        "Error while loading board from DB - at PostgresBoardDatasource.ts -> findByName",
-      );
+      throw error;
     }
   };
   public getById = async (boardId: number): Promise<BoardEntity | null> => {
@@ -35,10 +29,7 @@ export class PostgresBoardRepository implements BoardRepository {
       const board = await prisma.board.findFirst({ where: { id: boardId } });
       return board === null ? null : BoardEntity.fromObject(board);
     } catch (error) {
-      console.log({ ERROR_READING_BOARD_BY_ID: error });
-      throw CustomError.internalServer(
-        "Error while loading board from DB - at PostgresBoardDatasource.ts -> findById",
-      );
+      throw error;
     }
   };
   public getByUserAndBoardName = async (
@@ -51,10 +42,7 @@ export class PostgresBoardRepository implements BoardRepository {
       });
       return board === null ? null : BoardEntity.fromObject(board);
     } catch (error) {
-      console.log({ ERROR_READING_BOARD_BY_USER_BOARD: error });
-      throw CustomError.internalServer(
-        "Error while loading board from DB - at PostgresBoardDatasource.ts -> findByUserAndBoard",
-      );
+      throw error;
     }
   };
 
@@ -68,10 +56,7 @@ export class PostgresBoardRepository implements BoardRepository {
       });
       return board ? true : false;
     } catch (error) {
-      console.log({ ERROR_CHECKING_RELATIOSHIPN_USER_BOARD: error });
-      throw CustomError.internalServer(
-        `Error while checking relation between board no. ${boardId} and user ${userId}- at PostgresBoardDatasource.ts -> checkRelationship`,
-      );
+      throw error;
     }
   };
 
@@ -88,10 +73,7 @@ export class PostgresBoardRepository implements BoardRepository {
       });
       return BoardEntity.fromObject(createdBoard);
     } catch (error) {
-      console.log({ ERROR_CREATING_BOARD: error });
-      throw CustomError.internalServer(
-        "Error while loading boards from DB - at PostgresBoardDatasource.ts",
-      );
+      throw error;
     }
   };
   public update = async (
@@ -105,10 +87,7 @@ export class PostgresBoardRepository implements BoardRepository {
       });
       return BoardEntity.fromObject(updatedBoard);
     } catch (error) {
-      console.log({ ERROR_UPDATE_BOARD: error });
-      throw CustomError.internalServer(
-        "Error while updating board -  at PostgresBoardDatasource.ts",
-      );
+      throw error;
     }
   };
 
@@ -119,10 +98,7 @@ export class PostgresBoardRepository implements BoardRepository {
       });
       return BoardEntity.fromObject(deletedBoard);
     } catch (error) {
-      console.log({ ERROR_DELETE_BOARD: error });
-      throw CustomError.internalServer(
-        "Error while DELETING board -  at PostgresBoardDatasource.ts",
-      );
+      throw error;
     }
   };
 }

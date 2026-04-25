@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository, BoardRepository } from "../../../domain/repositories";
 import { TokenReturnDto } from "../../dtos";
 
@@ -14,7 +14,10 @@ export class GetBoardsUseCase {
     } = user;
     const existingUser = await this.authRepository.getById(id);
     if (!existingUser)
-      throw CustomError.internalServer(`User with id ${id} not found`);
+      throw CustomError.unauthorized(
+        `User with id ${id} not found`,
+        ErrorCodes.UNAUTHORIZED,
+      );
     const boards = await this.boardRepository.getAll(id);
     return {
       data: boards,

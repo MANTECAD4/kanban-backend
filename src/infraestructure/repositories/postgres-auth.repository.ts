@@ -13,8 +13,7 @@ export class PostgresAuthRepository implements AuthRepository {
       const userEntity = new UserEntity(registeredUser);
       return userEntity;
     } catch (error) {
-      console.error({ error });
-      throw CustomError.internalServer("Error while registering user");
+      throw error;
     }
   };
   public getByEmail = async (email: string): Promise<UserEntity | null> => {
@@ -28,8 +27,7 @@ export class PostgresAuthRepository implements AuthRepository {
 
       return rawUser === null ? null : new UserEntity(rawUser);
     } catch (error) {
-      console.error({ error });
-      throw CustomError.internalServer("Error while registering user");
+      throw error;
     }
   };
 }

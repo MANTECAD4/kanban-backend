@@ -17,10 +17,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
 
       return column ? true : false;
     } catch (error) {
-      console.log({ ERROR_CHECKING_COLUMN_RELATIONS: error });
-      throw CustomError.internalServer(
-        `Error checking relationship between user - board - column.`,
-      );
+      throw error;
     }
   };
 
@@ -34,10 +31,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
 
       return rawColumns.map((column) => StatusColumnEntity.fromObject(column));
     } catch (error) {
-      console.log({ ERROR_LOADING_ALL_COLUMNS: error });
-      throw CustomError.internalServer(
-        `Error while loading columns for board with id ${boardId}`,
-      );
+      throw error;
     }
   };
 
@@ -51,10 +45,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       });
       return !column ? null : StatusColumnEntity.fromObject(column);
     } catch (error) {
-      console.log({ ERROR_FIND_BY_NAME_COLUMN: error });
-      throw CustomError.internalServer(
-        `Error while loading column ${name} from board with id ${boardId}`,
-      );
+      throw error;
     }
   };
   public getById = async (
@@ -66,10 +57,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       });
       return !column ? null : StatusColumnEntity.fromObject(column);
     } catch (error) {
-      console.log({ ERROR_FIND_BY_ID_COLUMN: error });
-      throw CustomError.internalServer(
-        `Error while loading column with id ${columnId}`,
-      );
+      throw error;
     }
   };
 
@@ -83,8 +71,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       });
       return StatusColumnEntity.fromObject(createdColumn);
     } catch (error) {
-      console.log({ ERROR_CREATING_COLUMN: error });
-      throw CustomError.internalServer(`Error while creating columns`);
+      throw error;
     }
   };
   public update = async (
@@ -98,10 +85,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       });
       return StatusColumnEntity.fromObject(updatedColumn);
     } catch (error) {
-      console.log({ ERROR_UPDATING_COLUMN: error });
-      throw CustomError.internalServer(
-        `Error while updating column with id ${columnId}`,
-      );
+      throw error;
     }
   };
   public delete = async (columnId: number): Promise<StatusColumnEntity> => {
@@ -111,10 +95,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
       });
       return StatusColumnEntity.fromObject(deletedColumn);
     } catch (error) {
-      console.log({ ERROR_DELETING_COLUMN: error });
-      throw CustomError.internalServer(
-        `Error while deleting column with id ${columnId}`,
-      );
+      throw error;
     }
   };
 }

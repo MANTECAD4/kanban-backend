@@ -19,14 +19,14 @@ export class BoardsController {
     this.createBoardUseCase
       .execute(req.user!, req.validatedBody! as CreateBoardDto)
       .then((result) => res.status(201).json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public getAll = (req: Request, res: Response) => {
     this.getBoardsUseCase
       .execute(req.user!)
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public update = (req: Request, res: Response) => {
@@ -37,13 +37,13 @@ export class BoardsController {
         req.validatedBody! as UpdateBoardDto,
       )
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public delete = (req: Request, res: Response) => {
     this.deleteBoardUseCase
       .execute(req.user!, req.validatedParams!.boardId as number)
       .then((result) => res.json(result))
-      .catch((error) => CustomError.handleError(error, res));
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 }

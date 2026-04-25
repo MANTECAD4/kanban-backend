@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { TokenReturnDto } from "../../dtos/auth.dto";
 import {
   BoardRepository,
@@ -18,6 +18,7 @@ export class GetStatusColumnsUseCase {
     if (!existRelationship)
       throw CustomError.forbidden(
         `User does not have access to columns in this board`,
+        ErrorCodes["NO_RELATION"],
       );
     const columns = await this.statusColumnRepository.getAll(boardId);
     return {

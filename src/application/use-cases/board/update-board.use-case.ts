@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
 import { TokenReturnDto, UpdateBoardDto } from "../../dtos";
@@ -18,7 +18,8 @@ export class UpdateBoardUseCase {
 
     if (!existsRelationship)
       throw CustomError.forbidden(
-        `Doesn't exist relation between user and board.`,
+        `Relation between entities doesn't exist`,
+        ErrorCodes.NO_RELATION,
       );
 
     const definedFields = getDefinedFields(data);

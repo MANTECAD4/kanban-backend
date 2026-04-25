@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import {
   BoardRepository,
   StatusColumnRepository,
@@ -23,7 +23,8 @@ export class CreateStatusColumnUseCase {
     );
     if (!existsRelationship)
       throw CustomError.forbidden(
-        `Relation doesn't exist between provided board and user.`,
+        `Relation between entities doesn't exist`,
+        ErrorCodes["NO_RELATION"],
       );
     const existingColumnInBoard =
       await this.statusColumnRepository.getByBoardAndName(
@@ -34,6 +35,7 @@ export class CreateStatusColumnUseCase {
     if (existingColumnInBoard)
       throw CustomError.badRequest(
         "Name already registered in this board collection",
+        ErrorCodes["ALREADY_REGISTERED"],
       );
 
     const createdColumn = await this.statusColumnRepository.create(

@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
 import { UpdateStatusColumnDto } from "../../dtos";
@@ -27,7 +27,10 @@ export class UpdateStatusColumnUseCase {
       columnId,
     );
     if (!existRelation)
-      throw CustomError.forbidden(`Relation between entities doesn't match`);
+      throw CustomError.forbidden(
+        `Relation between entities doesn't exist`,
+        ErrorCodes["NO_RELATION"],
+      );
     const definedProperties = getDefinedFields(data);
     const updatedColumn = await this.statusColumnRepository.update(
       columnId,

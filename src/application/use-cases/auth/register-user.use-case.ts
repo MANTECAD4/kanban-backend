@@ -1,4 +1,4 @@
-import { CustomError } from "../../../domain/errors/custom-error";
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository } from "../../../domain/repositories";
 import { TokenGenerator } from "../../../domain/services";
 import { HasherService } from "../../../domain/services/hasher.service";
@@ -16,7 +16,11 @@ export class RegisterUserUseCase {
 
     const existentUser = await this.authRepository.getByEmail(email);
 
-    if (existentUser) throw CustomError.badRequest("Email already registered");
+    if (existentUser)
+      throw CustomError.badRequest(
+        "Email already registered",
+        ErrorCodes["ALREADY_REGISTERED"],
+      );
 
     const hashedPassword = this.hasherService.hash(rawPassword);
 

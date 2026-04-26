@@ -5,6 +5,7 @@ import {
   KanbanTaskRepository,
   StatusColumnRepository,
 } from "../../domain/repositories";
+import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 
 export class TaskRoutes {
   constructor(
@@ -14,7 +15,12 @@ export class TaskRoutes {
   public get routes(): Router {
     const router = Router({ mergeParams: true });
 
-    const controller = new KanbanTaskController();
+    const getTasksUseCase = new GetTasksUseCase(
+      this.statusColumnRepository,
+      this.kanbanTaskRepository,
+    );
+
+    const controller = new KanbanTaskController(getTasksUseCase);
 
     router.get("/", controller.getAll);
     router.post(

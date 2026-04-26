@@ -45,7 +45,6 @@ export class CreateStatusColumnUseCase {
 
     return {
       data: createdColumn,
-      message: `Status column created succesfully`,
     };
   };
 }

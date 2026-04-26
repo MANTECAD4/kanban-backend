@@ -38,7 +38,6 @@ export class UpdateStatusColumnUseCase {
     );
     return {
       data: updatedColumn,
-      message: `Column with id ${columnId} updated succesfully`,
     };
   };
 }

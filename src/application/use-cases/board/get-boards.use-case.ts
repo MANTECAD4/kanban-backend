@@ -21,7 +21,7 @@ export class GetBoardsUseCase {
     const boards = await this.boardRepository.getAll(id);
     return {
       data: boards,
-      message: `Boards loaded succesfully`,
+
       meta: { total: boards.length },
     };
   };

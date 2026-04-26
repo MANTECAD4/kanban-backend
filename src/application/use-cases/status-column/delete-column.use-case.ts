@@ -30,7 +30,6 @@ export class DeleteStatusColumnUseCase {
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
     return {
       data: deletedColumn,
-      message: `Status column with id ${columnId} deleted succesfully`,
     };
   };
 }

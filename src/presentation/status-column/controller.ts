@@ -20,7 +20,9 @@ export class StatusColumnsController {
   public getAll = (req: Request, res: Response) => {
     this.getStatusColumnsUsecase
       .execute(req.user!, req.validatedParams!.boardId)
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: `Status columns loaded succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
   public create = (req: Request, res: Response) => {
@@ -30,7 +32,11 @@ export class StatusColumnsController {
         req.validatedParams!.boardId,
         req.validatedBody! as CreateStatusColumnDto,
       )
-      .then((result) => res.status(201).json(result))
+      .then((result) =>
+        res
+          .status(201)
+          .json({ message: `Status column created succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 
@@ -43,7 +49,9 @@ export class StatusColumnsController {
 
         data: req.validatedBody as UpdateStatusColumnDto,
       })
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: `Column with updated succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 
@@ -54,7 +62,9 @@ export class StatusColumnsController {
         boardId: req.validatedParams!.boardId,
         columnId: req.validatedParams!.columnId,
       })
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: `Status column deleted succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 }

@@ -5,7 +5,6 @@ import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.u
 import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
 import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
 import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
-import { read } from "node:fs";
 
 export class BoardsController {
   constructor(
@@ -18,14 +17,20 @@ export class BoardsController {
   public create = (req: Request, res: Response) => {
     this.createBoardUseCase
       .execute(req.user!, req.validatedBody! as CreateBoardDto)
-      .then((result) => res.status(201).json(result))
+      .then((result) =>
+        res
+          .status(201)
+          .json({ message: "Board created succesfully", ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public getAll = (req: Request, res: Response) => {
     this.getBoardsUseCase
       .execute(req.user!)
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: `Boards loaded succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 
@@ -36,14 +41,18 @@ export class BoardsController {
         req.validatedParams!.boardId as number,
         req.validatedBody! as UpdateBoardDto,
       )
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: `Board updated succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public delete = (req: Request, res: Response) => {
     this.deleteBoardUseCase
       .execute(req.user!, req.validatedParams!.boardId as number)
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: `Board with deleted succesfully`, ...result }),
+      )
       .catch((error) => CustomError.handleError(error, req, res));
   };
 }

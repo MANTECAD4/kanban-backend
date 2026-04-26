@@ -32,7 +32,7 @@ export class RegisterUserUseCase {
 
     const token = await this.tokenGenerator.generate({ sub: { id: rest.id } });
     return {
-      data: { user: rest, token, message: "User registered succesfully" },
+      data: { user: rest, token },
     };
   }
 }

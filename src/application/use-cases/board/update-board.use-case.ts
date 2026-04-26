@@ -30,7 +30,6 @@ export class UpdateBoardUseCase {
     );
     return {
       data: rest,
-      message: `Board with id ${boardId} updated succesfully`,
     };
   };
 }

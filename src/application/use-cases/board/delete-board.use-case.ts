@@ -17,7 +17,6 @@ export class DeleteBoardUseCase {
     const deletedBoard = await this.boardRepository.delete(boardId);
     return {
       data: deletedBoard,
-      message: `Board with Id ${boardId} deleted succesfully`,
     };
   };
 }

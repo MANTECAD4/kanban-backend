@@ -13,6 +13,7 @@ import { StatusColumnsRoutes } from "./status-column/routes";
 import { PostgresStatusColumnRepository } from "../infraestructure/repositories/postgres-status-column.repository";
 import { BoardsMiddlewares } from "./board/middlewares";
 import { TaskRoutes } from "./task/routes";
+import { StatusColumnsMiddlewares } from "./status-column/middlewares";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -67,6 +68,7 @@ export class AppRoutes {
       [
         authMiddlewares.validateJwtToken,
         BoardsMiddlewares.boardIdParamValidation,
+        StatusColumnsMiddlewares.columnIdParamValidation,
       ],
       taskRoutes.routes,
     );

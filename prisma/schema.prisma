@@ -43,7 +43,7 @@ model Task{
   title String
   description String
   order Int
-  subtasks String[]
+  subtasks String[] @default([])
   status StatusColumn @relation(fields: [status_id], references: [id], onDelete: Cascade)
   status_id Int
 }

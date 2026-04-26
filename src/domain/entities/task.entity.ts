@@ -7,7 +7,6 @@ interface TaskProps {
   order: number;
   subtasks: string[];
   statusId: number;
-  // status: StatusColumnEntity;
 }
 
 export class TaskEntity {
@@ -17,7 +16,6 @@ export class TaskEntity {
   public order: number;
   public subtasks: string[];
   public statusId: number;
-  // public status: StatusColumnEntity;
 
   constructor(props: TaskProps) {
     const { description, id, order, statusId, subtasks, title } = props;
@@ -28,6 +26,26 @@ export class TaskEntity {
     this.order = order;
     this.subtasks = subtasks;
     this.statusId = statusId;
-    // this.status = status;
   }
+
+  static fromObject = (object: Record<string, any>): TaskEntity => {
+    const {
+      id,
+      _id,
+      title,
+      description,
+      order,
+      subtasks,
+      statusId,
+      status_id,
+    } = object;
+    return new TaskEntity({
+      id: id ?? _id,
+      title,
+      description,
+      order,
+      subtasks,
+      statusId: statusId ?? status_id,
+    });
+  };
 }

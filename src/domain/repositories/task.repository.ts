@@ -1,16 +1,10 @@
 import { CreateTaskDto, UpdateBoardDto } from "../../application/dtos";
 import { TaskEntity } from "../entities/task.entity";
 
-export interface RelationshipParams {
-  userId: number;
-  boardId: number;
-  columnId: number;
-  taskId: number;
-}
-
 export abstract class KanbanTaskRepository {
   public abstract checkRelationship: (
-    options: RelationshipParams,
+    userId: number,
+    taskId: number,
   ) => Promise<boolean>;
   public abstract getAll: (columnId: number) => Promise<TaskEntity[]>;
   public abstract getById: (taskId: number) => Promise<TaskEntity | null>;

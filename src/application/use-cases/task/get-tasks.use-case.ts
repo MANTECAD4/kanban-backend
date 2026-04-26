@@ -4,22 +4,15 @@ import {
   StatusColumnRepository,
 } from "../../../domain/repositories";
 
-interface GetTasksParams {
-  userId: number;
-  boardId: number;
-  columnId: number;
-}
-
 export class GetTasksUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: KanbanTaskRepository,
   ) {}
 
-  public execute = async ({ userId, boardId, columnId }: GetTasksParams) => {
+  public execute = async (userId: number, columnId: number) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
-      boardId,
       columnId,
     );
     if (!existRelation)

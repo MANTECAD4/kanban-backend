@@ -1,25 +1,14 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../../domain/repositories";
 
-interface DeleteStatusOptions {
-  userId: number;
-  boardId: number;
-  columnId: number;
-}
-
 export class DeleteStatusColumnUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
   ) {}
 
-  public execute = async ({
-    boardId,
-    columnId,
-    userId,
-  }: DeleteStatusOptions) => {
+  public execute = async (userId: number, columnId: number) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
-      boardId,
       columnId,
     );
     if (!existRelation)

@@ -7,7 +7,6 @@ import { CreateTaskDto } from "../../dtos";
 
 interface CreateKanbanTaskParams {
   userId: number;
-  boardId: number;
   columnId: number;
   data: CreateTaskDto;
 }
@@ -20,13 +19,11 @@ export class CreateTaskUseCase {
 
   public execute = async ({
     userId,
-    boardId,
     columnId,
     data,
   }: CreateKanbanTaskParams) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
-      boardId,
       columnId,
     );
     if (!existRelation)

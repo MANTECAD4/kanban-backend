@@ -44,7 +44,6 @@ export class StatusColumnsController {
     this.updateStatusColumnsUsecase
       .execute({
         userId: req.user!.sub.id,
-        boardId: req.validatedParams!.boardId,
         columnId: req.validatedParams!.columnId,
 
         data: req.validatedBody as UpdateStatusColumnDto,
@@ -57,11 +56,7 @@ export class StatusColumnsController {
 
   public delete = (req: Request, res: Response) => {
     this.deleteStatusColumnsUsecase
-      .execute({
-        userId: req.user!.sub.id,
-        boardId: req.validatedParams!.boardId,
-        columnId: req.validatedParams!.columnId,
-      })
+      .execute(req.user!.sub.id, req.validatedParams!.columnId)
       .then((result) =>
         res.json({ message: `Status column deleted succesfully`, ...result }),
       )

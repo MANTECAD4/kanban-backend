@@ -11,11 +11,7 @@ export class KanbanTaskController {
   ) {}
   public getAll = (req: Request, res: Response) => {
     this.getTasksUseCase
-      .execute({
-        userId: req.user!.sub.id,
-        boardId: req.validatedParams!.boardId,
-        columnId: req.validatedParams!.columnId,
-      })
+      .execute(req.user!.sub.id, req.validatedParams!.columnId)
       .then((result) =>
         res.json({ message: "Tasks loaded succesfully", ...result }),
       )
@@ -25,7 +21,6 @@ export class KanbanTaskController {
     this.createTaskUseCase
       .execute({
         userId: req.user!.sub.id,
-        boardId: req.validatedParams!.boardId,
         columnId: req.validatedParams!.columnId,
         data: req.validatedBody as CreateTaskDto,
       })

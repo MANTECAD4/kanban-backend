@@ -1,25 +1,19 @@
 import { CreateTaskDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { TaskEntity } from "../../domain/entities";
-import {
-  KanbanTaskRepository,
-  RelationshipParams,
-} from "../../domain/repositories";
+import { KanbanTaskRepository } from "../../domain/repositories";
 
 export class PostgresTaskRepository implements KanbanTaskRepository {
-  public checkRelationship = async ({
-    userId,
-    boardId,
-    columnId,
-    taskId,
-  }: RelationshipParams): Promise<boolean> => {
+  public checkRelationship = async (
+    userId: number,
+    taskId: number,
+  ): Promise<boolean> => {
     try {
       const task = await prisma.task.findFirst({
         where: {
           id: taskId,
           status: {
-            id: columnId,
-            board: { id: boardId, user: { id: userId } },
+            board: { user: { id: userId } },
           },
         },
       });

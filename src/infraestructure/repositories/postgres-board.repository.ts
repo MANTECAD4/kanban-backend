@@ -5,6 +5,19 @@ import { CustomError } from "../../domain/errors/custom-error";
 import { BoardRepository } from "../../domain/repositories";
 
 export class PostgresBoardRepository implements BoardRepository {
+  public checkRelationship = async (
+    userId: number,
+    boardId: number,
+  ): Promise<boolean> => {
+    try {
+      const board = await prisma.board.findFirst({
+        where: { id: boardId, user: { id: userId } },
+      });
+      return board ? true : false;
+    } catch (error) {
+      throw error;
+    }
+  };
   public getAll = async (userId: number): Promise<BoardEntity[]> => {
     try {
       const rawBoards = await prisma.board.findMany({
@@ -41,20 +54,6 @@ export class PostgresBoardRepository implements BoardRepository {
         where: { name: boardName, user_id: userId },
       });
       return board === null ? null : BoardEntity.fromObject(board);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  public checkRelationship = async (
-    userId: number,
-    boardId: number,
-  ): Promise<boolean> => {
-    try {
-      const board = await prisma.board.findFirst({
-        where: { id: boardId, user: { id: userId } },
-      });
-      return board ? true : false;
     } catch (error) {
       throw error;
     }

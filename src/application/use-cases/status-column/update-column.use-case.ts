@@ -5,7 +5,6 @@ import { UpdateStatusColumnDto } from "../../dtos";
 
 interface UpdateStatusColumnOptions {
   userId: number;
-  boardId: number;
   columnId: number;
   data: UpdateStatusColumnDto;
 }
@@ -16,14 +15,12 @@ export class UpdateStatusColumnUseCase {
   ) {}
 
   public execute = async ({
-    boardId,
     columnId,
     userId,
     data,
   }: UpdateStatusColumnOptions) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
-      boardId,
       columnId,
     );
     if (!existRelation)

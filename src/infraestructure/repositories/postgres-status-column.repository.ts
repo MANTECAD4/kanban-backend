@@ -7,12 +7,11 @@ import { StatusColumnRepository } from "../../domain/repositories";
 export class PostgresStatusColumnRepository implements StatusColumnRepository {
   public checkRelationship = async (
     userId: number,
-    boardId: number,
     columnId: number,
   ): Promise<boolean> => {
     try {
       const column = await prisma.statusColumn.findFirst({
-        where: { id: columnId, board: { id: boardId, user: { id: userId } } },
+        where: { id: columnId, board: { user: { id: userId } } },
       });
 
       return column ? true : false;

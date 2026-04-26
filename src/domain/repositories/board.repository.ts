@@ -2,6 +2,11 @@ import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
 import { BoardEntity } from "../entities/board.entity";
 
 export abstract class BoardRepository {
+  public abstract checkRelationship: (
+    userId: number,
+    boardId: number,
+  ) => Promise<boolean>;
+
   public abstract getAll: (userId: number) => Promise<BoardEntity[]>;
   public abstract getByName: (name: string) => Promise<BoardEntity | null>;
 
@@ -11,11 +16,6 @@ export abstract class BoardRepository {
     userId: number,
     boardName: string,
   ) => Promise<BoardEntity | null>;
-
-  public abstract checkRelationship: (
-    userId: number,
-    boardId: number,
-  ) => Promise<boolean>;
 
   public abstract create: (
     userId: number,

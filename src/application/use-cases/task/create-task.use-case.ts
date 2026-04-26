@@ -3,20 +3,27 @@ import {
   KanbanTaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
+import { CreateTaskDto } from "../../dtos";
 
-interface GetTasksParams {
+interface CreateKanbanTaskParams {
   userId: number;
   boardId: number;
   columnId: number;
+  data: CreateTaskDto;
 }
 
-export class GetTasksUseCase {
+export class CreateTaskUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: KanbanTaskRepository,
   ) {}
 
-  public execute = async ({ userId, boardId, columnId }: GetTasksParams) => {
+  public execute = async ({
+    userId,
+    boardId,
+    columnId,
+    data,
+  }: CreateKanbanTaskParams) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
       boardId,
@@ -27,7 +34,7 @@ export class GetTasksUseCase {
         `Relation between entities doesn't exist`,
         ErrorCodes.NO_RELATION,
       );
-    const tasks = await this.kanbanTaskRepository.getAll(columnId);
-    return { data: tasks, meta: { total: tasks.length } };
+    const createdTask = await this.kanbanTaskRepository.create(columnId, data);
+    return { data: createdTask };
   };
 }

@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
 import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
+import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
+import { CreateTaskDto } from "../../application/dtos";
 
 export class KanbanTaskController {
-  constructor(private readonly getTasksUseCase: GetTasksUseCase) {}
+  constructor(
+    private readonly getTasksUseCase: GetTasksUseCase,
+    private readonly createTaskUseCase: CreateTaskUseCase,
+  ) {}
   public getAll = (req: Request, res: Response) => {
     this.getTasksUseCase
       .execute({
@@ -17,7 +22,19 @@ export class KanbanTaskController {
       .catch((error) => CustomError.handleError(error, req, res));
   };
   public create = (req: Request, res: Response) => {
-    return res.json(`create`);
+    this.createTaskUseCase
+      .execute({
+        userId: req.user!.sub.id,
+        boardId: req.validatedParams!.boardId,
+        columnId: req.validatedParams!.columnId,
+        data: req.validatedBody as CreateTaskDto,
+      })
+      .then((result) =>
+        res
+          .status(201)
+          .json({ message: "Task created succesfully", ...result }),
+      )
+      .catch((error) => CustomError.handleError(error, req, res));
   };
   public update = (req: Request, res: Response) => {
     return res.json(`update -> ${req.params.taskId}`);

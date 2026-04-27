@@ -1,13 +1,13 @@
 import z from "zod";
 
-export const CreateTaskSchema = z.strictObject({
+export const CreateKanbanTaskSchema = z.strictObject({
   title: z.string().normalize().min(3),
   description: z.string().normalize().nonempty(),
   order: z.coerce.number().int().min(1),
   // subtasks: z.array(z.string().normalize().nonempty()),
 });
 
-export const UpdateTaskSchema = z
+export const UpdateKanbanTaskSchema = z
   .strictObject({
     title: z.string().normalize().min(3),
     description: z.string().normalize().nonempty(),
@@ -16,5 +16,5 @@ export const UpdateTaskSchema = z
   })
   .partial();
 
-export type CreateTaskDto = z.infer<typeof CreateTaskSchema>;
-export type UpdateTaskDto = z.infer<typeof UpdateTaskSchema>;
+export type CreateKanbanTaskDto = z.infer<typeof CreateKanbanTaskSchema>;
+export type UpdateKanbanTaskDto = z.infer<typeof UpdateKanbanTaskSchema>;

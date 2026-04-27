@@ -1,16 +1,16 @@
 import { Router } from "express";
 import { KanbanTaskController } from "./controller";
-import { KanbanTasksMiddlewares } from "./middlewares";
+import { KanbanTaskMiddlewares } from "./middlewares";
 import {
   KanbanTaskRepository,
   StatusColumnRepository,
 } from "../../domain/repositories";
-import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
-import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
+import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
+import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { StatusColumnsMiddlewares } from "../status-column/middlewares";
 import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 
-export class TaskRoutes {
+export class KanbanTaskRoutes {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: KanbanTaskRepository,
@@ -18,12 +18,12 @@ export class TaskRoutes {
   public get routes(): Router {
     const router = Router({ mergeParams: true });
 
-    const getTasksUseCase = new GetTasksUseCase(
+    const getTasksUseCase = new GetKanbanTasksUseCase(
       this.statusColumnRepository,
       this.kanbanTaskRepository,
     );
 
-    const createTaskUseCase = new CreateTaskUseCase(
+    const createTaskUseCase = new CreateKanbanTaskUseCase(
       this.statusColumnRepository,
       this.kanbanTaskRepository,
     );
@@ -46,21 +46,21 @@ export class TaskRoutes {
       "/in-column/:columnId",
       [
         StatusColumnsMiddlewares.columnIdParamValidation,
-        KanbanTasksMiddlewares.createTaskDataValidation,
+        KanbanTaskMiddlewares.createTaskDataValidation,
       ],
       controller.create,
     );
     router.put(
       "/:taskId",
       [
-        KanbanTasksMiddlewares.taskIdParamValidation,
-        KanbanTasksMiddlewares.updateTaskDataValidation,
+        KanbanTaskMiddlewares.taskIdParamValidation,
+        KanbanTaskMiddlewares.updateTaskDataValidation,
       ],
       controller.update,
     );
     router.delete(
       "/:taskId",
-      [KanbanTasksMiddlewares.taskIdParamValidation],
+      [KanbanTaskMiddlewares.taskIdParamValidation],
       controller.delete,
     );
 

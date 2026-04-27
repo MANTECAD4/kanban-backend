@@ -1,11 +1,14 @@
-import { CreateTaskSchema, UpdateTaskSchema } from "../../application/dtos";
+import {
+  CreateKanbanTaskSchema,
+  UpdateKanbanTaskSchema,
+} from "../../application/dtos";
 import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
 } from "../shared/factories/data-validation-middleware";
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
-export class KanbanTasksMiddlewares {
+export class KanbanTaskMiddlewares {
   public static taskIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("taskId"),
     `Invalid task id provided`,
@@ -13,13 +16,13 @@ export class KanbanTasksMiddlewares {
   );
 
   public static createTaskDataValidation = dataValidationMiddlewareFactory(
-    CreateTaskSchema,
+    CreateKanbanTaskSchema,
     "Invalid data recieved. Task creation failed",
     RequestValidationTarget.BODY,
   );
 
   public static updateTaskDataValidation = dataValidationMiddlewareFactory(
-    UpdateTaskSchema,
+    UpdateKanbanTaskSchema,
     "Invalida data recieved. Task update failed",
     RequestValidationTarget.BODY,
   );

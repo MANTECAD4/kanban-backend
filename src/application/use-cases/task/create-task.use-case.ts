@@ -3,15 +3,15 @@ import {
   KanbanTaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { CreateTaskDto } from "../../dtos";
+import { CreateKanbanTaskDto } from "../../dtos";
 
 interface CreateKanbanTaskParams {
   userId: number;
   columnId: number;
-  data: CreateTaskDto;
+  data: CreateKanbanTaskDto;
 }
 
-export class CreateTaskUseCase {
+export class CreateKanbanTaskUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: KanbanTaskRepository,

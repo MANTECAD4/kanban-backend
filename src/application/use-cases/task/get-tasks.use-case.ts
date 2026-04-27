@@ -4,7 +4,7 @@ import {
   StatusColumnRepository,
 } from "../../../domain/repositories";
 
-export class GetTasksUseCase {
+export class GetKanbanTasksUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: KanbanTaskRepository,

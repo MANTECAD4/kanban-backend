@@ -12,9 +12,9 @@ import { AuthMiddlewares } from "./auth/middlewares";
 import { StatusColumnsRoutes } from "./status-column/routes";
 import { PostgresStatusColumnRepository } from "../infraestructure/repositories/postgres-status-column.repository";
 import { BoardsMiddlewares } from "./board/middlewares";
-import { TaskRoutes } from "./task/routes";
+import { KanbanTaskRoutes } from "./task/routes";
 import { StatusColumnsMiddlewares } from "./status-column/middlewares";
-import { PostgresTaskRepository } from "../infraestructure/repositories/postgres-task.repository";
+import { PostgresKanbanTaskRepository } from "../infraestructure/repositories/postgres-task.repository";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -26,7 +26,7 @@ export class AppRoutes {
     const authRepository = new PostgresAuthRepository();
     const boardRepository = new PostgresBoardRepository();
     const statusColumnRepository = new PostgresStatusColumnRepository();
-    const kanbanTaskRepository = new PostgresTaskRepository();
+    const kanbanTaskRepository = new PostgresKanbanTaskRepository();
 
     //! SERVCIES
     const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
@@ -46,7 +46,7 @@ export class AppRoutes {
       statusColumnRepository,
       boardRepository,
     );
-    const taskRoutes = new TaskRoutes(
+    const kanbanTaskRoutes = new KanbanTaskRoutes(
       statusColumnRepository,
       kanbanTaskRepository,
     );
@@ -68,7 +68,7 @@ export class AppRoutes {
     router.use(
       "/api/tasks",
       [authMiddlewares.validateJwtToken],
-      taskRoutes.routes,
+      kanbanTaskRoutes.routes,
     );
 
     return router;

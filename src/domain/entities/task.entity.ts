@@ -8,7 +8,7 @@ interface TaskProps {
   statusColumnId: number;
 }
 
-export class TaskEntity {
+export class KanbanTaskEntity {
   public id: number;
   public title: string;
   public description: string;
@@ -25,7 +25,7 @@ export class TaskEntity {
     this.statusColumnId = statusColumnId;
   }
 
-  static fromObject = (object: Record<string, any>): TaskEntity => {
+  static fromObject = (object: Record<string, any>): KanbanTaskEntity => {
     const {
       id,
       _id,
@@ -36,7 +36,7 @@ export class TaskEntity {
       statusColumnId,
       status_column_id,
     } = object;
-    return new TaskEntity({
+    return new KanbanTaskEntity({
       id: id ?? _id,
       title,
       description,

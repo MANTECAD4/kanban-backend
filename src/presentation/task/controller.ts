@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
+import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
-import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
-import { CreateTaskDto } from "../../application/dtos";
+import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
+import { CreateKanbanTaskDto } from "../../application/dtos";
 import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 
 export class KanbanTaskController {
   constructor(
-    private readonly getTasksUseCase: GetTasksUseCase,
-    private readonly createTaskUseCase: CreateTaskUseCase,
+    private readonly getTasksUseCase: GetKanbanTasksUseCase,
+    private readonly createTaskUseCase: CreateKanbanTaskUseCase,
     private readonly deleteTaskUseCase: DeleteKanbanTaskUseCase,
   ) {}
   public getAll = (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ export class KanbanTaskController {
       .execute({
         userId: req.user!.sub.id,
         columnId: req.validatedParams!.columnId,
-        data: req.validatedBody as CreateTaskDto,
+        data: req.validatedBody as CreateKanbanTaskDto,
       })
       .then((result) =>
         res

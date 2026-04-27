@@ -7,6 +7,7 @@ import {
 } from "../../domain/repositories";
 import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
+import { StatusColumnsMiddlewares } from "../status-column/middlewares";
 
 export class TaskRoutes {
   constructor(
@@ -31,10 +32,17 @@ export class TaskRoutes {
       createTaskUseCase,
     );
 
-    router.get("/", controller.getAll);
+    router.get(
+      "/in-column/:columnId",
+      [StatusColumnsMiddlewares.columnIdParamValidation],
+      controller.getAll,
+    );
     router.post(
-      "/",
-      [KanbanTasksMiddlewares.createTaskDataValidation],
+      "/in-column/:columnId",
+      [
+        StatusColumnsMiddlewares.columnIdParamValidation,
+        KanbanTasksMiddlewares.createTaskDataValidation,
+      ],
       controller.create,
     );
     router.put(

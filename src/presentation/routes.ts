@@ -14,6 +14,7 @@ import { PostgresStatusColumnRepository } from "../infraestructure/repositories/
 import { BoardsMiddlewares } from "./board/middlewares";
 import { TaskRoutes } from "./task/routes";
 import { StatusColumnsMiddlewares } from "./status-column/middlewares";
+import { PostgresTaskRepository } from "../infraestructure/repositories/postgres-task.repository";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -25,6 +26,7 @@ export class AppRoutes {
     const authRepository = new PostgresAuthRepository();
     const boardRepository = new PostgresBoardRepository();
     const statusColumnRepository = new PostgresStatusColumnRepository();
+    const kanbanTaskRepository = new PostgresTaskRepository();
 
     //! SERVCIES
     const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
@@ -44,7 +46,10 @@ export class AppRoutes {
       statusColumnRepository,
       boardRepository,
     );
-    const taskRoutes = new TaskRoutes();
+    const taskRoutes = new TaskRoutes(
+      statusColumnRepository,
+      kanbanTaskRepository,
+    );
 
     //! MAIN ENDPOINTS
     router.use("/api/auth", authRoutes.routes);
@@ -55,21 +60,14 @@ export class AppRoutes {
     );
 
     router.use(
-      "/api/boards/:boardId/status-columns",
-      [
-        authMiddlewares.validateJwtToken,
-        BoardsMiddlewares.boardIdParamValidation,
-      ],
+      "/api/status-columns",
+      [authMiddlewares.validateJwtToken],
       statusColumnRoutes.routes,
     );
 
     router.use(
-      "/api/boards/:boardId/status-columns/:columnId/tasks",
-      [
-        authMiddlewares.validateJwtToken,
-        BoardsMiddlewares.boardIdParamValidation,
-        StatusColumnsMiddlewares.columnIdParamValidation,
-      ],
+      "/api/tasks",
+      [authMiddlewares.validateJwtToken],
       taskRoutes.routes,
     );
 

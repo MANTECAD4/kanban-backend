@@ -9,6 +9,7 @@ import {
 import { GetStatusColumnsUseCase } from "../../application/use-cases/status-column/get-columns.use-case";
 import { UpdateStatusColumnUseCase } from "../../application/use-cases/status-column/update-column.use-case";
 import { DeleteStatusColumnUseCase } from "../../application/use-cases/status-column/delete-column.use-case";
+import { BoardsMiddlewares } from "../board/middlewares";
 
 export class StatusColumnsRoutes {
   constructor(
@@ -41,11 +42,18 @@ export class StatusColumnsRoutes {
       updateStatusColumnUsecase,
       deleteStatusColumnUsecase,
     );
-    router.get("/", controller.getAll);
+    router.get(
+      "/in-board/:boardId",
+      [BoardsMiddlewares.boardIdParamValidation],
+      controller.getAll,
+    );
 
     router.post(
-      "/",
-      [StatusColumnsMiddlewares.createStatusColumnDataValidation],
+      "/in-board/:boardId",
+      [
+        BoardsMiddlewares.boardIdParamValidation,
+        StatusColumnsMiddlewares.createStatusColumnDataValidation,
+      ],
       controller.create,
     );
 

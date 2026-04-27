@@ -7,7 +7,7 @@ export class PostgresKanbanTaskRepository implements KanbanTaskRepository {
   public checkRelationship = async (
     userId: number,
     taskId: number,
-  ): Promise<boolean> => {
+  ): Promise<KanbanTaskEntity | null> => {
     try {
       const task = await prisma.task.findFirst({
         where: {
@@ -17,7 +17,7 @@ export class PostgresKanbanTaskRepository implements KanbanTaskRepository {
           },
         },
       });
-      return task ? true : false;
+      return task ? KanbanTaskEntity.fromObject(task) : null;
     } catch (error) {
       throw error;
     }

@@ -15,6 +15,7 @@ export class KanbanTaskRoutes {
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: KanbanTaskRepository,
   ) {}
+
   public get routes(): Router {
     const router = Router({ mergeParams: true });
 
@@ -42,6 +43,7 @@ export class KanbanTaskRoutes {
       [StatusColumnsMiddlewares.columnIdParamValidation],
       controller.getAll,
     );
+
     router.post(
       "/in-column/:columnId",
       [
@@ -50,6 +52,7 @@ export class KanbanTaskRoutes {
       ],
       controller.create,
     );
+
     router.put(
       "/:taskId",
       [
@@ -58,6 +61,7 @@ export class KanbanTaskRoutes {
       ],
       controller.update,
     );
+
     router.delete(
       "/:taskId",
       [KanbanTaskMiddlewares.taskIdParamValidation],

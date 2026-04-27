@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import z, { ZodObject, ZodError } from "zod";
+import z, { ZodObject } from "zod";
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 
 export enum RequestValidationTarget {

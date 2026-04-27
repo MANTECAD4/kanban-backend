@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 export enum ErrorCodes {
   "UNAUTHORIZED" = "UNAUTHORIZED",
   "FORBIDDEN" = "FORBIDDEN",
+  "BAD_REQUEST" = "BAD_REQUEST",
   "INVALID_DATA" = "INVALID_DATA",
 
   "ALREADY_REGISTERED" = "ALREADY_REGISTERED",

@@ -5,7 +5,7 @@ export abstract class KanbanTaskRepository {
   public abstract checkRelationship: (
     userId: number,
     taskId: number,
-  ) => Promise<boolean>;
+  ) => Promise<KanbanTaskEntity | null>;
   public abstract getAll: (columnId: number) => Promise<KanbanTaskEntity[]>;
   public abstract getById: (taskId: number) => Promise<KanbanTaskEntity | null>;
   public abstract getByTitle: (

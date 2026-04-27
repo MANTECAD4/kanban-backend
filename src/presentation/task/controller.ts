@@ -11,6 +11,7 @@ export class KanbanTaskController {
     private readonly createTaskUseCase: CreateKanbanTaskUseCase,
     private readonly deleteTaskUseCase: DeleteKanbanTaskUseCase,
   ) {}
+
   public getAll = (req: Request, res: Response) => {
     this.getTasksUseCase
       .execute(req.user!.sub.id, req.validatedParams!.columnId)
@@ -19,6 +20,7 @@ export class KanbanTaskController {
       )
       .catch((error) => CustomError.handleError(error, req, res));
   };
+
   public create = (req: Request, res: Response) => {
     this.createTaskUseCase
       .execute({
@@ -35,7 +37,9 @@ export class KanbanTaskController {
   };
 
   public update = (req: Request, res: Response) => {
-    return res.json(`update -> ${req.validatedParams!.taskId}`);
+    return res.json(
+      `update -> ${JSON.stringify(req.validatedParams!)} | ${JSON.stringify(req.validatedBody)}`,
+    );
   };
 
   public delete = (req: Request, res: Response) => {

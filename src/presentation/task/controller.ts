@@ -3,11 +3,13 @@ import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-
 import { CustomError } from "../../domain/errors/custom-error";
 import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { CreateTaskDto } from "../../application/dtos";
+import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 
 export class KanbanTaskController {
   constructor(
     private readonly getTasksUseCase: GetTasksUseCase,
     private readonly createTaskUseCase: CreateTaskUseCase,
+    private readonly deleteTaskUseCase: DeleteKanbanTaskUseCase,
   ) {}
   public getAll = (req: Request, res: Response) => {
     this.getTasksUseCase
@@ -31,10 +33,17 @@ export class KanbanTaskController {
       )
       .catch((error) => CustomError.handleError(error, req, res));
   };
+
   public update = (req: Request, res: Response) => {
-    return res.json(`update -> ${req.params.taskId}`);
+    return res.json(`update -> ${req.validatedParams!.taskId}`);
   };
+
   public delete = (req: Request, res: Response) => {
-    return res.json(`delete -> ${req.params.taskId}`);
+    this.deleteTaskUseCase
+      .execute(req.user!.sub.id, req.validatedParams!.taskId)
+      .then((result) =>
+        res.json({ message: "Task deleted succesfully", ...result }),
+      )
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 }

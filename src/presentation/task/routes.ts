@@ -8,6 +8,7 @@ import {
 import { GetTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { StatusColumnsMiddlewares } from "../status-column/middlewares";
+import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 
 export class TaskRoutes {
   constructor(
@@ -27,9 +28,13 @@ export class TaskRoutes {
       this.kanbanTaskRepository,
     );
 
+    const deleteTaskUsecase = new DeleteKanbanTaskUseCase(
+      this.kanbanTaskRepository,
+    );
     const controller = new KanbanTaskController(
       getTasksUseCase,
       createTaskUseCase,
+      deleteTaskUsecase,
     );
 
     router.get(

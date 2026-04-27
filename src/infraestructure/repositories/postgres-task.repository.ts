@@ -27,7 +27,7 @@ export class PostgresTaskRepository implements KanbanTaskRepository {
     try {
       const tasks = await prisma.task.findMany({
         where: {
-          status_id: columnId,
+          status_column_id: columnId,
         },
       });
       return tasks.map((rawTask) => TaskEntity.fromObject(rawTask));
@@ -60,7 +60,7 @@ export class PostgresTaskRepository implements KanbanTaskRepository {
   ): Promise<TaskEntity> => {
     try {
       const createdTask = await prisma.task.create({
-        data: { ...data, status_id: columnId },
+        data: { ...data, status_column_id: columnId },
       });
       return TaskEntity.fromObject(createdTask);
     } catch (error) {

@@ -28,7 +28,7 @@ export class CreateTaskUseCase {
     );
     if (!existRelation)
       throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
+        `User doesn't own this staus column`,
         ErrorCodes.NO_RELATION,
       );
     const createdTask = await this.kanbanTaskRepository.create(columnId, data);

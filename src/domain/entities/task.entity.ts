@@ -5,8 +5,7 @@ interface TaskProps {
   title: string;
   description: string;
   order: number;
-  subtasks: string[];
-  statusId: number;
+  statusColumnId: number;
 }
 
 export class TaskEntity {
@@ -14,18 +13,16 @@ export class TaskEntity {
   public title: string;
   public description: string;
   public order: number;
-  public subtasks: string[];
-  public statusId: number;
+  public statusColumnId: number;
 
   constructor(props: TaskProps) {
-    const { description, id, order, statusId, subtasks, title } = props;
+    const { description, id, order, statusColumnId, title } = props;
 
     this.id = id;
     this.title = title;
     this.description = description;
     this.order = order;
-    this.subtasks = subtasks;
-    this.statusId = statusId;
+    this.statusColumnId = statusColumnId;
   }
 
   static fromObject = (object: Record<string, any>): TaskEntity => {
@@ -35,17 +32,16 @@ export class TaskEntity {
       title,
       description,
       order,
-      subtasks,
-      statusId,
-      status_id,
+
+      statusColumnId,
+      status_column_id,
     } = object;
     return new TaskEntity({
       id: id ?? _id,
       title,
       description,
       order,
-      subtasks,
-      statusId: statusId ?? status_id,
+      statusColumnId: statusColumnId ?? status_column_id,
     });
   };
 }

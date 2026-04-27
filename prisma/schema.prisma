@@ -27,12 +27,13 @@ model Board{
   description String?
   user   User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
   user_id Int
-  colummns StatusColumn[]
+  status_colummns StatusColumn[]
 }
 
 model StatusColumn{
   id Int @id @default(autoincrement())
   name String
+  description String
   board   Board @relation(fields: [board_id], references: [id], onDelete: Cascade) 
   board_id Int
   tasks Task[]
@@ -43,7 +44,15 @@ model Task{
   title String
   description String
   order Int
-  subtasks String[] @default([])
-  status StatusColumn @relation(fields: [status_id], references: [id], onDelete: Cascade)
-  status_id Int
+  status_column StatusColumn @relation(fields: [status_column_id], references: [id], onDelete: Cascade)
+  status_column_id Int
+  subtasks Subtasks[] 
+}
+
+model Subtasks {
+  id Int @id @default(autoincrement())
+  description String
+  is_completed Boolean
+  task Task @relation(fields:[task_id], references: [id])
+  task_id Int
 }

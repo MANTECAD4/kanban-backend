@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const RegisterUserSchema = z.strictObject({
+export const RegisterUserSchema = z.object({
   name: z.string().trim().min(3),
   email: z.email().trim().normalize(),
   password: z

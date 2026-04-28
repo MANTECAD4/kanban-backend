@@ -3,7 +3,7 @@ export interface GetTasksDto {
   boardId: number;
 }
 
-export const CreateStatusColumnSchema = z.strictObject({
+export const CreateStatusColumnSchema = z.object({
   name: z.string().trim().normalize().min(3),
   description: z.string().trim().normalize().nonempty(),
 });

@@ -61,6 +61,8 @@ export class CustomError extends Error {
       method: req.method,
       url: req.originalUrl,
       userId: req.user?.sub.id,
+      body: req.validatedBody,
+      params: req.validatedParams,
     });
     return res.status(500).json({
       error: {

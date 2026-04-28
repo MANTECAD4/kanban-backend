@@ -9,6 +9,8 @@ import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-task
 import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { StatusColumnsMiddlewares } from "../status-column/middlewares";
 import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
+import { UpdateDataInKanbanTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
+import { UpdateStatusColumnInKanbanTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 
 export class KanbanTaskRoutes {
   constructor(
@@ -29,12 +31,22 @@ export class KanbanTaskRoutes {
       this.kanbanTaskRepository,
     );
 
+    const updateDataTask = new UpdateDataInKanbanTaskUseCase(
+      this.kanbanTaskRepository,
+    );
+    const updateColumnTask = new UpdateStatusColumnInKanbanTaskUseCase(
+      this.kanbanTaskRepository,
+      this.statusColumnRepository,
+    );
+
     const deleteTaskUsecase = new DeleteKanbanTaskUseCase(
       this.kanbanTaskRepository,
     );
     const controller = new KanbanTaskController(
       getTasksUseCase,
       createTaskUseCase,
+      updateDataTask,
+      updateColumnTask,
       deleteTaskUsecase,
     );
 
@@ -59,7 +71,15 @@ export class KanbanTaskRoutes {
         KanbanTaskMiddlewares.taskIdParamValidation,
         KanbanTaskMiddlewares.updateTaskDataValidation,
       ],
-      controller.update,
+      controller.updateData,
+    );
+    router.put(
+      "/:taskId/status-column",
+      [
+        KanbanTaskMiddlewares.taskIdParamValidation,
+        KanbanTaskMiddlewares.updateTaskColumnDataValidation,
+      ],
+      controller.updateStatusColumn,
     );
 
     router.delete(

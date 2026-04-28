@@ -1,7 +1,7 @@
 import z from "zod";
 
 // This should not be here. No specific tecnologies should be used in domain or application layers
-export const CreateBoardSchema = z.strictObject({
+export const CreateBoardSchema = z.object({
   name: z.string().trim().normalize().min(3),
   description: z.string().trim().normalize().nonempty(),
 });

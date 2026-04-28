@@ -1,7 +1,6 @@
 import { CreateStatusColumnDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { StatusColumnEntity } from "../../domain/entities";
-import { CustomError } from "../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../domain/repositories";
 
 export class PostgresStatusColumnRepository implements StatusColumnRepository {

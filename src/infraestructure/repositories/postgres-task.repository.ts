@@ -12,7 +12,7 @@ export class PostgresKanbanTaskRepository implements KanbanTaskRepository {
       const task = await prisma.task.findFirst({
         where: {
           id: taskId,
-          status: {
+          status_column: {
             board: { user: { id: userId } },
           },
         },

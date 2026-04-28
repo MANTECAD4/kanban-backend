@@ -1,15 +1,12 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import {
-  KanbanTaskRepository,
-  StatusColumnRepository,
-} from "../../../domain/repositories";
+import { KanbanTaskRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateKanbanTaskDto } from "../../dtos";
+import { UpdateDataInKanbanTaskDto } from "../../dtos";
 
 interface UpdateKanbanTaskParams {
   userId: number;
   taskId: number;
-  data: UpdateKanbanTaskDto;
+  data: UpdateDataInKanbanTaskDto;
 }
 export class UpdateDataInKanbanTaskUseCase {
   constructor(private readonly kanbanTaskRepository: KanbanTaskRepository) {}

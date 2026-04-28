@@ -3,11 +3,12 @@ import {
   KanbanTaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
+import { UpdateColumnInKanbanTaskDto } from "../../dtos";
 
 interface UseCaseParams {
   userId: number;
-  newStatusColumnId: number;
   taskId: number;
+  data: UpdateColumnInKanbanTaskDto;
 }
 
 export class UpdateStatusColumnInKanbanTaskUseCase {
@@ -19,7 +20,7 @@ export class UpdateStatusColumnInKanbanTaskUseCase {
   public execute = async ({
     userId,
     taskId,
-    newStatusColumnId,
+    data: { statusColumnId },
   }: UseCaseParams) => {
     const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(
       userId,
@@ -39,14 +40,14 @@ export class UpdateStatusColumnInKanbanTaskUseCase {
       await this.statusColumnRepository.getAll(currentStatusColumn!.boardId)
     ).map(({ id }) => id);
 
-    if (!statusColumnsInBoard.includes(newStatusColumnId))
+    if (!statusColumnsInBoard.includes(statusColumnId))
       throw CustomError.badRequest(
         `New Status column doesn't belong to actual board`,
         ErrorCodes.BAD_REQUEST,
       );
 
     const updatedTask = await this.kanbanTaskRepository.update(taskId, {
-      status_column_id: newStatusColumnId,
+      status_column_id: statusColumnId,
     });
     return { data: updatedTask };
   };

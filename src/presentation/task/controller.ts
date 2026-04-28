@@ -2,13 +2,20 @@ import { Request, Response } from "express";
 import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
 import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
-import { CreateKanbanTaskDto } from "../../application/dtos";
+import {
+  CreateKanbanTaskDto,
+  UpdateColumnInKanbanTaskDto,
+} from "../../application/dtos";
 import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
+import { UpdateStatusColumnInKanbanTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
+import { UpdateDataInKanbanTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
 
 export class KanbanTaskController {
   constructor(
     private readonly getTasksUseCase: GetKanbanTasksUseCase,
     private readonly createTaskUseCase: CreateKanbanTaskUseCase,
+    private readonly updateDataInKanbanTaskUseCase: UpdateDataInKanbanTaskUseCase,
+    private readonly updateColumnInKanbanTaskUseCase: UpdateStatusColumnInKanbanTaskUseCase,
     private readonly deleteTaskUseCase: DeleteKanbanTaskUseCase,
   ) {}
 
@@ -36,10 +43,30 @@ export class KanbanTaskController {
       .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public update = (req: Request, res: Response) => {
-    return res.json(
-      `update -> ${JSON.stringify(req.validatedParams!)} | ${JSON.stringify(req.validatedBody)}`,
-    );
+  public updateData = (req: Request, res: Response) => {
+    this.updateDataInKanbanTaskUseCase
+      .execute({
+        userId: req.user!.sub.id,
+        taskId: req.validatedParams!.taskId,
+        data: req.validatedBody!,
+      })
+      .then((result) =>
+        res.json({ message: `Task content updated succesfully`, ...result }),
+      )
+      .catch((error) => CustomError.handleError(error, req, res));
+  };
+
+  public updateStatusColumn = (req: Request, res: Response) => {
+    this.updateColumnInKanbanTaskUseCase
+      .execute({
+        userId: req.user!.sub.id,
+        taskId: req.validatedParams!.taskId,
+        data: req.validatedBody! as UpdateColumnInKanbanTaskDto,
+      })
+      .then((result) =>
+        res.json({ message: "Task status updated succesfully", ...result }),
+      )
+      .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public delete = (req: Request, res: Response) => {

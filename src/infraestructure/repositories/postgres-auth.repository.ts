@@ -6,15 +6,11 @@ import { AuthRepository } from "../../domain/repositories";
 
 export class PostgresAuthRepository implements AuthRepository {
   public register = async (registerUserDto: RegisterUserDto) => {
-    try {
-      const registeredUser = await prisma.user.create({
-        data: registerUserDto,
-      });
-      const userEntity = new UserEntity(registeredUser);
-      return userEntity;
-    } catch (error) {
-      throw error;
-    }
+    const registeredUser = await prisma.user.create({
+      data: registerUserDto,
+    });
+    const userEntity = new UserEntity(registeredUser);
+    return userEntity;
   };
   public getByEmail = async (email: string): Promise<UserEntity | null> => {
     const rawUser = await prisma.user.findFirst({ where: { email } });
@@ -22,12 +18,8 @@ export class PostgresAuthRepository implements AuthRepository {
   };
 
   public getById = async (userId: number): Promise<UserEntity | null> => {
-    try {
-      const rawUser = await prisma.user.findFirst({ where: { id: userId } });
+    const rawUser = await prisma.user.findFirst({ where: { id: userId } });
 
-      return rawUser === null ? null : new UserEntity(rawUser);
-    } catch (error) {
-      throw error;
-    }
+    return rawUser === null ? null : new UserEntity(rawUser);
   };
 }

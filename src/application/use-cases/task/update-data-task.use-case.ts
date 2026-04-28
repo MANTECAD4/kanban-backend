@@ -8,7 +8,7 @@ interface UpdateKanbanTaskParams {
   taskId: number;
   data: UpdateDataInTaskDto;
 }
-export class UpdateDataInKanbanTaskUseCase {
+export class UpdateDataInTaskUseCase {
   constructor(private readonly kanbanTaskRepository: TaskRepository) {}
   public execute = async ({ userId, taskId, data }: UpdateKanbanTaskParams) => {
     const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(

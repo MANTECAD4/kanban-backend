@@ -4,7 +4,7 @@ import { envs } from "../configs/envs";
 import { AuthRoutes } from "./auth/routes";
 import { BoardsRoutes } from "./board/routes";
 import { StatusColumnsRoutes } from "./status-column/routes";
-import { KanbanTaskRoutes } from "./task/routes";
+import { TaskRoutes } from "./task/routes";
 import { SubtaskRoutes } from "./subtask/routes";
 
 import { AuthMiddlewares } from "./auth/middlewares";
@@ -14,7 +14,7 @@ import {
   PostgresBoardRepository,
 } from "../infraestructure/repositories";
 import { PostgresStatusColumnRepository } from "../infraestructure/repositories/postgres-status-column.repository";
-import { PostgresKanbanTaskRepository } from "../infraestructure/repositories/postgres-task.repository";
+import { PostgresTaskRepository } from "../infraestructure/repositories/postgres-task.repository";
 
 import { JwtGenerator } from "../infraestructure/services/jwt-generator.service";
 import { BycryptHasher } from "../infraestructure/services/bycrypt.service";
@@ -30,7 +30,7 @@ export class AppRoutes {
     const authRepository = new PostgresAuthRepository();
     const boardRepository = new PostgresBoardRepository();
     const statusColumnRepository = new PostgresStatusColumnRepository();
-    const kanbanTaskRepository = new PostgresKanbanTaskRepository();
+    const kanbanTaskRepository = new PostgresTaskRepository();
 
     //! SERVCIES
     const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
@@ -50,7 +50,7 @@ export class AppRoutes {
       statusColumnRepository,
       boardRepository,
     );
-    const kanbanTaskRoutes = new KanbanTaskRoutes(
+    const kanbanTaskRoutes = new TaskRoutes(
       statusColumnRepository,
       kanbanTaskRepository,
     );

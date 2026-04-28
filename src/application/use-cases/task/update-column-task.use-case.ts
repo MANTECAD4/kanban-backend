@@ -11,7 +11,7 @@ interface UseCaseParams {
   data: UpdateColumnInTaskDto;
 }
 
-export class UpdateStatusColumnInKanbanTaskUseCase {
+export class UpdateStatusColumnInTaskUseCase {
   constructor(
     private readonly kanbanTaskRepository: TaskRepository,
     private readonly statusColumnRepository: StatusColumnRepository,

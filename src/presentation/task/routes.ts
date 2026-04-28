@@ -1,18 +1,18 @@
 import { Router } from "express";
-import { KanbanTaskController } from "./controller";
-import { KanbanTaskMiddlewares } from "./middlewares";
+import { TaskController } from "./controller";
+import { TaskMiddlewares } from "./middlewares";
 import {
   TaskRepository,
   StatusColumnRepository,
 } from "../../domain/repositories";
-import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
-import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
+import { GetTasksByColumnUseCase } from "../../application/use-cases/task/get-tasks.use-case";
+import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { StatusColumnsMiddlewares } from "../status-column/middlewares";
-import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
-import { UpdateDataInKanbanTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
-import { UpdateStatusColumnInKanbanTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
+import { DeleteTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
+import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
+import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 
-export class KanbanTaskRoutes {
+export class TaskRoutes {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: TaskRepository,
@@ -21,28 +21,26 @@ export class KanbanTaskRoutes {
   public get routes(): Router {
     const router = Router({ mergeParams: true });
 
-    const getTasksUseCase = new GetKanbanTasksUseCase(
+    const getTasksUseCase = new GetTasksByColumnUseCase(
       this.statusColumnRepository,
       this.kanbanTaskRepository,
     );
 
-    const createTaskUseCase = new CreateKanbanTaskUseCase(
+    const createTaskUseCase = new CreateTaskUseCase(
       this.statusColumnRepository,
       this.kanbanTaskRepository,
     );
 
-    const updateDataTask = new UpdateDataInKanbanTaskUseCase(
+    const updateDataTask = new UpdateDataInTaskUseCase(
       this.kanbanTaskRepository,
     );
-    const updateColumnTask = new UpdateStatusColumnInKanbanTaskUseCase(
+    const updateColumnTask = new UpdateStatusColumnInTaskUseCase(
       this.kanbanTaskRepository,
       this.statusColumnRepository,
     );
 
-    const deleteTaskUsecase = new DeleteKanbanTaskUseCase(
-      this.kanbanTaskRepository,
-    );
-    const controller = new KanbanTaskController(
+    const deleteTaskUsecase = new DeleteTaskUseCase(this.kanbanTaskRepository);
+    const controller = new TaskController(
       getTasksUseCase,
       createTaskUseCase,
       updateDataTask,
@@ -60,7 +58,7 @@ export class KanbanTaskRoutes {
       "/in-column/:columnId",
       [
         StatusColumnsMiddlewares.columnIdParamValidation,
-        KanbanTaskMiddlewares.createTaskDataValidation,
+        TaskMiddlewares.createTaskDataValidation,
       ],
       controller.create,
     );
@@ -68,23 +66,23 @@ export class KanbanTaskRoutes {
     router.put(
       "/:taskId",
       [
-        KanbanTaskMiddlewares.taskIdParamValidation,
-        KanbanTaskMiddlewares.updateTaskDataValidation,
+        TaskMiddlewares.taskIdParamValidation,
+        TaskMiddlewares.updateTaskDataValidation,
       ],
       controller.updateData,
     );
     router.put(
       "/:taskId/status-column",
       [
-        KanbanTaskMiddlewares.taskIdParamValidation,
-        KanbanTaskMiddlewares.updateTaskColumnDataValidation,
+        TaskMiddlewares.taskIdParamValidation,
+        TaskMiddlewares.updateTaskColumnDataValidation,
       ],
       controller.updateStatusColumn,
     );
 
     router.delete(
       "/:taskId",
-      [KanbanTaskMiddlewares.taskIdParamValidation],
+      [TaskMiddlewares.taskIdParamValidation],
       controller.delete,
     );
 

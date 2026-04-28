@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-export class KanbanSubtaskController {
+export class SubtaskController {
   constructor() {}
 
   public getAllByTask = (req: Request, res: Response) => {

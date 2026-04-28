@@ -8,7 +8,7 @@ import {
   UpdateSubtaskSchema,
 } from "../../application/dtos/subtask.dto";
 
-export class KanbanSubtaskMiddlewares {
+export class SubtaskMiddlewares {
   public static subtaskIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("subtaskId"),
     `Invalid subtask id`,

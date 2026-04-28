@@ -6,15 +6,20 @@ export abstract class SubtaskRepository {
     userId: number,
     subtaskId: number,
   ) => Promise<SubtaskEntity | null>;
+
   abstract getAllByTask: (taskId: number) => Promise<SubtaskEntity[]>;
+
   abstract getById: (subtaskId: number) => Promise<SubtaskEntity | null>;
+
   abstract create: (
     taskId: number,
     data: CreateSubtaskDto,
   ) => Promise<SubtaskEntity>;
+
   abstract update: (
     subtaskId: number,
     data: Record<string, any>,
   ) => Promise<SubtaskEntity>;
+
   abstract delete: (subtaskId: number) => Promise<SubtaskEntity>;
 }

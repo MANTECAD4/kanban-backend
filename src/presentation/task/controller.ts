@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
-import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
+import { GetTasksByColumnUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
-import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
+import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { CreateTaskDto, UpdateColumnInTaskDto } from "../../application/dtos";
-import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
-import { UpdateStatusColumnInKanbanTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
-import { UpdateDataInKanbanTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
+import { DeleteTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
+import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
+import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
 
-export class KanbanTaskController {
+export class TaskController {
   constructor(
-    private readonly getTasksUseCase: GetKanbanTasksUseCase,
-    private readonly createTaskUseCase: CreateKanbanTaskUseCase,
-    private readonly updateDataInKanbanTaskUseCase: UpdateDataInKanbanTaskUseCase,
-    private readonly updateColumnInKanbanTaskUseCase: UpdateStatusColumnInKanbanTaskUseCase,
-    private readonly deleteTaskUseCase: DeleteKanbanTaskUseCase,
+    private readonly getTasksUseCase: GetTasksByColumnUseCase,
+    private readonly createTaskUseCase: CreateTaskUseCase,
+    private readonly updateDataInKanbanTaskUseCase: UpdateDataInTaskUseCase,
+    private readonly updateColumnInKanbanTaskUseCase: UpdateStatusColumnInTaskUseCase,
+    private readonly deleteTaskUseCase: DeleteTaskUseCase,
   ) {}
 
   public getAllByColumn = (req: Request, res: Response) => {

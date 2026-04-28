@@ -9,7 +9,7 @@ import {
 } from "../shared/factories/data-validation-middleware";
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
-export class KanbanTaskMiddlewares {
+export class TaskMiddlewares {
   public static taskIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("taskId"),
     `Invalid task id provided`,

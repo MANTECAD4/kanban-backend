@@ -11,7 +11,7 @@ interface CreateKanbanTaskParams {
   data: CreateTaskDto;
 }
 
-export class CreateKanbanTaskUseCase {
+export class CreateTaskUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
     private readonly kanbanTaskRepository: TaskRepository,

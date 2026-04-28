@@ -1,26 +1,26 @@
 import { Router } from "express";
-import { KanbanSubtaskController } from "./controller";
-import { KanbanSubtaskMiddlewares } from "./middlewares";
-import { KanbanTaskMiddlewares } from "../task/middlewares";
+import { SubtaskController } from "./controller";
+import { SubtaskMiddlewares } from "./middlewares";
+import { TaskMiddlewares } from "../task/middlewares";
 
 export class SubtaskRoutes {
   constructor() {}
   public get routes(): Router {
     const router = Router();
 
-    const controller = new KanbanSubtaskController();
+    const controller = new SubtaskController();
 
     router.get(
       "/in-task/:taskId",
-      [KanbanTaskMiddlewares.taskIdParamValidation],
+      [TaskMiddlewares.taskIdParamValidation],
       controller.getAllByTask,
     );
 
     router.post(
       "/in-task/:taskId",
       [
-        KanbanTaskMiddlewares.taskIdParamValidation,
-        KanbanSubtaskMiddlewares.createSubtaskDataValidation,
+        TaskMiddlewares.taskIdParamValidation,
+        SubtaskMiddlewares.createSubtaskDataValidation,
       ],
       controller.create,
     );
@@ -28,8 +28,8 @@ export class SubtaskRoutes {
     router.put(
       "/:subtaskId",
       [
-        KanbanSubtaskMiddlewares.subtaskIdParamValidation,
-        KanbanSubtaskMiddlewares.updateSubtaskDataValidation,
+        SubtaskMiddlewares.subtaskIdParamValidation,
+        SubtaskMiddlewares.updateSubtaskDataValidation,
       ],
       controller.update,
     );

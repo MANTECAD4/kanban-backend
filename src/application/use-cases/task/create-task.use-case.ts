@@ -1,20 +1,20 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import {
-  KanbanTaskRepository,
+  TaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { CreateKanbanTaskDto } from "../../dtos";
+import { CreateTaskDto } from "../../dtos";
 
 interface CreateKanbanTaskParams {
   userId: number;
   columnId: number;
-  data: CreateKanbanTaskDto;
+  data: CreateTaskDto;
 }
 
 export class CreateKanbanTaskUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly kanbanTaskRepository: KanbanTaskRepository,
+    private readonly kanbanTaskRepository: TaskRepository,
   ) {}
 
   public execute = async ({

@@ -1,4 +1,4 @@
-import { CustomError } from "../errors/custom-error";
+import { CustomError, ErrorCodes } from "../errors/custom-error";
 
 export const getDefinedFields = (data: Record<string, any>) => {
   const definedFields: Record<string, any> = {};
@@ -7,6 +7,9 @@ export const getDefinedFields = (data: Record<string, any>) => {
   });
 
   if (Object.keys(definedFields).length === 0)
-    throw CustomError.badRequest("No values were recieved for board updating.");
+    throw CustomError.badRequest(
+      "No values were recieved for board updating.",
+      ErrorCodes.BAD_REQUEST,
+    );
   return definedFields;
 };

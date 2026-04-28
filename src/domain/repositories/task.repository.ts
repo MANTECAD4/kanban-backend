@@ -1,23 +1,23 @@
-import { CreateKanbanTaskDto, UpdateBoardDto } from "../../application/dtos";
-import { KanbanTaskEntity } from "../entities/task.entity";
+import { CreateTaskDto, UpdateBoardDto } from "../../application/dtos";
+import { TaskEntity } from "../entities/task.entity";
 
-export abstract class KanbanTaskRepository {
+export abstract class TaskRepository {
   public abstract checkRelationship: (
     userId: number,
     taskId: number,
-  ) => Promise<KanbanTaskEntity | null>;
-  public abstract getAll: (columnId: number) => Promise<KanbanTaskEntity[]>;
-  public abstract getById: (taskId: number) => Promise<KanbanTaskEntity | null>;
-  public abstract getByTitle: (
-    title: string,
-  ) => Promise<KanbanTaskEntity | null>;
+  ) => Promise<TaskEntity | null>;
+  public abstract getAllByStatusColumn: (
+    columnId: number,
+  ) => Promise<TaskEntity[]>;
+  public abstract getById: (taskId: number) => Promise<TaskEntity | null>;
+  public abstract getByTitle: (title: string) => Promise<TaskEntity | null>;
   public abstract create: (
     columnId: number,
-    data: CreateKanbanTaskDto,
-  ) => Promise<KanbanTaskEntity>;
+    data: CreateTaskDto,
+  ) => Promise<TaskEntity>;
   public abstract update: (
     taskId: number,
     data: Record<string, any>,
-  ) => Promise<KanbanTaskEntity>;
-  public abstract delete: (taskId: number) => Promise<KanbanTaskEntity>;
+  ) => Promise<TaskEntity>;
+  public abstract delete: (taskId: number) => Promise<TaskEntity>;
 }

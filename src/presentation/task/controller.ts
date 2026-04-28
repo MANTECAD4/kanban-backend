@@ -2,10 +2,7 @@ import { Request, Response } from "express";
 import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
 import { CreateKanbanTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
-import {
-  CreateKanbanTaskDto,
-  UpdateColumnInKanbanTaskDto,
-} from "../../application/dtos";
+import { CreateTaskDto, UpdateColumnInTaskDto } from "../../application/dtos";
 import { DeleteKanbanTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 import { UpdateStatusColumnInKanbanTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 import { UpdateDataInKanbanTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
@@ -19,7 +16,7 @@ export class KanbanTaskController {
     private readonly deleteTaskUseCase: DeleteKanbanTaskUseCase,
   ) {}
 
-  public getAll = (req: Request, res: Response) => {
+  public getAllByColumn = (req: Request, res: Response) => {
     this.getTasksUseCase
       .execute(req.user!.sub.id, req.validatedParams!.columnId)
       .then((result) =>
@@ -33,7 +30,7 @@ export class KanbanTaskController {
       .execute({
         userId: req.user!.sub.id,
         columnId: req.validatedParams!.columnId,
-        data: req.validatedBody as CreateKanbanTaskDto,
+        data: req.validatedBody as CreateTaskDto,
       })
       .then((result) =>
         res
@@ -61,7 +58,7 @@ export class KanbanTaskController {
       .execute({
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
-        data: req.validatedBody! as UpdateColumnInKanbanTaskDto,
+        data: req.validatedBody! as UpdateColumnInTaskDto,
       })
       .then((result) =>
         res.json({ message: "Task status updated succesfully", ...result }),

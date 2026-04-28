@@ -1,15 +1,15 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { KanbanTaskRepository } from "../../../domain/repositories";
+import { TaskRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateDataInKanbanTaskDto } from "../../dtos";
+import { UpdateDataInTaskDto } from "../../dtos";
 
 interface UpdateKanbanTaskParams {
   userId: number;
   taskId: number;
-  data: UpdateDataInKanbanTaskDto;
+  data: UpdateDataInTaskDto;
 }
 export class UpdateDataInKanbanTaskUseCase {
-  constructor(private readonly kanbanTaskRepository: KanbanTaskRepository) {}
+  constructor(private readonly kanbanTaskRepository: TaskRepository) {}
   public execute = async ({ userId, taskId, data }: UpdateKanbanTaskParams) => {
     const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(
       userId,

@@ -1,7 +1,7 @@
 import {
-  CreateKanbanTaskSchema,
-  UpdateColumnInKanbanTaskSchema,
-  UpdateDatainKanbanTaskSchema,
+  CreateTaskSchema,
+  UpdateColumnInTaskSchema,
+  UpdateDataInTaskSchema,
 } from "../../application/dtos";
 import {
   dataValidationMiddlewareFactory,
@@ -17,20 +17,20 @@ export class KanbanTaskMiddlewares {
   );
 
   public static createTaskDataValidation = dataValidationMiddlewareFactory(
-    CreateKanbanTaskSchema,
+    CreateTaskSchema,
     "Invalid data recieved. Task creation failed",
     RequestValidationTarget.BODY,
   );
 
   public static updateTaskDataValidation = dataValidationMiddlewareFactory(
-    UpdateDatainKanbanTaskSchema,
+    UpdateDataInTaskSchema,
     "Invalida data recieved. Task update failed",
     RequestValidationTarget.BODY,
   );
 
   public static updateTaskColumnDataValidation =
     dataValidationMiddlewareFactory(
-      UpdateColumnInKanbanTaskSchema,
+      UpdateColumnInTaskSchema,
       `Invalid data recieved. TaskUpdate failed`,
       RequestValidationTarget.BODY,
     );

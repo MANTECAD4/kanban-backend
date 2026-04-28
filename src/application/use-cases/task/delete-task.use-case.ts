@@ -1,8 +1,8 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { KanbanTaskRepository } from "../../../domain/repositories";
+import { TaskRepository } from "../../../domain/repositories";
 
 export class DeleteKanbanTaskUseCase {
-  constructor(private readonly kanbanTaskRepository: KanbanTaskRepository) {}
+  constructor(private readonly kanbanTaskRepository: TaskRepository) {}
   public execute = async (userId: number, taskId: number) => {
     const existRelation = await this.kanbanTaskRepository.checkRelationship(
       userId,

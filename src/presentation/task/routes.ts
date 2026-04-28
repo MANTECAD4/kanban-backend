@@ -2,7 +2,7 @@ import { Router } from "express";
 import { KanbanTaskController } from "./controller";
 import { KanbanTaskMiddlewares } from "./middlewares";
 import {
-  KanbanTaskRepository,
+  TaskRepository,
   StatusColumnRepository,
 } from "../../domain/repositories";
 import { GetKanbanTasksUseCase } from "../../application/use-cases/task/get-tasks.use-case";
@@ -15,7 +15,7 @@ import { UpdateStatusColumnInKanbanTaskUseCase } from "../../application/use-cas
 export class KanbanTaskRoutes {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly kanbanTaskRepository: KanbanTaskRepository,
+    private readonly kanbanTaskRepository: TaskRepository,
   ) {}
 
   public get routes(): Router {
@@ -53,7 +53,7 @@ export class KanbanTaskRoutes {
     router.get(
       "/in-column/:columnId",
       [StatusColumnsMiddlewares.columnIdParamValidation],
-      controller.getAll,
+      controller.getAllByColumn,
     );
 
     router.post(

@@ -52,7 +52,7 @@ model Task{
 model Subtasks {
   id Int @id @default(autoincrement())
   description String
-  is_completed Boolean
+  is_completed Boolean @default(false)
   task Task @relation(fields:[task_id], references: [id])
   task_id Int
 }

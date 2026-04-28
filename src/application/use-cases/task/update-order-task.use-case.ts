@@ -1,5 +1,5 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { KanbanTaskRepository } from "../../../domain/repositories";
+import { TaskRepository } from "../../../domain/repositories";
 
 interface UseCaseParams {
   userId: number;
@@ -8,7 +8,7 @@ interface UseCaseParams {
 }
 
 export class UpdateOrderInTaskUseCase {
-  constructor(private readonly kanbanTaskRepository: KanbanTaskRepository) {}
+  constructor(private readonly kanbanTaskRepository: TaskRepository) {}
 
   public execute = async ({ userId, taskId, newOrder }: UseCaseParams) => {
     const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(
@@ -21,7 +21,7 @@ export class UpdateOrderInTaskUseCase {
         ErrorCodes.FORBIDDEN,
       );
 
-    const tasksInColumn = await this.kanbanTaskRepository.getAll(
+    const tasksInColumn = await this.kanbanTaskRepository.getAllByStatusColumn(
       taskOwnedByUser.statusColumnId,
     );
     let order = newOrder;

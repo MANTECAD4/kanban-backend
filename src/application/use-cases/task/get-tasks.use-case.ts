@@ -1,13 +1,13 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import {
-  KanbanTaskRepository,
+  TaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
 
 export class GetKanbanTasksUseCase {
   constructor(
     private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly kanbanTaskRepository: KanbanTaskRepository,
+    private readonly kanbanTaskRepository: TaskRepository,
   ) {}
 
   public execute = async (userId: number, columnId: number) => {
@@ -20,7 +20,8 @@ export class GetKanbanTasksUseCase {
         `Relation between entities doesn't exist`,
         ErrorCodes.NO_RELATION,
       );
-    const tasks = await this.kanbanTaskRepository.getAll(columnId);
+    const tasks =
+      await this.kanbanTaskRepository.getAllByStatusColumn(columnId);
     return { data: tasks, meta: { total: tasks.length } };
   };
 }

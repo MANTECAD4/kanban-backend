@@ -1,19 +1,19 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import {
-  KanbanTaskRepository,
+  TaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { UpdateColumnInKanbanTaskDto } from "../../dtos";
+import { UpdateColumnInTaskDto } from "../../dtos";
 
 interface UseCaseParams {
   userId: number;
   taskId: number;
-  data: UpdateColumnInKanbanTaskDto;
+  data: UpdateColumnInTaskDto;
 }
 
 export class UpdateStatusColumnInKanbanTaskUseCase {
   constructor(
-    private readonly kanbanTaskRepository: KanbanTaskRepository,
+    private readonly kanbanTaskRepository: TaskRepository,
     private readonly statusColumnRepository: StatusColumnRepository,
   ) {}
 

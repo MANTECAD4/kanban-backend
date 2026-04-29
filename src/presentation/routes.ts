@@ -18,6 +18,8 @@ import { PostgresTaskRepository } from "../infraestructure/repositories/postgres
 
 import { JwtGenerator } from "../infraestructure/services/jwt-generator.service";
 import { BycryptHasher } from "../infraestructure/services/bycrypt.service";
+import { SubtaskRepository } from "../domain/repositories/subtask.repository";
+import { PostgresSubtaskRepository } from "../infraestructure/repositories/postgres-subtask.repository";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -30,7 +32,8 @@ export class AppRoutes {
     const authRepository = new PostgresAuthRepository();
     const boardRepository = new PostgresBoardRepository();
     const statusColumnRepository = new PostgresStatusColumnRepository();
-    const kanbanTaskRepository = new PostgresTaskRepository();
+    const taskRepository = new PostgresTaskRepository();
+    const subtaskRepository = new PostgresSubtaskRepository();
 
     //! SERVCIES
     const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
@@ -52,9 +55,12 @@ export class AppRoutes {
     );
     const kanbanTaskRoutes = new TaskRoutes(
       statusColumnRepository,
-      kanbanTaskRepository,
+      taskRepository,
     );
-    const kanbanSubtaskRoutes = new SubtaskRoutes();
+    const kanbanSubtaskRoutes = new SubtaskRoutes(
+      subtaskRepository,
+      taskRepository,
+    );
 
     //! MAIN ENDPOINTS
     router.use("/api/auth", authRoutes.routes);

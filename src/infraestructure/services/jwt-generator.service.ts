@@ -1,40 +1,20 @@
 import jwt from "jsonwebtoken";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
-import { TokenGenerator } from "../../domain/services";
+import { TokenProvider } from "../../domain/services";
 import { TokenPayload, TokenReturnDto } from "../../application/dtos";
 
-export class JwtGenerator implements TokenGenerator {
+export class JwtGenerator implements TokenProvider {
   constructor(private readonly secret: string) {}
 
-  public generate = async (
-    payload: TokenPayload,
-    duration?: number,
-  ): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      jwt.sign(
-        payload,
-        this.secret,
-        { expiresIn: 60 * (duration ?? 30) },
-        (err, token) => {
-          if (err || !token) {
-            return reject(err);
-          }
-          return resolve(token);
-        },
-      );
+  public generate = (payload: TokenPayload, duration: number): string => {
+    const token = jwt.sign(payload, this.secret, {
+      expiresIn: 60 * duration,
     });
+    return token;
   };
 
-  public validate = (token: string): Promise<TokenReturnDto | null> => {
-    return new Promise((resolve, reject) => {
-      jwt.verify(token, this.secret, (err, decoded) => {
-        if (err) {
-          return reject(
-            CustomError.unauthorized(`Invalid token`, ErrorCodes.UNAUTHORIZED),
-          );
-        }
-        return resolve(decoded as unknown as TokenReturnDto);
-      });
-    });
+  public validate = (token: string): TokenReturnDto | null => {
+    const tokenContent = jwt.verify(token, this.secret);
+    return tokenContent as unknown as TokenReturnDto;
   };
 }

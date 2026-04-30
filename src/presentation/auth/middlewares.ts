@@ -7,14 +7,14 @@ import {
 import {
   LoginSchema,
   RegisterUserSchema,
-  TokenPayloadSchema,
   TokenReturnSchema,
 } from "../../application/dtos";
-import { TokenGenerator } from "../../domain/services";
+import { TokenProvider } from "../../domain/services";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
+import { VerifyErrors } from "jsonwebtoken";
 
 export class AuthMiddlewares {
-  constructor(private readonly tokenGenerator: TokenGenerator) {}
+  constructor(private readonly tokenGenerator: TokenProvider) {}
 
   static loginDataValidation = dataValidationMiddlewareFactory(
     LoginSchema,
@@ -27,7 +27,8 @@ export class AuthMiddlewares {
     "Invalid data recieved. Register failed",
     RequestValidationTarget.BODY,
   );
-  public validateJwtToken = async (
+
+  public validateAccessToken = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -43,7 +44,7 @@ export class AuthMiddlewares {
     if (!authorization.startsWith("Bearer ")) {
       const error = CustomError.unauthorized(
         "Invalid token",
-        ErrorCodes.UNAUTHORIZED,
+        ErrorCodes.INVALID_TOKEN,
       );
       return CustomError.handleError(error, req, res);
     }
@@ -51,12 +52,19 @@ export class AuthMiddlewares {
     const token = authorization.split(" ").at(1) ?? "";
 
     try {
-      const payload = await this.tokenGenerator.validate(token);
+      const payload = this.tokenGenerator.validate(token);
       const result = TokenReturnSchema.safeParse(payload);
       if (!result.success) {
         const error = CustomError.unauthorized(
-          "Invalid token",
-          ErrorCodes.UNAUTHORIZED,
+          "Invalid token payload",
+          ErrorCodes.INVALID_TOKEN,
+        );
+        return CustomError.handleError(error, req, res);
+      }
+      if (result.data.type !== "access") {
+        const error = CustomError.unauthorized(
+          "Invalid token type",
+          ErrorCodes.INVALID_TOKEN,
         );
         return CustomError.handleError(error, req, res);
       }
@@ -64,11 +72,22 @@ export class AuthMiddlewares {
       req.user = result.data;
       next();
     } catch (error) {
-      const errorInstance = CustomError.unauthorized(
+      const { message } = error as VerifyErrors;
+
+      let customErrorInstance;
+      if (message.match(/expired/i)) {
+        customErrorInstance = CustomError.unauthorized(
+          "Expired token",
+          ErrorCodes.EXPIRED_TOKEN,
+        );
+        return CustomError.handleError(customErrorInstance, req, res);
+      }
+
+      customErrorInstance = CustomError.unauthorized(
         "Invalid token",
-        ErrorCodes.UNAUTHORIZED,
+        ErrorCodes.INVALID_TOKEN,
       );
-      return CustomError.handleError(errorInstance, req, res);
+      return CustomError.handleError(customErrorInstance, req, res);
     }
   };
 }

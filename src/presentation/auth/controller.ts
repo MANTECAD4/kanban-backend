@@ -10,20 +10,39 @@ export class AuthController {
     private readonly loginUserUseCase: LoginUserUseCase,
   ) {}
 
-  public login = (req: Request, res: Response) => {
-    this.loginUserUseCase
-      .execute(req.validatedBody! as LoginUserDto)
-      .then((result) => res.json({ message: "Login succesful!", ...result }))
-      .catch((error) => CustomError.handleError(error, req, res));
+  public login = async (req: Request, res: Response) => {
+    try {
+      console.log(req.body);
+      const result = await this.loginUserUseCase.execute(
+        req.validatedBody! as LoginUserDto,
+      );
+      return res.json({ message: "Login succesful!", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.loginUserUseCase
+    //   .execute(req.validatedBody! as LoginUserDto)
+    //   .then((result) => res.json({ message: "Login succesful!", ...result }))
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
-  public register = (req: Request, res: Response) => {
-    this.registerUserUseCase
-      .execute(req.validatedBody! as RegisterUserDto)
-      .then((result) =>
-        res
-          .status(201)
-          .json({ message: "User registered succesfully", ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public register = async (req: Request, res: Response) => {
+    try {
+      const result = await this.registerUserUseCase.execute(
+        req.validatedBody! as RegisterUserDto,
+      );
+      return res
+        .status(201)
+        .json({ message: "User registered succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.registerUserUseCase
+    //   .execute(req.validatedBody! as RegisterUserDto)
+    //   .then((result) =>
+    //     res
+    //       .status(201)
+    //       .json({ message: "User registered succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

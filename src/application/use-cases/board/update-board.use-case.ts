@@ -18,8 +18,8 @@ export class UpdateBoardUseCase {
 
     if (!existsRelationship)
       throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
-        ErrorCodes.NO_RELATION,
+        `User doesn't own this board`,
+        ErrorCodes.FORBIDDEN,
       );
 
     const definedFields = getDefinedFields(data);

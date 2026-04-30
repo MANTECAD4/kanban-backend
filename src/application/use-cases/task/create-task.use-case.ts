@@ -29,7 +29,7 @@ export class CreateTaskUseCase {
     if (!existRelation)
       throw CustomError.forbidden(
         `User doesn't own this staus column`,
-        ErrorCodes.NO_RELATION,
+        ErrorCodes.FORBIDDEN,
       );
     const createdTask = await this.kanbanTaskRepository.create(columnId, data);
     return { data: createdTask };

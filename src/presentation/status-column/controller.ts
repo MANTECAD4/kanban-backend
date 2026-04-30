@@ -17,49 +17,101 @@ export class StatusColumnsController {
     private readonly deleteStatusColumnsUsecase: DeleteStatusColumnUseCase,
   ) {}
 
-  public getAll = (req: Request, res: Response) => {
-    this.getStatusColumnsUsecase
-      .execute(req.user!, req.validatedParams!.boardId)
-      .then((result) =>
-        res.json({ message: `Status columns loaded succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public getAll = async (req: Request, res: Response) => {
+    try {
+      const result = await this.getStatusColumnsUsecase.execute(
+        req.user!,
+        req.validatedParams!.boardId,
+      );
+      return res.json({
+        message: `Status columns loaded succesfully`,
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.getStatusColumnsUsecase
+    //   .execute(req.user!, req.validatedParams!.boardId)
+    //   .then((result) =>
+    //     res.json({ message: `Status columns loaded succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
-  public create = (req: Request, res: Response) => {
-    this.createStatusColumnUsecase
-      .execute(
+  public create = async (req: Request, res: Response) => {
+    try {
+      const result = await this.createStatusColumnUsecase.execute(
         req.user!,
         req.validatedParams!.boardId,
         req.validatedBody! as CreateStatusColumnDto,
-      )
-      .then((result) =>
-        res
-          .status(201)
-          .json({ message: `Status column created succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+      );
+
+      return res
+        .status(201)
+        .json({ message: `Status column created succesfully`, ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.createStatusColumnUsecase
+    //   .execute(
+    //     req.user!,
+    //     req.validatedParams!.boardId,
+    //     req.validatedBody! as CreateStatusColumnDto,
+    //   )
+    //   .then((result) =>
+    //     res
+    //       .status(201)
+    //       .json({ message: `Status column created succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public update = (req: Request, res: Response) => {
-    this.updateStatusColumnsUsecase
-      .execute({
+  public update = async (req: Request, res: Response) => {
+    try {
+      const result = await this.updateStatusColumnsUsecase.execute({
         userId: req.user!.sub.id,
         columnId: req.validatedParams!.columnId,
 
         data: req.validatedBody as UpdateStatusColumnDto,
-      })
-      .then((result) =>
-        res.json({ message: `Column with updated succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+      });
+      return res.json({
+        message: `Column with updated succesfully`,
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.updateStatusColumnsUsecase
+    //   .execute({
+    //     userId: req.user!.sub.id,
+    //     columnId: req.validatedParams!.columnId,
+
+    //     data: req.validatedBody as UpdateStatusColumnDto,
+    //   })
+    //   .then((result) =>
+    //     res.json({ message: `Column with updated succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public delete = (req: Request, res: Response) => {
-    this.deleteStatusColumnsUsecase
-      .execute(req.user!.sub.id, req.validatedParams!.columnId)
-      .then((result) =>
-        res.json({ message: `Status column deleted succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public delete = async (req: Request, res: Response) => {
+    try {
+      const result = await this.deleteStatusColumnsUsecase.execute(
+        req.user!.sub.id,
+        req.validatedParams!.columnId,
+      );
+
+      return res.json({
+        message: `Status column deleted succesfully`,
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.deleteStatusColumnsUsecase
+    //   .execute(req.user!.sub.id, req.validatedParams!.columnId)
+    //   .then((result) =>
+    //     res.json({ message: `Status column deleted succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

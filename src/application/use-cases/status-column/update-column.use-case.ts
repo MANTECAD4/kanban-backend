@@ -25,8 +25,8 @@ export class UpdateStatusColumnUseCase {
     );
     if (!existRelation)
       throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
-        ErrorCodes["NO_RELATION"],
+        `User doesn't have access to this column`,
+        ErrorCodes["FORBIDDEN"],
       );
     const definedProperties = getDefinedFields(data);
     const updatedColumn = await this.statusColumnRepository.update(

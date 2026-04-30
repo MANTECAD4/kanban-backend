@@ -18,7 +18,7 @@ export class GetStatusColumnsUseCase {
     if (!existRelationship)
       throw CustomError.forbidden(
         `User does not have access to columns in this board`,
-        ErrorCodes["NO_RELATION"],
+        ErrorCodes["FORBIDDEN"],
       );
     const columns = await this.statusColumnRepository.getAll(boardId);
     return {

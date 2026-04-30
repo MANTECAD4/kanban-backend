@@ -11,9 +11,9 @@ export class CreateBoardUseCase {
   public execute = async (user: TokenReturnDto, data: CreateBoardDto) => {
     const existingUser = await this.authRepository.getById(user.sub.id);
     if (!existingUser)
-      throw CustomError.unauthorized(
+      throw CustomError.notFound(
         `User with id ${user.sub.id} not found`,
-        ErrorCodes.UNAUTHORIZED,
+        ErrorCodes.NOT_FOUND,
       );
 
     const existingBoardInUserCollection =

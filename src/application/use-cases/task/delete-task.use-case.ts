@@ -11,7 +11,7 @@ export class DeleteTaskUseCase {
     if (!existRelation)
       throw CustomError.forbidden(
         `User doesn't own this task`,
-        ErrorCodes.NO_RELATION,
+        ErrorCodes.FORBIDDEN,
       );
     const deletedTask = await this.kanbanTaskRepository.delete(taskId);
     return { data: deletedTask };

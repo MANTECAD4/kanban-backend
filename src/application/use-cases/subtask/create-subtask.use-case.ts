@@ -22,7 +22,7 @@ export class CreateSubtaskUseCase {
     );
     if (!taskOwnedByUser)
       throw CustomError.forbidden(
-        `User doesn't own specified task`,
+        `User doesn't have access to specified task`,
         ErrorCodes.FORBIDDEN,
       );
     const createdSubtask = await this.subtaskRepository.create(taskId, data);

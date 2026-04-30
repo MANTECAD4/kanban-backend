@@ -66,25 +66,25 @@ export class AppRoutes {
     router.use("/api/auth", authRoutes.routes);
     router.use(
       "/api/boards",
-      [authMiddlewares.validateJwtToken],
+      [authMiddlewares.validateAccessToken],
       boardRoutes.routes,
     );
 
     router.use(
       "/api/status-columns",
-      [authMiddlewares.validateJwtToken],
+      [authMiddlewares.validateAccessToken],
       statusColumnRoutes.routes,
     );
 
     router.use(
       "/api/tasks",
-      [authMiddlewares.validateJwtToken],
+      [authMiddlewares.validateAccessToken],
       kanbanTaskRoutes.routes,
     );
 
     router.use(
       "/api/subtasks",
-      [authMiddlewares.validateJwtToken],
+      [authMiddlewares.validateAccessToken],
       kanbanSubtaskRoutes.routes,
     );
 

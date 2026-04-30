@@ -11,8 +11,8 @@ export class DeleteBoardUseCase {
     );
     if (!existRelationship)
       throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
-        ErrorCodes.NO_RELATION,
+        `User doesn't own this board`,
+        ErrorCodes.FORBIDDEN,
       );
     const deletedBoard = await this.boardRepository.delete(boardId);
     return {

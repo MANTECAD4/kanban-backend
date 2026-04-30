@@ -23,8 +23,8 @@ export class CreateStatusColumnUseCase {
     );
     if (!existsRelationship)
       throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
-        ErrorCodes["NO_RELATION"],
+        `User doesn't own this board`,
+        ErrorCodes["FORBIDDEN"],
       );
     const existingColumnInBoard =
       await this.statusColumnRepository.getByBoardAndName(
@@ -34,7 +34,7 @@ export class CreateStatusColumnUseCase {
 
     if (existingColumnInBoard)
       throw CustomError.badRequest(
-        "Name already registered in this board collection",
+        "Status column name is already registered in this board's collection",
         ErrorCodes["ALREADY_REGISTERED"],
       );
 

@@ -17,36 +17,82 @@ export class SubtaskController {
     private readonly deleteSubtaskUseCase: DeleteSubtaskUseCase,
   ) {}
 
-  public getAllByTask = (req: Request, res: Response) => {
-    this.getSubtasksUseCase
-      .execute(req.user!.sub.id, req.validatedParams!.taskId)
-      .then((result) => res.json({ message: "", ...result }))
-      .catch((error) => CustomError.handleError(error, req, res));
+  public getAllByTask = async (req: Request, res: Response) => {
+    try {
+      const result = await this.getSubtasksUseCase.execute(
+        req.user!.sub.id,
+        req.validatedParams!.taskId,
+      );
+      return res.json({ message: "Subtasks loaded succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.getSubtasksUseCase
+    //   .execute(req.user!.sub.id, req.validatedParams!.taskId)
+    //   .then((result) =>
+    //     res.json({ message: "Subtasks loaded succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
-  public create = (req: Request, res: Response) => {
-    this.createSubtaskUsecase
-      .execute({
+  public create = async (req: Request, res: Response) => {
+    try {
+      const result = await this.createSubtaskUsecase.execute({
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
         data: req.validatedBody! as CreateSubtaskDto,
-      })
-      .then((result) => res.json({ message: "", ...result }))
-      .catch((error) => CustomError.handleError(error, req, res));
+      });
+      return res.json({ message: "Subtask created succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.createSubtaskUsecase
+    //   .execute({
+    //     userId: req.user!.sub.id,
+    //     taskId: req.validatedParams!.taskId,
+    //     data: req.validatedBody! as CreateSubtaskDto,
+    //   })
+    //   .then((result) =>
+    //     res.json({ message: "Subtask created succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
-  public update = (req: Request, res: Response) => {
-    this.updateSubtaskUseCase
-      .execute({
+  public update = async (req: Request, res: Response) => {
+    try {
+      const result = await this.updateSubtaskUseCase.execute({
         userId: req.user!.sub.id,
         subtaskId: req.validatedParams!.subtaskId,
         data: req.validatedBody as UpdateSubtaskDto,
-      })
-      .then((result) => res.json({ message: "", ...result }))
-      .catch((error) => CustomError.handleError(error, req, res));
+      });
+      return res.json({ message: "Subtask updated succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.updateSubtaskUseCase
+    //   .execute({
+    //     userId: req.user!.sub.id,
+    //     subtaskId: req.validatedParams!.subtaskId,
+    //     data: req.validatedBody as UpdateSubtaskDto,
+    //   })
+    //   .then((result) =>
+    //     res.json({ message: "Subtask updated succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
-  public delete = (req: Request, res: Response) => {
-    this.deleteSubtaskUseCase
-      .execute(req.user!.sub.id, req.validatedParams!.subtaskId)
-      .then((result) => res.json({ message: "", ...result }))
-      .catch((error) => CustomError.handleError(error, req, res));
+  public delete = async (req: Request, res: Response) => {
+    try {
+      const result = await this.deleteSubtaskUseCase.execute(
+        req.user!.sub.id,
+        req.validatedParams!.subtaskId,
+      );
+      return res.json({ message: "Subtask deleted succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.deleteSubtaskUseCase
+    //   .execute(req.user!.sub.id, req.validatedParams!.subtaskId)
+    //   .then((result) =>
+    //     res.json({ message: "Subtask deleted succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

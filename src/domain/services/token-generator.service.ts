@@ -1,9 +1,6 @@
 import { TokenPayload, TokenReturnDto } from "../../application/dtos";
 
-export abstract class TokenGenerator {
-  abstract generate: (
-    payload: TokenPayload,
-    duration?: number,
-  ) => Promise<string>;
-  abstract validate: (token: string) => Promise<TokenReturnDto | null>;
+export abstract class TokenProvider {
+  abstract generate: (payload: TokenPayload, duration: number) => string;
+  abstract validate: (token: string) => TokenReturnDto | null;
 }

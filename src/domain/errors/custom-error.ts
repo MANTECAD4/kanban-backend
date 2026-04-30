@@ -4,13 +4,14 @@ export enum ErrorCodes {
   "UNAUTHORIZED" = "UNAUTHORIZED",
   "FORBIDDEN" = "FORBIDDEN",
   "BAD_REQUEST" = "BAD_REQUEST",
-  "INVALID_DATA" = "INVALID_DATA",
+  "NOT_FOUND" = "NOT_FOUND",
+  "INTERNAL_ERROR" = "INTERNAL_ERROR",
+
+  "EXPIRED_TOKEN" = "EXPIRED_TOKEN",
+  "INVALID_TOKEN" = "INVALID_TOKEN",
 
   "ALREADY_REGISTERED" = "ALREADY_REGISTERED",
-  "NO_RELATION" = "NO_RELATION",
-
-  // Internal server errors
-  "INTERNAL_ERROR" = "INTERNAL_ERROR",
+  "INVALID_DATA" = "INVALID_DATA",
 }
 
 type ErrorDetails = Record<string, string[] | undefined>;
@@ -55,15 +56,19 @@ export class CustomError extends Error {
         },
       });
     }
+
     console.error({
       message: error.message,
       stack: error.stack,
       method: req.method,
       url: req.originalUrl,
       userId: req.user?.sub.id,
-      body: req.validatedBody,
-      params: req.validatedParams,
+      "validated-body": req.validatedBody,
+      body: req.body,
+      "validated-params": req.validatedParams,
+      params: JSON.stringify(req.params),
     });
+
     return res.status(500).json({
       error: {
         message: "Internal server error",

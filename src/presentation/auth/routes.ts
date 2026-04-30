@@ -4,13 +4,13 @@ import { RegisterUserUseCase } from "../../application/use-cases/auth/register-u
 import { LoginUserUseCase } from "../../application/use-cases/auth/login-user.use-case";
 import { AuthMiddlewares } from "./middlewares";
 import { AuthRepository } from "../../domain/repositories";
-import { TokenGenerator } from "../../domain/services";
+import { TokenProvider } from "../../domain/services";
 import { HasherService } from "../../domain/services/hasher.service";
 
 export class AuthRoutes {
   constructor(
     private readonly authRepository: AuthRepository,
-    private readonly tokenGenerator: TokenGenerator,
+    private readonly tokenGenerator: TokenProvider,
     private readonly hashService: HasherService,
   ) {}
   public get routes(): Router {

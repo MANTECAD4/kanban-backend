@@ -29,7 +29,7 @@ export class UpdateStatusColumnInTaskUseCase {
     if (!taskOwnedByUser)
       throw CustomError.forbidden(
         "User doesn't own this task",
-        ErrorCodes.NO_RELATION,
+        ErrorCodes.FORBIDDEN,
       );
 
     const currentStatusColumn = await this.statusColumnRepository.getById(

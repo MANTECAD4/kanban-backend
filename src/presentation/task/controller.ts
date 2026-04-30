@@ -16,62 +16,118 @@ export class TaskController {
     private readonly deleteTaskUseCase: DeleteTaskUseCase,
   ) {}
 
-  public getAllByColumn = (req: Request, res: Response) => {
-    this.getTasksUseCase
-      .execute(req.user!.sub.id, req.validatedParams!.columnId)
-      .then((result) =>
-        res.json({ message: "Tasks loaded succesfully", ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public getAllByColumn = async (req: Request, res: Response) => {
+    try {
+      const result = await this.getTasksUseCase.execute(
+        req.user!.sub.id,
+        req.validatedParams!.columnId,
+      );
+      return res.json({ message: "Tasks loaded succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.getTasksUseCase
+    //   .execute(req.user!.sub.id, req.validatedParams!.columnId)
+    //   .then((result) =>
+    //     res.json({ message: "Tasks loaded succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public create = (req: Request, res: Response) => {
-    this.createTaskUseCase
-      .execute({
+  public create = async (req: Request, res: Response) => {
+    try {
+      const result = await this.createTaskUseCase.execute({
         userId: req.user!.sub.id,
         columnId: req.validatedParams!.columnId,
         data: req.validatedBody as CreateTaskDto,
-      })
-      .then((result) =>
-        res
-          .status(201)
-          .json({ message: "Task created succesfully", ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+      });
+      return res
+        .status(201)
+        .json({ message: "Task created succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.createTaskUseCase
+    //   .execute({
+    //     userId: req.user!.sub.id,
+    //     columnId: req.validatedParams!.columnId,
+    //     data: req.validatedBody as CreateTaskDto,
+    //   })
+    //   .then((result) =>
+    //     res
+    //       .status(201)
+    //       .json({ message: "Task created succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public updateData = (req: Request, res: Response) => {
-    this.updateDataInKanbanTaskUseCase
-      .execute({
+  public updateData = async (req: Request, res: Response) => {
+    try {
+      const result = await this.updateDataInKanbanTaskUseCase.execute({
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
         data: req.validatedBody!,
-      })
-      .then((result) =>
-        res.json({ message: `Task content updated succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+      });
+      return res.json({
+        message: `Task content updated succesfully`,
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.updateDataInKanbanTaskUseCase
+    //   .execute({
+    //     userId: req.user!.sub.id,
+    //     taskId: req.validatedParams!.taskId,
+    //     data: req.validatedBody!,
+    //   })
+    //   .then((result) =>
+    //     res.json({ message: `Task content updated succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public updateStatusColumn = (req: Request, res: Response) => {
-    this.updateColumnInKanbanTaskUseCase
-      .execute({
+  public updateStatusColumn = async (req: Request, res: Response) => {
+    try {
+      const result = await this.updateColumnInKanbanTaskUseCase.execute({
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
         data: req.validatedBody! as UpdateColumnInTaskDto,
-      })
-      .then((result) =>
-        res.json({ message: "Task status updated succesfully", ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+      });
+      return res.json({
+        message: "Task status updated succesfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.updateColumnInKanbanTaskUseCase
+    //   .execute({
+    //     userId: req.user!.sub.id,
+    //     taskId: req.validatedParams!.taskId,
+    //     data: req.validatedBody! as UpdateColumnInTaskDto,
+    //   })
+    //   .then((result) =>
+    //     res.json({ message: "Task status updated succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public delete = (req: Request, res: Response) => {
-    this.deleteTaskUseCase
-      .execute(req.user!.sub.id, req.validatedParams!.taskId)
-      .then((result) =>
-        res.json({ message: "Task deleted succesfully", ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public delete = async (req: Request, res: Response) => {
+    try {
+      const result = await this.deleteTaskUseCase.execute(
+        req.user!.sub.id,
+        req.validatedParams!.taskId,
+      );
+      return res.json({ message: "Task deleted succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.deleteTaskUseCase
+    //   .execute(req.user!.sub.id, req.validatedParams!.taskId)
+    //   .then((result) =>
+    //     res.json({ message: "Task deleted succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

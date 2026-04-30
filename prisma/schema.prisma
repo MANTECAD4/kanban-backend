@@ -19,6 +19,15 @@ model User {
   name String
   password String
   boards Board[]
+  refresh_tokens Refresh_token[]
+}
+model Refresh_token{
+  id Int @id @default(autoincrement())
+  token String
+  expires_at DateTime
+  revoked Boolean
+  user User @relation(fields:[user_id], references: [id])
+  user_id Int
 }
 
 model Board{
@@ -38,7 +47,6 @@ model StatusColumn{
   board_id Int
   tasks Task[]
 }
-
 model Task{
   id Int @id @default(autoincrement())
   title String

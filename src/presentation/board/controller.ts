@@ -14,45 +14,82 @@ export class BoardsController {
     private readonly deleteBoardUseCase: DeleteBoardUseCase,
   ) {}
 
-  public create = (req: Request, res: Response) => {
-    this.createBoardUseCase
-      .execute(req.user!, req.validatedBody! as CreateBoardDto)
-      .then((result) =>
-        res
-          .status(201)
-          .json({ message: "Board created succesfully", ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public create = async (req: Request, res: Response) => {
+    try {
+      const result = await this.createBoardUseCase.execute(
+        req.user!,
+        req.validatedBody! as CreateBoardDto,
+      );
+
+      return res
+        .status(201)
+        .json({ message: "Board created succesfully", ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.createBoardUseCase
+    //   .execute(req.user!, req.validatedBody! as CreateBoardDto)
+    //   .then((result) =>
+    //     res
+    //       .status(201)
+    //       .json({ message: "Board created succesfully", ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public getAll = (req: Request, res: Response) => {
-    this.getBoardsUseCase
-      .execute(req.user!)
-      .then((result) =>
-        res.json({ message: `Boards loaded succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public getAll = async (req: Request, res: Response) => {
+    try {
+      const result = await this.getBoardsUseCase.execute(req.user!);
+      return res.json({ message: `Boards loaded succesfully`, ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.getBoardsUseCase
+    //   .execute(req.user!)
+    //   .then((result) =>
+    //     res.json({ message: `Boards loaded succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public update = (req: Request, res: Response) => {
-    this.updateBoardUseCase
-      .execute(
+  public update = async (req: Request, res: Response) => {
+    try {
+      const result = await this.updateBoardUseCase.execute(
         req.user!,
         req.validatedParams!.boardId as number,
         req.validatedBody! as UpdateBoardDto,
-      )
-      .then((result) =>
-        res.json({ message: `Board updated succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+      );
+      return res.json({ message: `Board updated succesfully`, ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.updateBoardUseCase
+    //   .execute(
+    //     req.user!,
+    //     req.validatedParams!.boardId as number,
+    //     req.validatedBody! as UpdateBoardDto,
+    //   )
+    //   .then((result) =>
+    //     res.json({ message: `Board updated succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
-  public delete = (req: Request, res: Response) => {
-    this.deleteBoardUseCase
-      .execute(req.user!, req.validatedParams!.boardId as number)
-      .then((result) =>
-        res.json({ message: `Board with deleted succesfully`, ...result }),
-      )
-      .catch((error) => CustomError.handleError(error, req, res));
+  public delete = async (req: Request, res: Response) => {
+    try {
+      const result = await this.deleteBoardUseCase.execute(
+        req.user!,
+        req.validatedParams!.boardId as number,
+      );
+      return res.json({ message: `Board with deleted succesfully`, ...result });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+    // this.deleteBoardUseCase
+    //   .execute(req.user!, req.validatedParams!.boardId as number)
+    //   .then((result) =>
+    //     res.json({ message: `Board with deleted succesfully`, ...result }),
+    //   )
+    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

@@ -18,7 +18,7 @@ export class GetTasksByColumnUseCase {
     if (!existRelation)
       throw CustomError.forbidden(
         `Relation between entities doesn't exist`,
-        ErrorCodes.NO_RELATION,
+        ErrorCodes.FORBIDDEN,
       );
     const tasks =
       await this.kanbanTaskRepository.getAllByStatusColumn(columnId);

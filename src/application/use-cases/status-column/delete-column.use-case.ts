@@ -13,8 +13,8 @@ export class DeleteStatusColumnUseCase {
     );
     if (!existRelation)
       throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
-        ErrorCodes["NO_RELATION"],
+        `User doesn't own specified status column`,
+        ErrorCodes["FORBIDDEN"],
       );
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
     return {

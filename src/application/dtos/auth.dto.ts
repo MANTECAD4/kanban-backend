@@ -14,6 +14,7 @@ export const RegisterUserSchema = z.object({
 
 export const TokenPayloadSchema = z.object({
   sub: z.object({ id: z.coerce.number().int().min(1) }),
+  type: z.enum(["access", "refresh"]),
 });
 
 export const TokenTimersSchema = z.object({

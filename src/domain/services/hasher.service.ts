@@ -1,4 +1,4 @@
 export abstract class HasherService {
-  abstract hash: (inputText: string) => string;
-  abstract compare: (inputText: string, hashed: string) => boolean;
+  abstract hash: (inputText: string) => Promise<string>;
+  abstract compare: (inputText: string, hashed: string) => Promise<boolean>;
 }

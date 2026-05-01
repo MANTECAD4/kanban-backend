@@ -18,7 +18,7 @@ export const RefreshTokenPayloadSchema = z.object({
 
 export const RefreshTokenEntitySchema = z.object({
   jti: z.uuidv4(),
-  hash: z.hash("sha256"),
+  hash: z.hash("sha256", { enc: "hex" }),
   expiresAt: z.date(),
   revoked: z.boolean(),
   userId: z.number().int().min(1),

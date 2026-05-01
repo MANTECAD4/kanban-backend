@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
-import { envs } from "./configs/envs";
 import { Server } from "./presentation/server";
-import { AppRoutes } from "./presentation/routes";
+import { envs } from "./configs/envs";
+
 import {
   PostgresAuthRepository,
   PostgresBoardRepository,
@@ -9,15 +9,18 @@ import {
   PostgresSubtaskRepository,
   PostgresTaskRepository,
 } from "./infraestructure/repositories";
-import { BycryptHasher, JwtGenerator } from "./infraestructure/services";
+
 import { AuthMiddlewares } from "./presentation/auth/middlewares";
-import { AuthRoutes } from "./presentation/auth/routes";
-import { StatusColumnsRoutes } from "./presentation/status-column/routes";
-import { TaskRoutes } from "./presentation/task/routes";
-import { SubtaskRoutes } from "./presentation/subtask/routes";
-import { BoardsRoutes } from "./presentation/board/routes";
-import { AuthController } from "./presentation/auth/controller";
-import { BoardController } from "./presentation/board/controller";
+import { BoardMiddlewares } from "./presentation/board/middlewares";
+import { StatusColumnMiddlewares } from "./presentation/status-column/middlewares";
+import { TaskMiddlewares } from "./presentation/task/middlewares";
+import { SubtaskMiddlewares } from "./presentation/subtask/middlewares";
+
+import {
+  BycryptHasher,
+  CryptoHasher,
+  JwtGenerator,
+} from "./infraestructure/services";
 
 import {
   LoginUserUseCase,
@@ -35,19 +38,7 @@ import {
   GetStatusColumnsUseCase,
   UpdateStatusColumnUseCase,
 } from "./application/use-cases/status-column";
-import { StatusColumnController } from "./presentation/status-column/controller";
-import { BoardMiddlewares } from "./presentation/board/middlewares";
-import { StatusColumnMiddlewares } from "./presentation/status-column/middlewares";
-import { SubtaskController } from "./presentation/subtask/controller";
-import {
-  CreateSubtaskUseCase,
-  DeleteSubtaskUseCase,
-  GetSubtasksUseCase,
-  UpdateSubtaskUseCase,
-} from "./application/use-cases/subtask";
-import { TaskMiddlewares } from "./presentation/task/middlewares";
-import { SubtaskMiddlewares } from "./presentation/subtask/middlewares";
-import { TaskController } from "./presentation/task/controller";
+
 import {
   CreateTaskUseCase,
   DeleteTaskUseCase,
@@ -55,6 +46,26 @@ import {
   UpdateDataInTaskUseCase,
   UpdateStatusColumnInTaskUseCase,
 } from "./application/use-cases/task";
+
+import {
+  CreateSubtaskUseCase,
+  DeleteSubtaskUseCase,
+  GetSubtasksUseCase,
+  UpdateSubtaskUseCase,
+} from "./application/use-cases/subtask";
+
+import { AuthController } from "./presentation/auth/controller";
+import { BoardController } from "./presentation/board/controller";
+import { StatusColumnController } from "./presentation/status-column/controller";
+import { TaskController } from "./presentation/task/controller";
+import { SubtaskController } from "./presentation/subtask/controller";
+
+import { AppRoutes } from "./presentation/routes";
+import { AuthRoutes } from "./presentation/auth/routes";
+import { BoardsRoutes } from "./presentation/board/routes";
+import { StatusColumnsRoutes } from "./presentation/status-column/routes";
+import { TaskRoutes } from "./presentation/task/routes";
+import { SubtaskRoutes } from "./presentation/subtask/routes";
 
 (async () => {
   main();
@@ -79,8 +90,9 @@ function main() {
   //! SERVCIES
   const tokenProvider = new JwtGenerator(TOKEN_SECRET);
   const strongHasher = new BycryptHasher();
+  const softHasher = new CryptoHasher();
 
-  //! MIDDLEWARES WITH DI
+  //! MIDDLEWARES
   const authMiddlewares = new AuthMiddlewares(tokenProvider);
   const boardMiddlewares = new BoardMiddlewares();
   const statusColumnMiddlewares = new StatusColumnMiddlewares();
@@ -95,8 +107,7 @@ function main() {
     authRepository,
     tokenProvider,
     strongHasher,
-    // TODO: change for the crypto implementation
-    softHasher: strongHasher,
+    softHasher,
   });
 
   const registerUserUseCase = new RegisterUserUseCase({
@@ -226,14 +237,14 @@ function main() {
     subtaskMiddlewares,
   });
 
-  const appRouter = new AppRoutes({
+  const appRouter = new AppRoutes(
     authMiddlewares,
     authRouter,
     boardRouter,
     statusColumnRouter,
-    subtaskRouter,
     taskRouter,
-  });
+    subtaskRouter,
+  );
 
   // !SERVER INIT
 

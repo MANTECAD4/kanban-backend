@@ -1,16 +1,7 @@
 import { Router } from "express";
 import { TaskController } from "./controller";
 import { TaskMiddlewares } from "./middlewares";
-import {
-  TaskRepository,
-  StatusColumnRepository,
-} from "../../domain/repositories";
-import { GetTasksByColumnUseCase } from "../../application/use-cases/task/get-tasks.use-case";
-import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
 import { StatusColumnMiddlewares } from "../status-column/middlewares";
-import { DeleteTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
-import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
-import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 
 interface ClassDependencies {
   controller: TaskController;

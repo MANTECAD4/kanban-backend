@@ -8,39 +8,15 @@ import { SubtaskRoutes } from "./subtask/routes";
 
 import { AuthMiddlewares } from "./auth/middlewares";
 
-interface ClassDependencies {
-  authRouter: AuthRoutes;
-  authMiddlewares: AuthMiddlewares;
-  boardRouter: BoardsRoutes;
-  statusColumnRouter: StatusColumnsRoutes;
-  taskRouter: TaskRoutes;
-  subtaskRouter: SubtaskRoutes;
-}
-
 export class AppRoutes {
-  private readonly authRouter: AuthRoutes;
-  private readonly authMiddlewares: AuthMiddlewares;
-  private readonly boardRouter: BoardsRoutes;
-  private readonly statusColumnRouter: StatusColumnsRoutes;
-  private readonly taskRouter: TaskRoutes;
-  private readonly subtaskRouter: SubtaskRoutes;
-
-  constructor(dependencies: ClassDependencies) {
-    const {
-      authRouter,
-      authMiddlewares,
-      boardRouter,
-      statusColumnRouter,
-      taskRouter,
-      subtaskRouter,
-    } = dependencies;
-    this.authRouter = authRouter;
-    this.authMiddlewares = authMiddlewares;
-    this.boardRouter = boardRouter;
-    this.statusColumnRouter = statusColumnRouter;
-    this.taskRouter = taskRouter;
-    this.subtaskRouter = subtaskRouter;
-  }
+  constructor(
+    private readonly authMiddlewares: AuthMiddlewares,
+    private readonly authRouter: AuthRoutes,
+    private readonly boardRouter: BoardsRoutes,
+    private readonly statusColumnRouter: StatusColumnsRoutes,
+    private readonly taskRouter: TaskRoutes,
+    private readonly subtaskRouter: SubtaskRoutes,
+  ) {}
 
   public get routes(): Router {
     const router = Router();

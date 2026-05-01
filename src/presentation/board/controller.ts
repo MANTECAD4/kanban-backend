@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
-import { CreateBoardUseCase } from "../../application/use-cases";
 import { CustomError } from "../../domain/errors/custom-error";
-import { GetBoardsUseCase } from "../../application/use-cases/board/get-boards.use-case";
-import { UpdateBoardUseCase } from "../../application/use-cases/board/update-board.use-case";
-import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
 import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
+import {
+  GetBoardsUseCase,
+  CreateBoardUseCase,
+  UpdateBoardUseCase,
+  DeleteBoardUseCase,
+} from "../../application/use-cases/board";
 
 export class BoardController {
   constructor(

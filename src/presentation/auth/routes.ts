@@ -1,11 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "./controller";
-import { RegisterUserUseCase } from "../../application/use-cases/auth/register-user.use-case";
-import { LoginUserUseCase } from "../../application/use-cases/auth/login-user.use-case";
 import { AuthMiddlewares } from "./middlewares";
-import { AuthRepository } from "../../domain/repositories";
-import { TokenProvider } from "../../domain/services";
-import { HasherService } from "../../domain/services/hasher.service";
 
 interface ClassDependencies {
   controller: AuthController;

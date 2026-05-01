@@ -1,11 +1,11 @@
 import { HasherService } from "../../domain/services/hasher.service";
 
-import { hashSync, compareSync } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 export class BycryptHasher implements HasherService {
-  public hash = (inputText: string) => {
-    return hashSync(inputText, 10);
+  public hash = async (inputText: string) => {
+    return hash(inputText, 10);
   };
-  public compare = (inputText: string, hashed: string) => {
-    return compareSync(inputText, hashed);
+  public compare = async (inputText: string, hashed: string) => {
+    return compare(inputText, hashed);
   };
 }

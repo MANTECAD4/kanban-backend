@@ -1,75 +1,58 @@
 import { Router } from "express";
-import { StatusColumnsController } from "./controller";
-import { StatusColumnsMiddlewares } from "./middlewares";
-import { CreateStatusColumnUseCase } from "../../application/use-cases/status-column/create-column.use-case";
-import {
-  BoardRepository,
-  StatusColumnRepository,
-} from "../../domain/repositories";
-import { GetStatusColumnsUseCase } from "../../application/use-cases/status-column/get-columns.use-case";
-import { UpdateStatusColumnUseCase } from "../../application/use-cases/status-column/update-column.use-case";
-import { DeleteStatusColumnUseCase } from "../../application/use-cases/status-column/delete-column.use-case";
-import { BoardsMiddlewares } from "../board/middlewares";
+import { StatusColumnMiddlewares } from "./middlewares";
+import { BoardMiddlewares } from "../board/middlewares";
+import { StatusColumnController } from "./controller";
+
+interface ClassDependencies {
+  controller: StatusColumnController;
+  boardMiddlewares: BoardMiddlewares;
+  statusColumnMiddlewares: StatusColumnMiddlewares;
+}
 
 export class StatusColumnsRoutes {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly boardRepository: BoardRepository,
-  ) {}
+  private readonly controller: StatusColumnController;
+  private readonly boardMiddlewares: BoardMiddlewares;
+  private readonly statusColumnMiddlewares: StatusColumnMiddlewares;
+
+  constructor(dependencies: ClassDependencies) {
+    const { controller, boardMiddlewares, statusColumnMiddlewares } =
+      dependencies;
+    this.controller = controller;
+    this.boardMiddlewares = boardMiddlewares;
+    this.statusColumnMiddlewares = statusColumnMiddlewares;
+  }
+
   public get routes() {
     const router = Router({ mergeParams: true });
 
-    const createStatusColumnUseCase = new CreateStatusColumnUseCase(
-      this.statusColumnRepository,
-      this.boardRepository,
-    );
-
-    const getStatusColumnsUseCase = new GetStatusColumnsUseCase(
-      this.statusColumnRepository,
-      this.boardRepository,
-    );
-
-    const updateStatusColumnUsecase = new UpdateStatusColumnUseCase(
-      this.statusColumnRepository,
-    );
-    const deleteStatusColumnUsecase = new DeleteStatusColumnUseCase(
-      this.statusColumnRepository,
-    );
-
-    const controller = new StatusColumnsController(
-      getStatusColumnsUseCase,
-      createStatusColumnUseCase,
-      updateStatusColumnUsecase,
-      deleteStatusColumnUsecase,
-    );
     router.get(
       "/in-board/:boardId",
-      [BoardsMiddlewares.boardIdParamValidation],
-      controller.getAll,
+      [this.boardMiddlewares.boardIdParamValidation],
+      this.controller.getAll,
     );
 
     router.post(
       "/in-board/:boardId",
       [
-        BoardsMiddlewares.boardIdParamValidation,
-        StatusColumnsMiddlewares.createStatusColumnDataValidation,
+        this.boardMiddlewares.boardIdParamValidation,
+        this.statusColumnMiddlewares.createStatusColumnDataValidation,
       ],
-      controller.create,
+      this.controller.create,
     );
 
     router.put(
       "/:columnId",
       [
-        StatusColumnsMiddlewares.columnIdParamValidation,
-        StatusColumnsMiddlewares.updateStatusColumnDataValidation,
+        this.statusColumnMiddlewares.columnIdParamValidation,
+        this.statusColumnMiddlewares.updateStatusColumnDataValidation,
       ],
-      controller.update,
+      this.controller.update,
     );
 
     router.delete(
       "/:columnId",
-      [StatusColumnsMiddlewares.columnIdParamValidation],
-      controller.delete,
+      [this.statusColumnMiddlewares.columnIdParamValidation],
+      this.controller.delete,
     );
     return router;
   }

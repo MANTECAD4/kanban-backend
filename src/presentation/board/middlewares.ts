@@ -5,19 +5,19 @@ import {
 } from "../shared/factories/data-validation-middleware";
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
-export class BoardsMiddlewares {
-  public static createBoardDataValidation = dataValidationMiddlewareFactory(
+export class BoardMiddlewares {
+  public createBoardDataValidation = dataValidationMiddlewareFactory(
     CreateBoardSchema,
     "Invalid data recieved. Board creation failed.",
     RequestValidationTarget.BODY,
   );
-  public static updateBoardDataValidation = dataValidationMiddlewareFactory(
+  public updateBoardDataValidation = dataValidationMiddlewareFactory(
     UpdateBoardSchema,
     "Invalid data recieved. Board update failed.",
     RequestValidationTarget.BODY,
   );
 
-  public static boardIdParamValidation = dataValidationMiddlewareFactory(
+  public boardIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("boardId"),
     "Invalid board id provided.",
     RequestValidationTarget.PARAMS,

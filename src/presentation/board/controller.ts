@@ -6,7 +6,7 @@ import { UpdateBoardUseCase } from "../../application/use-cases/board/update-boa
 import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-board.use-case";
 import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
 
-export class BoardsController {
+export class BoardController {
   constructor(
     private readonly createBoardUseCase: CreateBoardUseCase,
     private readonly getBoardsUseCase: GetBoardsUseCase,
@@ -17,7 +17,7 @@ export class BoardsController {
   public create = async (req: Request, res: Response) => {
     try {
       const result = await this.createBoardUseCase.execute(
-        req.user!,
+        req.user!.sub.id,
         req.validatedBody! as CreateBoardDto,
       );
 
@@ -27,69 +27,39 @@ export class BoardsController {
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.createBoardUseCase
-    //   .execute(req.user!, req.validatedBody! as CreateBoardDto)
-    //   .then((result) =>
-    //     res
-    //       .status(201)
-    //       .json({ message: "Board created succesfully", ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public getAll = async (req: Request, res: Response) => {
     try {
-      const result = await this.getBoardsUseCase.execute(req.user!);
+      const result = await this.getBoardsUseCase.execute(req.user!.sub.id);
       return res.json({ message: `Boards loaded succesfully`, ...result });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.getBoardsUseCase
-    //   .execute(req.user!)
-    //   .then((result) =>
-    //     res.json({ message: `Boards loaded succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public update = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateBoardUseCase.execute(
-        req.user!,
-        req.validatedParams!.boardId as number,
-        req.validatedBody! as UpdateBoardDto,
-      );
+      const result = await this.updateBoardUseCase.execute({
+        userId: req.user!.sub.id,
+        boardId: req.validatedParams!.boardId as number,
+        data: req.validatedBody! as UpdateBoardDto,
+      });
       return res.json({ message: `Board updated succesfully`, ...result });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.updateBoardUseCase
-    //   .execute(
-    //     req.user!,
-    //     req.validatedParams!.boardId as number,
-    //     req.validatedBody! as UpdateBoardDto,
-    //   )
-    //   .then((result) =>
-    //     res.json({ message: `Board updated succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public delete = async (req: Request, res: Response) => {
     try {
       const result = await this.deleteBoardUseCase.execute(
-        req.user!,
+        req.user!.sub.id,
         req.validatedParams!.boardId as number,
       );
       return res.json({ message: `Board with deleted succesfully`, ...result });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.deleteBoardUseCase
-    //   .execute(req.user!, req.validatedParams!.boardId as number)
-    //   .then((result) =>
-    //     res.json({ message: `Board with deleted succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

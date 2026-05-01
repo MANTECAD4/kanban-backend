@@ -8,19 +8,19 @@ import {
 } from "../shared/factories/data-validation-middleware";
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
-export class StatusColumnsMiddlewares {
-  static createStatusColumnDataValidation = dataValidationMiddlewareFactory(
+export class StatusColumnMiddlewares {
+  public createStatusColumnDataValidation = dataValidationMiddlewareFactory(
     CreateStatusColumnSchema,
     "Invalid data for status column. Creation failed",
     RequestValidationTarget.BODY,
   );
 
-  static updateStatusColumnDataValidation = dataValidationMiddlewareFactory(
+  public updateStatusColumnDataValidation = dataValidationMiddlewareFactory(
     UpdateStatusColumnSchema,
     "Invalid data for updating status column",
     RequestValidationTarget.BODY,
   );
-  static columnIdParamValidation = dataValidationMiddlewareFactory(
+  public columnIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("columnId"),
     "Invalid status column id provided.",
     RequestValidationTarget.PARAMS,

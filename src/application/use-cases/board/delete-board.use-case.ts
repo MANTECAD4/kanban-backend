@@ -1,12 +1,19 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
-import { AccessTokenReturnDto } from "../../dtos";
+
+interface ClassDependencies {
+  boardRepository: BoardRepository;
+}
 
 export class DeleteBoardUseCase {
-  constructor(private readonly boardRepository: BoardRepository) {}
-  public execute = async (user: AccessTokenReturnDto, boardId: number) => {
+  private readonly boardRepository: BoardRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { boardRepository } = dependencies;
+    this.boardRepository = boardRepository;
+  }
+  public execute = async (userId: number, boardId: number) => {
     const existRelationship = await this.boardRepository.checkRelationship(
-      user.sub.id,
+      userId,
       boardId,
     );
     if (!existRelationship)

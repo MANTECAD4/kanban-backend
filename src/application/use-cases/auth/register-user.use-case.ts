@@ -5,12 +5,23 @@ import { TokenProvider } from "../../../domain/services";
 import { HasherService } from "../../../domain/services/hasher.service";
 import { RegisterUserDto } from "../../dtos";
 
+interface ClassDependencies {
+  authRepository: AuthRepository;
+  tokenProvider: TokenProvider;
+  strongHasher: HasherService;
+}
+
 export class RegisterUserUseCase {
-  constructor(
-    private readonly authRepository: AuthRepository,
-    private readonly tokenGenerator: TokenProvider,
-    private readonly hasherService: HasherService,
-  ) {}
+  private readonly authRepository: AuthRepository;
+  private readonly tokenProvider: TokenProvider;
+  private readonly strongHasher: HasherService;
+  constructor(dependencies: ClassDependencies) {
+    const { authRepository, tokenProvider, strongHasher } = dependencies;
+
+    this.authRepository = authRepository;
+    this.tokenProvider = tokenProvider;
+    this.strongHasher = strongHasher;
+  }
 
   public async execute(data: RegisterUserDto) {
     const { ACCESS_TOKEN_DURATION } = envs();
@@ -24,7 +35,7 @@ export class RegisterUserUseCase {
         ErrorCodes["ALREADY_REGISTERED"],
       );
 
-    const hashedPassword = this.hasherService.hash(rawPassword);
+    const hashedPassword = this.strongHasher.hash(rawPassword);
 
     const { password, ...rest } = await this.authRepository.register({
       email,
@@ -32,7 +43,7 @@ export class RegisterUserUseCase {
       name,
     });
 
-    const token = this.tokenGenerator.generate(
+    const token = this.tokenProvider.generate(
       { sub: { id: rest.id }, type: "access" },
       ACCESS_TOKEN_DURATION,
     );

@@ -1,24 +1,28 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository, BoardRepository } from "../../../domain/repositories";
-import { AccessTokenReturnDto } from "../../dtos";
+
+interface ClassDependencies {
+  authRepository: AuthRepository;
+  boardRepository: BoardRepository;
+}
 
 export class GetBoardsUseCase {
-  constructor(
-    private readonly authRepository: AuthRepository,
-    private readonly boardRepository: BoardRepository,
-  ) {}
+  private readonly authRepository: AuthRepository;
+  private readonly boardRepository: BoardRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { authRepository, boardRepository } = dependencies;
+    this.authRepository = authRepository;
+    this.boardRepository = boardRepository;
+  }
 
-  public execute = async (user: AccessTokenReturnDto) => {
-    const {
-      sub: { id },
-    } = user;
-    const existingUser = await this.authRepository.getById(id);
+  public execute = async (userId: number) => {
+    const existingUser = await this.authRepository.getById(userId);
     if (!existingUser)
-      throw CustomError.unauthorized(
-        `User with id ${id} not found`,
-        ErrorCodes.UNAUTHORIZED,
+      throw CustomError.notFound(
+        `User with id ${userId} not found`,
+        ErrorCodes["NOT_FOUND"],
       );
-    const boards = await this.boardRepository.getAll(id);
+    const boards = await this.boardRepository.getAll(userId);
     return {
       data: boards,
 

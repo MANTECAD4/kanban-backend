@@ -9,7 +9,7 @@ import { GetStatusColumnsUseCase } from "../../application/use-cases/status-colu
 import { UpdateStatusColumnUseCase } from "../../application/use-cases/status-column/update-column.use-case";
 import { DeleteStatusColumnUseCase } from "../../application/use-cases/status-column/delete-column.use-case";
 
-export class StatusColumnsController {
+export class StatusColumnController {
   constructor(
     private readonly getStatusColumnsUsecase: GetStatusColumnsUseCase,
     private readonly createStatusColumnUsecase: CreateStatusColumnUseCase,
@@ -30,12 +30,6 @@ export class StatusColumnsController {
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.getStatusColumnsUsecase
-    //   .execute(req.user!, req.validatedParams!.boardId)
-    //   .then((result) =>
-    //     res.json({ message: `Status columns loaded succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
   public create = async (req: Request, res: Response) => {
     try {
@@ -51,18 +45,6 @@ export class StatusColumnsController {
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.createStatusColumnUsecase
-    //   .execute(
-    //     req.user!,
-    //     req.validatedParams!.boardId,
-    //     req.validatedBody! as CreateStatusColumnDto,
-    //   )
-    //   .then((result) =>
-    //     res
-    //       .status(201)
-    //       .json({ message: `Status column created succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public update = async (req: Request, res: Response) => {
@@ -80,17 +62,6 @@ export class StatusColumnsController {
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.updateStatusColumnsUsecase
-    //   .execute({
-    //     userId: req.user!.sub.id,
-    //     columnId: req.validatedParams!.columnId,
-
-    //     data: req.validatedBody as UpdateStatusColumnDto,
-    //   })
-    //   .then((result) =>
-    //     res.json({ message: `Column with updated succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 
   public delete = async (req: Request, res: Response) => {
@@ -107,11 +78,5 @@ export class StatusColumnsController {
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
-    // this.deleteStatusColumnsUsecase
-    //   .execute(req.user!.sub.id, req.validatedParams!.columnId)
-    //   .then((result) =>
-    //     res.json({ message: `Status column deleted succesfully`, ...result }),
-    //   )
-    //   .catch((error) => CustomError.handleError(error, req, res));
   };
 }

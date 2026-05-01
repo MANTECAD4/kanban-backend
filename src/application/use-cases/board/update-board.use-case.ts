@@ -1,18 +1,28 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { AccessTokenReturnDto, UpdateBoardDto } from "../../dtos";
+import { UpdateBoardDto } from "../../dtos";
+
+interface ClassDependencies {
+  boardRepository: BoardRepository;
+}
+
+interface ExecutionProps {
+  userId: number;
+  boardId: number;
+  data: UpdateBoardDto;
+}
 
 export class UpdateBoardUseCase {
-  constructor(private readonly boardRepository: BoardRepository) {}
+  private readonly boardRepository: BoardRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { boardRepository } = dependencies;
+    this.boardRepository = boardRepository;
+  }
 
-  public execute = async (
-    user: AccessTokenReturnDto,
-    boardId: number,
-    data: UpdateBoardDto,
-  ) => {
+  public execute = async ({ userId, boardId, data }: ExecutionProps) => {
     const existsRelationship = await this.boardRepository.checkRelationship(
-      user.sub.id,
+      userId,
       boardId,
     );
 
@@ -24,7 +34,7 @@ export class UpdateBoardUseCase {
 
     const definedFields = getDefinedFields(data);
 
-    const { userId, ...rest } = await this.boardRepository.update(
+    const { userId: _, ...rest } = await this.boardRepository.update(
       boardId,
       definedFields,
     );

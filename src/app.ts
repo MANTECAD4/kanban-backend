@@ -17,8 +17,27 @@ import { TaskRoutes } from "./presentation/task/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
 import { BoardsRoutes } from "./presentation/board/routes";
 import { AuthController } from "./presentation/auth/controller";
-import { RegisterUserUseCase } from "./application/use-cases/auth/register-user.use-case";
-import { LoginUserUseCase } from "./application/use-cases";
+import { BoardController } from "./presentation/board/controller";
+
+import {
+  LoginUserUseCase,
+  RegisterUserUseCase,
+} from "./application/use-cases/auth/";
+import {
+  CreateBoardUseCase,
+  DeleteBoardUseCase,
+  GetBoardsUseCase,
+  UpdateBoardUseCase,
+} from "./application/use-cases/board";
+import {
+  CreateStatusColumnUseCase,
+  DeleteStatusColumnUseCase,
+  GetStatusColumnsUseCase,
+  UpdateStatusColumnUseCase,
+} from "./application/use-cases/status-column";
+import { StatusColumnController } from "./presentation/status-column/controller";
+import { BoardMiddlewares } from "./presentation/board/middlewares";
+import { StatusColumnMiddlewares } from "./presentation/status-column/middlewares";
 
 (async () => {
   main();
@@ -47,7 +66,11 @@ function main() {
 
   //! MIDDLEWARES WITH DI
   const authMiddlewares = new AuthMiddlewares(tokenProvider);
+  const boardMiddlewares = new BoardMiddlewares();
+  const statusColumnMiddlewares = new StatusColumnMiddlewares();
 
+  //////////////// ! USE CASES ////////////////
+  // AUTH
   const loginUserUseCase = new LoginUserUseCase({
     acccesTokenDuration,
     refreshTokenDuration,
@@ -57,23 +80,74 @@ function main() {
     // TODO: change for the crypto implementation
     softHasher: strongHasher,
   });
-  const registerUserUseCase = new RegisterUserUseCase();
 
+  const registerUserUseCase = new RegisterUserUseCase({
+    authRepository,
+    strongHasher,
+    tokenProvider,
+  });
+
+  // BOARDS
+  const createBoardUseCase = new CreateBoardUseCase({
+    boardRepository,
+    authRepository,
+  });
+
+  const getBoardsUseCase = new GetBoardsUseCase({
+    authRepository,
+    boardRepository,
+  });
+  const updateBoardUseCase = new UpdateBoardUseCase({ boardRepository });
+  const deleteBoardUseCase = new DeleteBoardUseCase({ boardRepository });
+
+  const createStatusColumnUseCase = new CreateStatusColumnUseCase({
+    statusColumnRepository,
+    boardRepository,
+  });
+
+  const getStatusColumnsUseCase = new GetStatusColumnsUseCase({
+    statusColumnRepository,
+    boardRepository,
+  });
+
+  const updateStatusColumnUsecase = new UpdateStatusColumnUseCase({
+    statusColumnRepository,
+  });
+  const deleteStatusColumnUsecase = new DeleteStatusColumnUseCase({
+    statusColumnRepository,
+  });
+
+  const statusColumnController = new StatusColumnController(
+    getStatusColumnsUseCase,
+    createStatusColumnUseCase,
+    updateStatusColumnUsecase,
+    deleteStatusColumnUsecase,
+  );
+
+  //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
     loginUserUseCase,
   );
 
+  const boardController = new BoardController(
+    createBoardUseCase,
+    getBoardsUseCase,
+    updateBoardUseCase,
+    deleteBoardUseCase,
+  );
+
   //! SUB ROUTERS
-  const boardRouter = new BoardsRoutes(authRepository, boardRepository);
+  const boardRouter = new BoardsRoutes({ controller: boardController });
   const authRouter = new AuthRoutes({
     authMiddlewares,
     controller: authController,
   });
-  const statusColumnRouter = new StatusColumnsRoutes(
-    statusColumnRepository,
-    boardRepository,
-  );
+  const statusColumnRouter = new StatusColumnsRoutes({
+    controller: statusColumnController,
+    boardMiddlewares,
+    statusColumnMiddlewares,
+  });
   const taskRouter = new TaskRoutes(statusColumnRepository, taskRepository);
   const subtaskRouter = new SubtaskRoutes(subtaskRepository, taskRepository);
   const server = new Server({ port });

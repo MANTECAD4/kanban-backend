@@ -38,16 +38,32 @@ import {
 import { StatusColumnController } from "./presentation/status-column/controller";
 import { BoardMiddlewares } from "./presentation/board/middlewares";
 import { StatusColumnMiddlewares } from "./presentation/status-column/middlewares";
+import { SubtaskController } from "./presentation/subtask/controller";
+import {
+  CreateSubtaskUseCase,
+  DeleteSubtaskUseCase,
+  GetSubtasksUseCase,
+  UpdateSubtaskUseCase,
+} from "./application/use-cases/subtask";
+import { TaskMiddlewares } from "./presentation/task/middlewares";
+import { SubtaskMiddlewares } from "./presentation/subtask/middlewares";
+import { TaskController } from "./presentation/task/controller";
+import {
+  CreateTaskUseCase,
+  DeleteTaskUseCase,
+  GetTasksByColumnUseCase,
+  UpdateDataInTaskUseCase,
+  UpdateStatusColumnInTaskUseCase,
+} from "./application/use-cases/task";
 
 (async () => {
   main();
 })();
 
 function main() {
-  const { PORT: port } = envs();
-
   //! ENVIROMENT VARIABLES
   const {
+    PORT: port,
     TOKEN_SECRET,
     ACCESS_TOKEN_DURATION: acccesTokenDuration,
     REFRESH_TOKEN_DURATION: refreshTokenDuration,
@@ -68,6 +84,8 @@ function main() {
   const authMiddlewares = new AuthMiddlewares(tokenProvider);
   const boardMiddlewares = new BoardMiddlewares();
   const statusColumnMiddlewares = new StatusColumnMiddlewares();
+  const taskMiddlewares = new TaskMiddlewares();
+  const subtaskMiddlewares = new SubtaskMiddlewares();
 
   //////////////// ! USE CASES ////////////////
   // AUTH
@@ -100,6 +118,7 @@ function main() {
   const updateBoardUseCase = new UpdateBoardUseCase({ boardRepository });
   const deleteBoardUseCase = new DeleteBoardUseCase({ boardRepository });
 
+  // STATUS COLUMNS
   const createStatusColumnUseCase = new CreateStatusColumnUseCase({
     statusColumnRepository,
     boardRepository,
@@ -117,13 +136,37 @@ function main() {
     statusColumnRepository,
   });
 
-  const statusColumnController = new StatusColumnController(
-    getStatusColumnsUseCase,
-    createStatusColumnUseCase,
-    updateStatusColumnUsecase,
-    deleteStatusColumnUsecase,
-  );
+  // SUBTASK
+  const getSubtasksUsecase = new GetSubtasksUseCase({
+    subtaskRepository,
+    taskRepository,
+  });
 
+  const createSubtaskUsecase = new CreateSubtaskUseCase({
+    subtaskRepository,
+    taskRepository,
+  });
+
+  const updateSubtaskUsecase = new UpdateSubtaskUseCase({ subtaskRepository });
+  const deleteSubtaskUsecase = new DeleteSubtaskUseCase({ subtaskRepository });
+  // TASKS
+  const getTasksUseCase = new GetTasksByColumnUseCase({
+    statusColumnRepository,
+    taskRepository,
+  });
+
+  const createTaskUseCase = new CreateTaskUseCase({
+    statusColumnRepository,
+    taskRepository,
+  });
+
+  const updateDataTask = new UpdateDataInTaskUseCase({ taskRepository });
+  const updateColumnTask = new UpdateStatusColumnInTaskUseCase({
+    taskRepository,
+    statusColumnRepository,
+  });
+
+  const deleteTaskUsecase = new DeleteTaskUseCase({ taskRepository });
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -136,9 +179,33 @@ function main() {
     updateBoardUseCase,
     deleteBoardUseCase,
   );
+  const statusColumnController = new StatusColumnController(
+    getStatusColumnsUseCase,
+    createStatusColumnUseCase,
+    updateStatusColumnUsecase,
+    deleteStatusColumnUsecase,
+  );
 
-  //! SUB ROUTERS
-  const boardRouter = new BoardsRoutes({ controller: boardController });
+  const subtaskController = new SubtaskController(
+    getSubtasksUsecase,
+    createSubtaskUsecase,
+    updateSubtaskUsecase,
+    deleteSubtaskUsecase,
+  );
+
+  const taskController = new TaskController(
+    getTasksUseCase,
+    createTaskUseCase,
+    updateDataTask,
+    updateColumnTask,
+    deleteTaskUsecase,
+  );
+
+  //! ROUTERS
+  const boardRouter = new BoardsRoutes({
+    controller: boardController,
+    boardMiddlewares,
+  });
   const authRouter = new AuthRoutes({
     authMiddlewares,
     controller: authController,
@@ -148,9 +215,16 @@ function main() {
     boardMiddlewares,
     statusColumnMiddlewares,
   });
-  const taskRouter = new TaskRoutes(statusColumnRepository, taskRepository);
-  const subtaskRouter = new SubtaskRoutes(subtaskRepository, taskRepository);
-  const server = new Server({ port });
+  const taskRouter = new TaskRoutes({
+    controller: taskController,
+    statusColumnMiddlewares,
+    taskMiddlewares,
+  });
+  const subtaskRouter = new SubtaskRoutes({
+    controller: subtaskController,
+    taskMiddlewares,
+    subtaskMiddlewares,
+  });
 
   const appRouter = new AppRoutes({
     authMiddlewares,
@@ -160,6 +234,10 @@ function main() {
     subtaskRouter,
     taskRouter,
   });
+
+  // !SERVER INIT
+
+  const server = new Server({ port });
   server.setRoutes(appRouter.routes);
 
   const httpServer = createServer(server.app);

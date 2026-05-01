@@ -9,18 +9,18 @@ import {
 } from "../../application/dtos/subtask.dto";
 
 export class SubtaskMiddlewares {
-  public static subtaskIdParamValidation = dataValidationMiddlewareFactory(
+  public subtaskIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("subtaskId"),
     `Invalid subtask id`,
     RequestValidationTarget.PARAMS,
   );
 
-  public static createSubtaskDataValidation = dataValidationMiddlewareFactory(
+  public createSubtaskDataValidation = dataValidationMiddlewareFactory(
     CreateSubtaskSchema,
     `Invalid data required to create a subtask`,
     RequestValidationTarget.BODY,
   );
-  public static updateSubtaskDataValidation = dataValidationMiddlewareFactory(
+  public updateSubtaskDataValidation = dataValidationMiddlewareFactory(
     UpdateSubtaskSchema,
     `Invalid data required to update a subtask`,
     RequestValidationTarget.BODY,

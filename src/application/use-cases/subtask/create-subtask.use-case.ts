@@ -3,6 +3,11 @@ import { TaskRepository } from "../../../domain/repositories";
 import { SubtaskRepository } from "../../../domain/repositories/subtask.repository";
 import { CreateSubtaskDto } from "../../dtos/subtask.dto";
 
+interface ClassDependencies {
+  subtaskRepository: SubtaskRepository;
+  taskRepository: TaskRepository;
+}
+
 interface ExecutionProps {
   userId: number;
   taskId: number;
@@ -10,10 +15,13 @@ interface ExecutionProps {
 }
 
 export class CreateSubtaskUseCase {
-  constructor(
-    private readonly subtaskRepository: SubtaskRepository,
-    private readonly taskRepository: TaskRepository,
-  ) {}
+  private readonly subtaskRepository: SubtaskRepository;
+  private readonly taskRepository: TaskRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { subtaskRepository, taskRepository } = dependencies;
+    this.subtaskRepository = subtaskRepository;
+    this.taskRepository = taskRepository;
+  }
 
   public execute = async ({ userId, taskId, data }: ExecutionProps) => {
     const taskOwnedByUser = await this.taskRepository.checkRelationship(

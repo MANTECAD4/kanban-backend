@@ -5,24 +5,33 @@ import {
 } from "../../../domain/repositories";
 import { UpdateColumnInTaskDto } from "../../dtos";
 
-interface UseCaseParams {
+interface ClassDependencies {
+  statusColumnRepository: StatusColumnRepository;
+  taskRepository: TaskRepository;
+}
+
+interface ExecutionProps {
   userId: number;
   taskId: number;
   data: UpdateColumnInTaskDto;
 }
 
 export class UpdateStatusColumnInTaskUseCase {
-  constructor(
-    private readonly kanbanTaskRepository: TaskRepository,
-    private readonly statusColumnRepository: StatusColumnRepository,
-  ) {}
+  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly taskRepository: TaskRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
+      dependencies;
+    this.taskRepository = kanbanTaskRepository;
+    this.statusColumnRepository = statusColumnRepository;
+  }
 
   public execute = async ({
     userId,
     taskId,
     data: { statusColumnId },
-  }: UseCaseParams) => {
-    const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(
+  }: ExecutionProps) => {
+    const taskOwnedByUser = await this.taskRepository.checkRelationship(
       userId,
       taskId,
     );
@@ -46,7 +55,7 @@ export class UpdateStatusColumnInTaskUseCase {
         ErrorCodes.BAD_REQUEST,
       );
 
-    const updatedTask = await this.kanbanTaskRepository.update(taskId, {
+    const updatedTask = await this.taskRepository.update(taskId, {
       status_column_id: statusColumnId,
     });
     return { data: updatedTask };

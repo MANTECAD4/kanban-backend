@@ -12,78 +12,63 @@ import { DeleteTaskUseCase } from "../../application/use-cases/task/delete-task.
 import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
 import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 
+interface ClassDependencies {
+  controller: TaskController;
+  statusColumnMiddlewares: StatusColumnMiddlewares;
+  taskMiddlewares: TaskMiddlewares;
+}
+
 export class TaskRoutes {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly kanbanTaskRepository: TaskRepository,
-  ) {}
+  private readonly controller: TaskController;
+  private readonly statusColumnMiddlewares: StatusColumnMiddlewares;
+  private readonly taskMiddlewares: TaskMiddlewares;
+  constructor(dependencies: ClassDependencies) {
+    const { controller, statusColumnMiddlewares, taskMiddlewares } =
+      dependencies;
+    this.controller = controller;
+    this.statusColumnMiddlewares = statusColumnMiddlewares;
+    this.taskMiddlewares = taskMiddlewares;
+  }
 
   public get routes(): Router {
     const router = Router({ mergeParams: true });
 
-    const getTasksUseCase = new GetTasksByColumnUseCase(
-      this.statusColumnRepository,
-      this.kanbanTaskRepository,
-    );
-
-    const createTaskUseCase = new CreateTaskUseCase(
-      this.statusColumnRepository,
-      this.kanbanTaskRepository,
-    );
-
-    const updateDataTask = new UpdateDataInTaskUseCase(
-      this.kanbanTaskRepository,
-    );
-    const updateColumnTask = new UpdateStatusColumnInTaskUseCase(
-      this.kanbanTaskRepository,
-      this.statusColumnRepository,
-    );
-
-    const deleteTaskUsecase = new DeleteTaskUseCase(this.kanbanTaskRepository);
-    const controller = new TaskController(
-      getTasksUseCase,
-      createTaskUseCase,
-      updateDataTask,
-      updateColumnTask,
-      deleteTaskUsecase,
-    );
-
     router.get(
       "/in-column/:columnId",
-      [StatusColumnMiddlewares.columnIdParamValidation],
-      controller.getAllByColumn,
+      [this.statusColumnMiddlewares.columnIdParamValidation],
+      this.controller.getAllByColumn,
     );
 
     router.post(
       "/in-column/:columnId",
       [
-        StatusColumnMiddlewares.columnIdParamValidation,
-        TaskMiddlewares.createTaskDataValidation,
+        this.statusColumnMiddlewares.columnIdParamValidation,
+        this.taskMiddlewares.createTaskDataValidation,
       ],
-      controller.create,
+      this.controller.create,
     );
 
     router.put(
       "/:taskId",
       [
-        TaskMiddlewares.taskIdParamValidation,
-        TaskMiddlewares.updateTaskDataValidation,
+        this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.updateTaskDataValidation,
       ],
-      controller.updateData,
+      this.controller.updateData,
     );
     router.put(
       "/:taskId/status-column",
       [
-        TaskMiddlewares.taskIdParamValidation,
-        TaskMiddlewares.updateTaskColumnDataValidation,
+        this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.updateTaskColumnDataValidation,
       ],
-      controller.updateStatusColumn,
+      this.controller.updateStatusColumn,
     );
 
     router.delete(
       "/:taskId",
-      [TaskMiddlewares.taskIdParamValidation],
-      controller.delete,
+      [this.taskMiddlewares.taskIdParamValidation],
+      this.controller.delete,
     );
 
     return router;

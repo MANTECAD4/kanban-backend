@@ -9,14 +9,17 @@ import { DeleteBoardUseCase } from "../../application/use-cases/board/delete-boa
 
 interface ClassDependencies {
   controller: BoardController;
+  boardMiddlewares: BoardMiddlewares;
 }
 
 export class BoardsRoutes {
   private readonly controller: BoardController;
+  private readonly boardMiddlewares: BoardMiddlewares;
 
   constructor(dependencies: ClassDependencies) {
-    const { controller } = dependencies;
+    const { controller, boardMiddlewares } = dependencies;
     this.controller = controller;
+    this.boardMiddlewares = boardMiddlewares;
   }
 
   public get routes() {
@@ -25,21 +28,21 @@ export class BoardsRoutes {
     router.get("/", this.controller.getAll);
     router.post(
       "/",
-      [BoardMiddlewares.createBoardDataValidation],
+      [this.boardMiddlewares.createBoardDataValidation],
       this.controller.create,
     );
 
     router.put(
       "/:boardId",
       [
-        BoardMiddlewares.boardIdParamValidation,
-        BoardMiddlewares.updateBoardDataValidation,
+        this.boardMiddlewares.boardIdParamValidation,
+        this.boardMiddlewares.updateBoardDataValidation,
       ],
       this.controller.update,
     );
     router.delete(
       "/:boardId",
-      [BoardMiddlewares.boardIdParamValidation],
+      [this.boardMiddlewares.boardIdParamValidation],
       this.controller.delete,
     );
 

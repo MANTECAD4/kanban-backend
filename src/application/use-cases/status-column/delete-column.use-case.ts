@@ -1,12 +1,24 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../../domain/repositories";
 
-export class DeleteStatusColumnUseCase {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-  ) {}
+interface ClassDependencies {
+  statusColumnRepository: StatusColumnRepository;
+}
 
-  public execute = async (userId: number, columnId: number) => {
+interface ExecutionProps {
+  userId: number;
+  columnId: number;
+}
+
+export class DeleteStatusColumnUseCase {
+  private readonly statusColumnRepository: StatusColumnRepository;
+
+  constructor(dependencies: ClassDependencies) {
+    const { statusColumnRepository } = dependencies;
+    this.statusColumnRepository = statusColumnRepository;
+  }
+
+  public execute = async ({ userId, columnId }: ExecutionProps) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
       columnId,

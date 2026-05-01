@@ -2,71 +2,55 @@ import { Router } from "express";
 import { SubtaskController } from "./controller";
 import { SubtaskMiddlewares } from "./middlewares";
 import { TaskMiddlewares } from "../task/middlewares";
-import { SubtaskRepository } from "../../domain/repositories/subtask.repository";
-import { TaskRepository } from "../../domain/repositories";
-import { GetSubtasksUseCase } from "../../application/use-cases/subtask/get-subtasks.use-case";
-import { CreateSubtaskUseCase } from "../../application/use-cases/subtask/create-subtask.use-case";
-import { UpdateSubtaskUseCase } from "../../application/use-cases/subtask/update-subtask.use-case";
-import { DeleteSubtaskUseCase } from "../../application/use-cases/subtask/delete-subtask.use-case";
+
+interface ClassDependencies {
+  controller: SubtaskController;
+  taskMiddlewares: TaskMiddlewares;
+  subtaskMiddlewares: SubtaskMiddlewares;
+}
 
 export class SubtaskRoutes {
-  constructor(
-    private readonly subtaskRepository: SubtaskRepository,
-    private readonly taskRepository: TaskRepository,
-  ) {}
+  private readonly controller: SubtaskController;
+  private readonly taskMiddlewares: TaskMiddlewares;
+  private readonly subtaskMiddlewares: SubtaskMiddlewares;
+  constructor(dependencies: ClassDependencies) {
+    const { controller, taskMiddlewares, subtaskMiddlewares } = dependencies;
+
+    this.controller = controller;
+    this.taskMiddlewares = taskMiddlewares;
+    this.subtaskMiddlewares = subtaskMiddlewares;
+  }
   public get routes(): Router {
     const router = Router();
 
-    const getSubtasksUsecase = new GetSubtasksUseCase(
-      this.subtaskRepository,
-      this.taskRepository,
-    );
-    const createSubtaskUsecase = new CreateSubtaskUseCase(
-      this.subtaskRepository,
-      this.taskRepository,
-    );
-    const updateSubtaskUsecase = new UpdateSubtaskUseCase(
-      this.subtaskRepository,
-    );
-    const deleteSubtaskUsecase = new DeleteSubtaskUseCase(
-      this.subtaskRepository,
-    );
-
-    const controller = new SubtaskController(
-      getSubtasksUsecase,
-      createSubtaskUsecase,
-      updateSubtaskUsecase,
-      deleteSubtaskUsecase,
-    );
-
     router.get(
       "/in-task/:taskId",
-      [TaskMiddlewares.taskIdParamValidation],
-      controller.getAllByTask,
+      [this.taskMiddlewares.taskIdParamValidation],
+      this.controller.getAllByTask,
     );
 
     router.post(
       "/in-task/:taskId",
       [
-        TaskMiddlewares.taskIdParamValidation,
-        SubtaskMiddlewares.createSubtaskDataValidation,
+        this.taskMiddlewares.taskIdParamValidation,
+        this.subtaskMiddlewares.createSubtaskDataValidation,
       ],
-      controller.create,
+      this.controller.create,
     );
 
     router.put(
       "/:subtaskId",
       [
-        SubtaskMiddlewares.subtaskIdParamValidation,
-        SubtaskMiddlewares.updateSubtaskDataValidation,
+        this.subtaskMiddlewares.subtaskIdParamValidation,
+        this.subtaskMiddlewares.updateSubtaskDataValidation,
       ],
-      controller.update,
+      this.controller.update,
     );
 
     router.delete(
       "/:subtaskId",
-      [SubtaskMiddlewares.subtaskIdParamValidation],
-      controller.delete,
+      [this.subtaskMiddlewares.subtaskIdParamValidation],
+      this.controller.delete,
     );
 
     return router;

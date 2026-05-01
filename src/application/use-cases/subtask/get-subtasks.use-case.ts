@@ -2,13 +2,26 @@ import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { TaskRepository } from "../../../domain/repositories";
 import { SubtaskRepository } from "../../../domain/repositories/subtask.repository";
 
-export class GetSubtasksUseCase {
-  constructor(
-    private readonly subtaskRepository: SubtaskRepository,
-    private readonly taskRepository: TaskRepository,
-  ) {}
+interface ClassDependencies {
+  subtaskRepository: SubtaskRepository;
+  taskRepository: TaskRepository;
+}
 
-  public execute = async (userId: number, taskId: number) => {
+interface ExecutionProps {
+  userId: number;
+  taskId: number;
+}
+
+export class GetSubtasksUseCase {
+  private readonly subtaskRepository: SubtaskRepository;
+  private readonly taskRepository: TaskRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { subtaskRepository, taskRepository } = dependencies;
+    this.subtaskRepository = subtaskRepository;
+    this.taskRepository = taskRepository;
+  }
+
+  public execute = async ({ userId, taskId }: ExecutionProps) => {
     const taskOwnedByUser = await this.taskRepository.checkRelationship(
       userId,
       taskId,

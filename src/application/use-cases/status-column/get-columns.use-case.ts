@@ -1,18 +1,31 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { TokenReturnDto } from "../../dtos/auth.dto";
 import {
   BoardRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
 
+interface ClassDependencies {
+  statusColumnRepository: StatusColumnRepository;
+  boardRepository: BoardRepository;
+}
+
+interface ExecutioProps {
+  userId: number;
+  boardId: number;
+}
+
 export class GetStatusColumnsUseCase {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly boardRepository: BoardRepository,
-  ) {}
-  public execute = async (user: TokenReturnDto, boardId: number) => {
+  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly boardRepository: BoardRepository;
+
+  constructor(dependencies: ClassDependencies) {
+    const { boardRepository, statusColumnRepository } = dependencies;
+    this.statusColumnRepository = statusColumnRepository;
+    this.boardRepository = boardRepository;
+  }
+  public execute = async ({ userId, boardId }: ExecutioProps) => {
     const existRelationship = await this.boardRepository.checkRelationship(
-      user.sub.id,
+      userId,
       boardId,
     );
     if (!existRelationship)

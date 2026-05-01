@@ -3,15 +3,24 @@ import { TaskRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
 import { UpdateDataInTaskDto } from "../../dtos";
 
-interface UpdateKanbanTaskParams {
+interface ClassDependencies {
+  taskRepository: TaskRepository;
+}
+
+interface ExecutionProps {
   userId: number;
   taskId: number;
   data: UpdateDataInTaskDto;
 }
+
 export class UpdateDataInTaskUseCase {
-  constructor(private readonly kanbanTaskRepository: TaskRepository) {}
-  public execute = async ({ userId, taskId, data }: UpdateKanbanTaskParams) => {
-    const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(
+  private readonly taskRepository: TaskRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { taskRepository: kanbanTaskRepository } = dependencies;
+    this.taskRepository = kanbanTaskRepository;
+  }
+  public execute = async ({ userId, taskId, data }: ExecutionProps) => {
+    const taskOwnedByUser = await this.taskRepository.checkRelationship(
       userId,
       taskId,
     );
@@ -24,7 +33,7 @@ export class UpdateDataInTaskUseCase {
 
     const definedProperties = getDefinedFields(data);
 
-    const updatedTask = await this.kanbanTaskRepository.update(
+    const updatedTask = await this.taskRepository.update(
       taskId,
       definedProperties,
     );

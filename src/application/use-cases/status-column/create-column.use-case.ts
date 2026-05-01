@@ -3,22 +3,36 @@ import {
   BoardRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { AccessTokenReturnDto } from "../../dtos";
 import { CreateStatusColumnDto } from "../../dtos/status-column.dto";
 
-export class CreateStatusColumnUseCase {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly boardRepository: BoardRepository,
-  ) {}
+interface ClassDependencies {
+  statusColumnRepository: StatusColumnRepository;
+  boardRepository: BoardRepository;
+}
 
-  public execute = async (
-    user: AccessTokenReturnDto,
-    boardId: number,
-    createStatusColumnDto: CreateStatusColumnDto,
-  ) => {
+interface ExecutionProps {
+  userId: number;
+  boardId: number;
+  createStatusColumnDto: CreateStatusColumnDto;
+}
+
+export class CreateStatusColumnUseCase {
+  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly boardRepository: BoardRepository;
+
+  constructor(dependencies: ClassDependencies) {
+    const { boardRepository, statusColumnRepository } = dependencies;
+    this.statusColumnRepository = statusColumnRepository;
+    this.boardRepository = boardRepository;
+  }
+
+  public execute = async ({
+    userId,
+    boardId,
+    createStatusColumnDto,
+  }: ExecutionProps) => {
     const existsRelationship = await this.boardRepository.checkRelationship(
-      user.sub.id,
+      userId,
       boardId,
     );
     if (!existsRelationship)

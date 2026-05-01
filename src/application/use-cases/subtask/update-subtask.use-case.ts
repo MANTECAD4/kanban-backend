@@ -3,20 +3,24 @@ import { SubtaskRepository } from "../../../domain/repositories/subtask.reposito
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
 import { UpdateSubtaskDto } from "../../dtos/subtask.dto";
 
-interface UseCaseExecutionProps {
+interface ClassDepenencies {
+  subtaskRepository: SubtaskRepository;
+}
+
+interface ExecutionProps {
   userId: number;
   subtaskId: number;
   data: UpdateSubtaskDto;
 }
 
 export class UpdateSubtaskUseCase {
-  constructor(private readonly subtaskRepository: SubtaskRepository) {}
+  private readonly subtaskRepository: SubtaskRepository;
 
-  public execute = async ({
-    userId,
-    subtaskId,
-    data,
-  }: UseCaseExecutionProps) => {
+  constructor(dependencies: ClassDepenencies) {
+    const { subtaskRepository } = dependencies;
+    this.subtaskRepository = subtaskRepository;
+  }
+  public execute = async ({ userId, subtaskId, data }: ExecutionProps) => {
     const subtaskOwnedByUser = await this.subtaskRepository.checkRelationship(
       userId,
       subtaskId,

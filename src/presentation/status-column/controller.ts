@@ -19,10 +19,10 @@ export class StatusColumnController {
 
   public getAll = async (req: Request, res: Response) => {
     try {
-      const result = await this.getStatusColumnsUsecase.execute(
-        req.user!,
-        req.validatedParams!.boardId,
-      );
+      const result = await this.getStatusColumnsUsecase.execute({
+        userId: req.user!.sub.id,
+        boardId: req.validatedParams!.boardId,
+      });
       return res.json({
         message: `Status columns loaded succesfully`,
         ...result,
@@ -33,11 +33,11 @@ export class StatusColumnController {
   };
   public create = async (req: Request, res: Response) => {
     try {
-      const result = await this.createStatusColumnUsecase.execute(
-        req.user!,
-        req.validatedParams!.boardId,
-        req.validatedBody! as CreateStatusColumnDto,
-      );
+      const result = await this.createStatusColumnUsecase.execute({
+        userId: req.user!.sub.id,
+        boardId: req.validatedParams!.boardId,
+        createStatusColumnDto: req.validatedBody! as CreateStatusColumnDto,
+      });
 
       return res
         .status(201)
@@ -66,10 +66,10 @@ export class StatusColumnController {
 
   public delete = async (req: Request, res: Response) => {
     try {
-      const result = await this.deleteStatusColumnsUsecase.execute(
-        req.user!.sub.id,
-        req.validatedParams!.columnId,
-      );
+      const result = await this.deleteStatusColumnsUsecase.execute({
+        userId: req.user!.sub.id,
+        columnId: req.validatedParams!.columnId,
+      });
 
       return res.json({
         message: `Status column deleted succesfully`,

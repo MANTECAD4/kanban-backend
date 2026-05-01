@@ -5,23 +5,28 @@ import {
 } from "../../../domain/repositories";
 import { CreateTaskDto } from "../../dtos";
 
-interface CreateKanbanTaskParams {
+interface ClassDependencies {
+  statusColumnRepository: StatusColumnRepository;
+  taskRepository: TaskRepository;
+}
+
+interface ExecutionProps {
   userId: number;
   columnId: number;
   data: CreateTaskDto;
 }
 
 export class CreateTaskUseCase {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly kanbanTaskRepository: TaskRepository,
-  ) {}
+  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly taskRepository: TaskRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
+      dependencies;
+    this.taskRepository = kanbanTaskRepository;
+    this.statusColumnRepository = statusColumnRepository;
+  }
 
-  public execute = async ({
-    userId,
-    columnId,
-    data,
-  }: CreateKanbanTaskParams) => {
+  public execute = async ({ userId, columnId, data }: ExecutionProps) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
       columnId,
@@ -31,7 +36,7 @@ export class CreateTaskUseCase {
         `User doesn't own this staus column`,
         ErrorCodes.FORBIDDEN,
       );
-    const createdTask = await this.kanbanTaskRepository.create(columnId, data);
+    const createdTask = await this.taskRepository.create(columnId, data);
     return { data: createdTask };
   };
 }

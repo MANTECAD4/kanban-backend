@@ -1,9 +1,23 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { SubtaskRepository } from "../../../domain/repositories/subtask.repository";
 
+interface ClassDepenencies {
+  subtaskRepository: SubtaskRepository;
+}
+
+interface ExecutionProps {
+  userId: number;
+  subtaskId: number;
+}
+
 export class DeleteSubtaskUseCase {
-  constructor(private readonly subtaskRepository: SubtaskRepository) {}
-  public execute = async (userId: number, subtaskId: number) => {
+  private readonly subtaskRepository: SubtaskRepository;
+
+  constructor(dependencies: ClassDepenencies) {
+    const { subtaskRepository } = dependencies;
+    this.subtaskRepository = subtaskRepository;
+  }
+  public execute = async ({ userId, subtaskId }: ExecutionProps) => {
     const subtaskOwnedByUser = await this.subtaskRepository.checkRelationship(
       userId,
       subtaskId,

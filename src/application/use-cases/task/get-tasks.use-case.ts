@@ -4,13 +4,27 @@ import {
   StatusColumnRepository,
 } from "../../../domain/repositories";
 
-export class GetTasksByColumnUseCase {
-  constructor(
-    private readonly statusColumnRepository: StatusColumnRepository,
-    private readonly kanbanTaskRepository: TaskRepository,
-  ) {}
+interface ClassDependencies {
+  statusColumnRepository: StatusColumnRepository;
+  taskRepository: TaskRepository;
+}
 
-  public execute = async (userId: number, columnId: number) => {
+interface ExecutionProps {
+  userId: number;
+  columnId: number;
+}
+
+export class GetTasksByColumnUseCase {
+  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly taskRepository: TaskRepository;
+  constructor(dependencies: ClassDependencies) {
+    const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
+      dependencies;
+    this.taskRepository = kanbanTaskRepository;
+    this.statusColumnRepository = statusColumnRepository;
+  }
+
+  public execute = async ({ userId, columnId }: ExecutionProps) => {
     const existRelation = await this.statusColumnRepository.checkRelationship(
       userId,
       columnId,
@@ -20,8 +34,7 @@ export class GetTasksByColumnUseCase {
         `Relation between entities doesn't exist`,
         ErrorCodes.FORBIDDEN,
       );
-    const tasks =
-      await this.kanbanTaskRepository.getAllByStatusColumn(columnId);
+    const tasks = await this.taskRepository.getAllByStatusColumn(columnId);
     return { data: tasks, meta: { total: tasks.length } };
   };
 }

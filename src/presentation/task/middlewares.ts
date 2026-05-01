@@ -10,28 +10,27 @@ import {
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
 export class TaskMiddlewares {
-  public static taskIdParamValidation = dataValidationMiddlewareFactory(
+  public taskIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("taskId"),
     `Invalid task id provided`,
     RequestValidationTarget.PARAMS,
   );
 
-  public static createTaskDataValidation = dataValidationMiddlewareFactory(
+  public createTaskDataValidation = dataValidationMiddlewareFactory(
     CreateTaskSchema,
     "Invalid data recieved. Task creation failed",
     RequestValidationTarget.BODY,
   );
 
-  public static updateTaskDataValidation = dataValidationMiddlewareFactory(
+  public updateTaskDataValidation = dataValidationMiddlewareFactory(
     UpdateDataInTaskSchema,
     "Invalida data recieved. Task update failed",
     RequestValidationTarget.BODY,
   );
 
-  public static updateTaskColumnDataValidation =
-    dataValidationMiddlewareFactory(
-      UpdateColumnInTaskSchema,
-      `Invalid data recieved. TaskUpdate failed`,
-      RequestValidationTarget.BODY,
-    );
+  public updateTaskColumnDataValidation = dataValidationMiddlewareFactory(
+    UpdateColumnInTaskSchema,
+    `Invalid data recieved. TaskUpdate failed`,
+    RequestValidationTarget.BODY,
+  );
 }

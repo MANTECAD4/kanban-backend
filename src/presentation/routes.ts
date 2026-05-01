@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { envs } from "../configs/envs";
 
 import { AuthRoutes } from "./auth/routes";
 import { BoardsRoutes } from "./board/routes";
@@ -9,83 +8,67 @@ import { SubtaskRoutes } from "./subtask/routes";
 
 import { AuthMiddlewares } from "./auth/middlewares";
 
-import {
-  PostgresAuthRepository,
-  PostgresBoardRepository,
-} from "../infraestructure/repositories";
-import { PostgresStatusColumnRepository } from "../infraestructure/repositories/postgres-status-column.repository";
-import { PostgresTaskRepository } from "../infraestructure/repositories/postgres-task.repository";
-
-import { JwtGenerator } from "../infraestructure/services/jwt-generator.service";
-import { BycryptHasher } from "../infraestructure/services/bycrypt.service";
-import { SubtaskRepository } from "../domain/repositories/subtask.repository";
-import { PostgresSubtaskRepository } from "../infraestructure/repositories/postgres-subtask.repository";
+interface ClassDependencies {
+  authRouter: AuthRoutes;
+  authMiddlewares: AuthMiddlewares;
+  boardRouter: BoardsRoutes;
+  statusColumnRouter: StatusColumnsRoutes;
+  taskRouter: TaskRoutes;
+  subtaskRouter: SubtaskRoutes;
+}
 
 export class AppRoutes {
-  static get routes(): Router {
+  private readonly authRouter: AuthRoutes;
+  private readonly authMiddlewares: AuthMiddlewares;
+  private readonly boardRouter: BoardsRoutes;
+  private readonly statusColumnRouter: StatusColumnsRoutes;
+  private readonly taskRouter: TaskRoutes;
+  private readonly subtaskRouter: SubtaskRoutes;
+
+  constructor(dependencies: ClassDependencies) {
+    const {
+      authRouter,
+      authMiddlewares,
+      boardRouter,
+      statusColumnRouter,
+      taskRouter,
+      subtaskRouter,
+    } = dependencies;
+    this.authRouter = authRouter;
+    this.authMiddlewares = authMiddlewares;
+    this.boardRouter = boardRouter;
+    this.statusColumnRouter = statusColumnRouter;
+    this.taskRouter = taskRouter;
+    this.subtaskRouter = subtaskRouter;
+  }
+
+  public get routes(): Router {
     const router = Router();
 
-    //! ENVIROMENT VARIABLES
-    const { TOKEN_SECRET } = envs();
-
-    //! REPOSITORIES
-    const authRepository = new PostgresAuthRepository();
-    const boardRepository = new PostgresBoardRepository();
-    const statusColumnRepository = new PostgresStatusColumnRepository();
-    const taskRepository = new PostgresTaskRepository();
-    const subtaskRepository = new PostgresSubtaskRepository();
-
-    //! SERVCIES
-    const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
-    const hashService = new BycryptHasher();
-
-    //! MIDDLEWARES WITH DI
-    const authMiddlewares = new AuthMiddlewares(tokenGenerator);
-
-    //! SUB ROUTERS
-    const boardRoutes = new BoardsRoutes(authRepository, boardRepository);
-    const authRoutes = new AuthRoutes(
-      authRepository,
-      tokenGenerator,
-      hashService,
-    );
-    const statusColumnRoutes = new StatusColumnsRoutes(
-      statusColumnRepository,
-      boardRepository,
-    );
-    const kanbanTaskRoutes = new TaskRoutes(
-      statusColumnRepository,
-      taskRepository,
-    );
-    const kanbanSubtaskRoutes = new SubtaskRoutes(
-      subtaskRepository,
-      taskRepository,
-    );
-
     //! MAIN ENDPOINTS
-    router.use("/api/auth", authRoutes.routes);
+    router.use("/api/auth", this.authRouter.routes);
     router.use(
       "/api/boards",
-      [authMiddlewares.validateAccessToken],
-      boardRoutes.routes,
+      [this.authMiddlewares.validateAccessToken],
+      this.boardRouter.routes,
     );
 
     router.use(
       "/api/status-columns",
-      [authMiddlewares.validateAccessToken],
-      statusColumnRoutes.routes,
+      [this.authMiddlewares.validateAccessToken],
+      this.statusColumnRouter.routes,
     );
 
     router.use(
       "/api/tasks",
-      [authMiddlewares.validateAccessToken],
-      kanbanTaskRoutes.routes,
+      [this.authMiddlewares.validateAccessToken],
+      this.taskRouter.routes,
     );
 
     router.use(
       "/api/subtasks",
-      [authMiddlewares.validateAccessToken],
-      kanbanSubtaskRoutes.routes,
+      [this.authMiddlewares.validateAccessToken],
+      this.subtaskRouter.routes,
     );
 
     return router;

@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
-import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 import { TokenProvider } from "../../domain/services";
-import { TokenPayload, TokenReturnDto } from "../../application/dtos";
+import { TokenPayload } from "../../application/dtos";
 
 export class JwtGenerator implements TokenProvider {
   constructor(private readonly secret: string) {}
@@ -13,8 +12,8 @@ export class JwtGenerator implements TokenProvider {
     return token;
   };
 
-  public validate = (token: string): TokenReturnDto | null => {
+  public validate = (token: string): TokenPayload | null => {
     const tokenContent = jwt.verify(token, this.secret);
-    return tokenContent as unknown as TokenReturnDto;
+    return tokenContent as unknown as TokenPayload;
   };
 }

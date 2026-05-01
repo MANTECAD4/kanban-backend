@@ -1,6 +1,6 @@
-import { TokenPayload, TokenReturnDto } from "../../application/dtos";
+import { AccessTokenPayload, TokenPayload } from "../../application/dtos";
 
 export abstract class TokenProvider {
   abstract generate: (payload: TokenPayload, duration: number) => string;
-  abstract validate: (token: string) => TokenReturnDto | null;
+  abstract validate: (token: string) => TokenPayload | null;
 }

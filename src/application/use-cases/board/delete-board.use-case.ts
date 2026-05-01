@@ -1,10 +1,10 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
-import { TokenReturnDto } from "../../dtos";
+import { AccessTokenReturnDto } from "../../dtos";
 
 export class DeleteBoardUseCase {
   constructor(private readonly boardRepository: BoardRepository) {}
-  public execute = async (user: TokenReturnDto, boardId: number) => {
+  public execute = async (user: AccessTokenReturnDto, boardId: number) => {
     const existRelationship = await this.boardRepository.checkRelationship(
       user.sub.id,
       boardId,

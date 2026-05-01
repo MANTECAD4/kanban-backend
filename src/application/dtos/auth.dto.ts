@@ -12,23 +12,7 @@ export const RegisterUserSchema = z.object({
     ),
 });
 
-export const TokenPayloadSchema = z.object({
-  sub: z.object({ id: z.coerce.number().int().min(1) }),
-  type: z.enum(["access", "refresh"]),
-});
-
-export const TokenTimersSchema = z.object({
-  iat: z.number(),
-  exp: z.number(),
-});
-
-export const TokenReturnSchema = TokenPayloadSchema.and(TokenTimersSchema);
-
 export const LoginSchema = RegisterUserSchema.omit({ name: true });
 
 export type LoginUserDto = z.infer<typeof LoginSchema>;
 export type RegisterUserDto = z.infer<typeof RegisterUserSchema>;
-
-export type TokenPayload = z.infer<typeof TokenPayloadSchema>;
-export type TokenTimers = z.infer<typeof TokenTimersSchema>;
-export type TokenReturnDto = z.infer<typeof TokenReturnSchema>;

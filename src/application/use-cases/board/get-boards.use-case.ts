@@ -1,6 +1,6 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository, BoardRepository } from "../../../domain/repositories";
-import { TokenReturnDto } from "../../dtos";
+import { AccessTokenReturnDto } from "../../dtos";
 
 export class GetBoardsUseCase {
   constructor(
@@ -8,7 +8,7 @@ export class GetBoardsUseCase {
     private readonly boardRepository: BoardRepository,
   ) {}
 
-  public execute = async (user: TokenReturnDto) => {
+  public execute = async (user: AccessTokenReturnDto) => {
     const {
       sub: { id },
     } = user;

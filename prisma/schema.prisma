@@ -19,13 +19,13 @@ model User {
   name String
   password String
   boards Board[]
-  refresh_tokens Refresh_token[]
+  refresh_tokens RefreshToken[]
 }
-model Refresh_token{
-  id Int @id @default(autoincrement())
-  token String
+model RefreshToken{
+  jti String @id @db.Uuid 
+  hash String
   expires_at DateTime
-  revoked Boolean
+  revoked Boolean @default(false)
   user User @relation(fields:[user_id], references: [id])
   user_id Int
 }

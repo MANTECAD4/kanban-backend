@@ -5,9 +5,9 @@ import {
   RequestValidationTarget,
 } from "../shared/factories/data-validation-middleware";
 import {
+  AccessTokenPayloadSchema,
   LoginSchema,
   RegisterUserSchema,
-  TokenReturnSchema,
 } from "../../application/dtos";
 import { TokenProvider } from "../../domain/services";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
@@ -53,7 +53,7 @@ export class AuthMiddlewares {
 
     try {
       const payload = this.tokenGenerator.validate(token);
-      const result = TokenReturnSchema.safeParse(payload);
+      const result = AccessTokenPayloadSchema.safeParse(payload);
       if (!result.success) {
         const error = CustomError.unauthorized(
           "Invalid token payload",
@@ -72,6 +72,7 @@ export class AuthMiddlewares {
       req.user = result.data;
       next();
     } catch (error) {
+      console.log(error);
       const { message } = error as VerifyErrors;
 
       let customErrorInstance;

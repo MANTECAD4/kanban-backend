@@ -1,6 +1,6 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository, BoardRepository } from "../../../domain/repositories";
-import { CreateBoardDto, TokenReturnDto } from "../../dtos";
+import { CreateBoardDto, AccessTokenReturnDto } from "../../dtos";
 
 export class CreateBoardUseCase {
   constructor(
@@ -8,7 +8,7 @@ export class CreateBoardUseCase {
     private readonly authRepository: AuthRepository,
   ) {}
 
-  public execute = async (user: TokenReturnDto, data: CreateBoardDto) => {
+  public execute = async (user: AccessTokenReturnDto, data: CreateBoardDto) => {
     const existingUser = await this.authRepository.getById(user.sub.id);
     if (!existingUser)
       throw CustomError.notFound(

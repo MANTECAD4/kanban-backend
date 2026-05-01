@@ -1,13 +1,13 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { TokenReturnDto, UpdateBoardDto } from "../../dtos";
+import { AccessTokenReturnDto, UpdateBoardDto } from "../../dtos";
 
 export class UpdateBoardUseCase {
   constructor(private readonly boardRepository: BoardRepository) {}
 
   public execute = async (
-    user: TokenReturnDto,
+    user: AccessTokenReturnDto,
     boardId: number,
     data: UpdateBoardDto,
   ) => {

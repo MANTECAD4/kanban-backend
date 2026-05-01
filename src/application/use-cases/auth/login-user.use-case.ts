@@ -32,8 +32,10 @@ export class LoginUserUseCase {
       { sub: { id: rest.id }, type: "access" },
       ACCESS_TOKEN_DURATION,
     );
+
+    const jti = crypto.randomUUID();
     const refreshToken = this.tokenService.generate(
-      { sub: { id: rest.id }, type: "refresh" },
+      { sub: { id: rest.id }, type: "refresh", jti },
       REFRESH_TOKEN_DURATION,
     );
     return {

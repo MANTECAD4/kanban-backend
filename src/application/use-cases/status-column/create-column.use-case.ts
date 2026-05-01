@@ -3,7 +3,7 @@ import {
   BoardRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { TokenReturnDto } from "../../dtos";
+import { AccessTokenReturnDto } from "../../dtos";
 import { CreateStatusColumnDto } from "../../dtos/status-column.dto";
 
 export class CreateStatusColumnUseCase {
@@ -13,7 +13,7 @@ export class CreateStatusColumnUseCase {
   ) {}
 
   public execute = async (
-    user: TokenReturnDto,
+    user: AccessTokenReturnDto,
     boardId: number,
     createStatusColumnDto: CreateStatusColumnDto,
   ) => {

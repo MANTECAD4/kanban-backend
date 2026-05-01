@@ -7,38 +7,30 @@ import { AuthRepository } from "../../domain/repositories";
 import { TokenProvider } from "../../domain/services";
 import { HasherService } from "../../domain/services/hasher.service";
 
+interface ClassDependencies {
+  controller: AuthController;
+  authMiddlewares: AuthMiddlewares;
+}
+
 export class AuthRoutes {
-  constructor(
-    private readonly authRepository: AuthRepository,
-    private readonly tokenGenerator: TokenProvider,
-    private readonly hashService: HasherService,
-  ) {}
+  private readonly controller: AuthController;
+  private readonly authMiddlewares: AuthMiddlewares;
+  constructor({ controller, authMiddlewares }: ClassDependencies) {
+    this.controller = controller;
+    this.authMiddlewares = authMiddlewares;
+  }
   public get routes(): Router {
     const router = Router();
 
-    const registerUseCase = new RegisterUserUseCase(
-      this.authRepository,
-      this.tokenGenerator,
-      this.hashService,
-    );
-
-    const loginUseCase = new LoginUserUseCase(
-      this.authRepository,
-      this.tokenGenerator,
-      this.hashService,
-    );
-
-    const controller = new AuthController(registerUseCase, loginUseCase);
-
     router.post(
       "/login",
-      [AuthMiddlewares.loginDataValidation],
-      controller.login,
+      [this.authMiddlewares.loginDataValidation],
+      this.controller.login,
     );
     router.post(
       "/register",
-      [AuthMiddlewares.registerDataValidation],
-      controller.register,
+      [this.authMiddlewares.registerDataValidation],
+      this.controller.register,
     );
     return router;
   }

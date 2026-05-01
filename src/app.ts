@@ -1,6 +1,5 @@
 import { createServer } from "node:http";
 import { envs } from "./configs/envs";
-import { prisma } from "./data/init-postgres";
 import { Server } from "./presentation/server";
 import { AppRoutes } from "./presentation/routes";
 import {
@@ -17,6 +16,9 @@ import { StatusColumnsRoutes } from "./presentation/status-column/routes";
 import { TaskRoutes } from "./presentation/task/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
 import { BoardsRoutes } from "./presentation/board/routes";
+import { AuthController } from "./presentation/auth/controller";
+import { RegisterUserUseCase } from "./application/use-cases/auth/register-user.use-case";
+import { LoginUserUseCase } from "./application/use-cases";
 
 (async () => {
   main();
@@ -26,7 +28,11 @@ function main() {
   const { PORT: port } = envs();
 
   //! ENVIROMENT VARIABLES
-  const { TOKEN_SECRET } = envs();
+  const {
+    TOKEN_SECRET,
+    ACCESS_TOKEN_DURATION: acccesTokenDuration,
+    REFRESH_TOKEN_DURATION: refreshTokenDuration,
+  } = envs();
 
   //! REPOSITORIES
   const authRepository = new PostgresAuthRepository();
@@ -36,19 +42,34 @@ function main() {
   const subtaskRepository = new PostgresSubtaskRepository();
 
   //! SERVCIES
-  const tokenGenerator = new JwtGenerator(TOKEN_SECRET);
-  const hashService = new BycryptHasher();
+  const tokenProvider = new JwtGenerator(TOKEN_SECRET);
+  const strongHasher = new BycryptHasher();
 
   //! MIDDLEWARES WITH DI
-  const authMiddlewares = new AuthMiddlewares(tokenGenerator);
+  const authMiddlewares = new AuthMiddlewares(tokenProvider);
+
+  const loginUserUseCase = new LoginUserUseCase({
+    acccesTokenDuration,
+    refreshTokenDuration,
+    authRepository,
+    tokenProvider,
+    strongHasher,
+    // TODO: change for the crypto implementation
+    softHasher: strongHasher,
+  });
+  const registerUserUseCase = new RegisterUserUseCase();
+
+  const authController = new AuthController(
+    registerUserUseCase,
+    loginUserUseCase,
+  );
 
   //! SUB ROUTERS
   const boardRouter = new BoardsRoutes(authRepository, boardRepository);
-  const authRouter = new AuthRoutes(
-    authRepository,
-    tokenGenerator,
-    hashService,
-  );
+  const authRouter = new AuthRoutes({
+    authMiddlewares,
+    controller: authController,
+  });
   const statusColumnRouter = new StatusColumnsRoutes(
     statusColumnRepository,
     boardRepository,

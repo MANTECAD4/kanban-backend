@@ -16,13 +16,13 @@ import { VerifyErrors } from "jsonwebtoken";
 export class AuthMiddlewares {
   constructor(private readonly tokenGenerator: TokenProvider) {}
 
-  static loginDataValidation = dataValidationMiddlewareFactory(
+  public loginDataValidation = dataValidationMiddlewareFactory(
     LoginSchema,
     "Invalid data recieved. Login denied",
     RequestValidationTarget.BODY,
   );
 
-  static registerDataValidation = dataValidationMiddlewareFactory(
+  public registerDataValidation = dataValidationMiddlewareFactory(
     RegisterUserSchema,
     "Invalid data recieved. Register failed",
     RequestValidationTarget.BODY,

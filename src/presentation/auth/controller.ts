@@ -12,7 +12,6 @@ export class AuthController {
 
   public login = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
       const result = await this.loginUserUseCase.execute(
         req.validatedBody! as LoginUserDto,
       );

@@ -1,30 +1,45 @@
-import { envs } from "../../../configs/envs";
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository } from "../../../domain/repositories";
 import { TokenProvider } from "../../../domain/services";
 import { HasherService } from "../../../domain/services/hasher.service";
 import { RegisterUserDto } from "../../dtos";
+import { RefreshTokenPersistencyService } from "../../../domain/services/refresh-token-persistency.service";
 
 interface ClassDependencies {
   authRepository: AuthRepository;
   tokenProvider: TokenProvider;
   strongHasher: HasherService;
+  accessTokenDuration: number;
+  refreshTokenDuration: number;
+  refreshTokenPersistencyService: RefreshTokenPersistencyService;
 }
 
 export class RegisterUserUseCase {
   private readonly authRepository: AuthRepository;
   private readonly tokenProvider: TokenProvider;
   private readonly strongHasher: HasherService;
+  private readonly accessTokenDuration: number;
+  private readonly refreshTokenDuration: number;
+  private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   constructor(dependencies: ClassDependencies) {
-    const { authRepository, tokenProvider, strongHasher } = dependencies;
+    const {
+      authRepository,
+      tokenProvider,
+      strongHasher,
+      accessTokenDuration,
+      refreshTokenDuration,
+      refreshTokenPersistencyService,
+    } = dependencies;
 
     this.authRepository = authRepository;
     this.tokenProvider = tokenProvider;
     this.strongHasher = strongHasher;
+    this.accessTokenDuration = accessTokenDuration;
+    this.refreshTokenDuration = refreshTokenDuration;
+    this.refreshTokenPersistencyService = refreshTokenPersistencyService;
   }
 
   public async execute(data: RegisterUserDto) {
-    const { ACCESS_TOKEN_DURATION } = envs();
     const { email, password: rawPassword, name } = data;
 
     const existentUser = await this.authRepository.getByEmail(email);
@@ -35,7 +50,7 @@ export class RegisterUserUseCase {
         ErrorCodes["ALREADY_REGISTERED"],
       );
 
-    const hashedPassword = this.strongHasher.hash(rawPassword);
+    const hashedPassword = await this.strongHasher.hash(rawPassword);
 
     const { password, ...rest } = await this.authRepository.register({
       email,
@@ -43,12 +58,28 @@ export class RegisterUserUseCase {
       name,
     });
 
-    const token = this.tokenProvider.generate(
+    const accessToken = this.tokenProvider.generate(
       { sub: { id: rest.id }, type: "access" },
-      ACCESS_TOKEN_DURATION,
+      this.accessTokenDuration,
     );
+
+    const jti = crypto.randomUUID();
+
+    const refreshToken = this.tokenProvider.generate(
+      { jti, sub: { id: rest.id }, type: "refresh" },
+      this.refreshTokenDuration,
+    );
+
+    await this.refreshTokenPersistencyService.save({
+      token: refreshToken,
+      jti,
+      userId: rest.id,
+      refreshTokenDuration: this.refreshTokenDuration,
+    });
+
     return {
-      data: { user: rest, token },
+      data: { user: rest, accessToken },
+      refreshToken,
     };
   }
 }

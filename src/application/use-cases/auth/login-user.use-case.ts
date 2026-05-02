@@ -1,41 +1,42 @@
-import { envs } from "../../../configs/envs";
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AuthRepository } from "../../../domain/repositories";
 import { HasherService } from "../../../domain/services/hasher.service";
 import { TokenProvider } from "../../../domain/services/token-generator.service";
 import { LoginUserDto } from "../../dtos";
+import { RefreshTokenPersistencyService } from "../../../domain/services/refresh-token-persistency.service";
 
 interface ClassDependencies {
   authRepository: AuthRepository;
   tokenProvider: TokenProvider;
-  softHasher: HasherService;
   strongHasher: HasherService;
-  acccesTokenDuration: number;
+  accessTokenDuration: number;
   refreshTokenDuration: number;
+  refreshTokenPersistencyService: RefreshTokenPersistencyService;
 }
 
 export class LoginUserUseCase {
   private readonly authRepository: AuthRepository;
   private readonly tokenProvider: TokenProvider;
-  private readonly softHasher: HasherService;
   private readonly strongHasher: HasherService;
-  private readonly acccesTokenDuration: number;
+  private readonly accessTokenDuration: number;
   private readonly refreshTokenDuration: number;
+  private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   constructor(dependencies: ClassDependencies) {
     const {
       authRepository,
       tokenProvider,
-      softHasher,
       strongHasher,
-      acccesTokenDuration,
+      accessTokenDuration,
       refreshTokenDuration,
+      refreshTokenPersistencyService,
     } = dependencies;
+
     this.authRepository = authRepository;
     this.tokenProvider = tokenProvider;
-    this.softHasher = softHasher;
     this.strongHasher = strongHasher;
-    this.acccesTokenDuration = acccesTokenDuration;
+    this.accessTokenDuration = accessTokenDuration;
     this.refreshTokenDuration = refreshTokenDuration;
+    this.refreshTokenPersistencyService = refreshTokenPersistencyService;
   }
 
   public execute = async (data: LoginUserDto) => {
@@ -45,7 +46,7 @@ export class LoginUserUseCase {
     if (!existentUser)
       throw CustomError.notFound("Email not registered", ErrorCodes.NOT_FOUND);
 
-    const passwordMatches = this.strongHasher.compare(
+    const passwordMatches = await this.strongHasher.compare(
       rawPassword,
       existentUser.password,
     );
@@ -55,16 +56,26 @@ export class LoginUserUseCase {
     const { password, ...rest } = existentUser;
     const accessToken = this.tokenProvider.generate(
       { sub: { id: rest.id }, type: "access" },
-      this.acccesTokenDuration,
+      this.accessTokenDuration,
     );
 
+    //! STORE NEW REFRESH TOKEN
     const jti = crypto.randomUUID();
     const refreshToken = this.tokenProvider.generate(
       { sub: { id: rest.id }, type: "refresh", jti },
       this.refreshTokenDuration,
     );
+
+    await this.refreshTokenPersistencyService.save({
+      jti,
+      token: refreshToken,
+      userId: rest.id,
+      refreshTokenDuration: this.refreshTokenDuration,
+    });
+
     return {
-      data: { user: rest, accessToken, refreshToken },
+      data: { user: rest, accessToken },
+      refreshToken,
     };
   };
 }

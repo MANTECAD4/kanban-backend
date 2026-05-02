@@ -3,7 +3,7 @@ import { prisma } from "../../data/init-postgres";
 import { RefreshTokenEntity } from "../../domain/entities/refresh-token.entity";
 import { RefreshTokenRepository } from "../../domain/repositories";
 
-export class PostgesRefreshTokenRepository implements RefreshTokenRepository {
+export class PostgresRefreshTokenRepository implements RefreshTokenRepository {
   public checkRelation = async (
     userId: number,
     jti: string,
@@ -20,11 +20,10 @@ export class PostgesRefreshTokenRepository implements RefreshTokenRepository {
     jti,
     hash,
     expiresAt,
-    revoked,
     userId,
   }: RefreshTokenEntityDto): Promise<RefreshTokenEntity> => {
     const refreshTokenRegister = await prisma.refreshToken.create({
-      data: { jti, hash, expires_at: expiresAt, revoked, user_id: userId },
+      data: { jti, hash, expires_at: expiresAt, user_id: userId },
     });
     return RefreshTokenEntity.fromObject(refreshTokenRegister);
   };

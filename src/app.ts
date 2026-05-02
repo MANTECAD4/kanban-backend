@@ -5,6 +5,7 @@ import { envs } from "./configs/envs";
 import {
   PostgresAuthRepository,
   PostgresBoardRepository,
+  PostgresRefreshTokenRepository,
   PostgresStatusColumnRepository,
   PostgresSubtaskRepository,
   PostgresTaskRepository,
@@ -21,6 +22,7 @@ import {
   CryptoHasher,
   JwtGenerator,
 } from "./infraestructure/services";
+import { RefreshTokenPersistencyService } from "./domain/services/refresh-token-persistency.service";
 
 import {
   LoginUserUseCase,
@@ -76,7 +78,7 @@ function main() {
   const {
     PORT: port,
     TOKEN_SECRET,
-    ACCESS_TOKEN_DURATION: acccesTokenDuration,
+    ACCESS_TOKEN_DURATION: accessTokenDuration,
     REFRESH_TOKEN_DURATION: refreshTokenDuration,
   } = envs();
 
@@ -86,11 +88,19 @@ function main() {
   const statusColumnRepository = new PostgresStatusColumnRepository();
   const taskRepository = new PostgresTaskRepository();
   const subtaskRepository = new PostgresSubtaskRepository();
+  const refreshTokenRepository = new PostgresRefreshTokenRepository();
 
   //! SERVCIES
   const tokenProvider = new JwtGenerator(TOKEN_SECRET);
   const strongHasher = new BycryptHasher();
   const softHasher = new CryptoHasher();
+
+  //! APPLICATION SERVICES
+
+  const refreshTokenPersistencyService = new RefreshTokenPersistencyService({
+    hasherService: softHasher,
+    refreshTokenRepository,
+  });
 
   //! MIDDLEWARES
   const authMiddlewares = new AuthMiddlewares(tokenProvider);
@@ -102,18 +112,21 @@ function main() {
   //////////////// ! USE CASES ////////////////
   // AUTH
   const loginUserUseCase = new LoginUserUseCase({
-    acccesTokenDuration,
+    accessTokenDuration,
     refreshTokenDuration,
     authRepository,
     tokenProvider,
     strongHasher,
-    softHasher,
+    refreshTokenPersistencyService,
   });
 
   const registerUserUseCase = new RegisterUserUseCase({
     authRepository,
     strongHasher,
     tokenProvider,
+    accessTokenDuration,
+    refreshTokenDuration,
+    refreshTokenPersistencyService,
   });
 
   // BOARDS

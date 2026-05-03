@@ -59,22 +59,15 @@ export class LoginUserUseCase {
       this.accessTokenDuration,
     );
 
-    //! STORE NEW REFRESH TOKEN
-    const jti = crypto.randomUUID();
-    const refreshToken = this.tokenProvider.generate(
-      { sub: { id: rest.id }, type: "refresh", jti },
-      this.refreshTokenDuration,
-    );
-
-    await this.refreshTokenPersistencyService.save({
-      jti,
-      token: refreshToken,
-      userId: rest.id,
-      refreshTokenDuration: this.refreshTokenDuration,
-    });
+    const refreshToken =
+      await this.refreshTokenPersistencyService.createAndSave({
+        userId: rest.id,
+        refreshTokenDuration: this.refreshTokenDuration,
+      });
 
     return {
-      data: { user: rest, accessToken },
+      data: { user: rest },
+      accessToken,
       refreshToken,
     };
   };

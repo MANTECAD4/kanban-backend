@@ -1,35 +1,41 @@
 import { RefreshTokenRepository } from "../repositories";
 import { HasherService } from "./hasher.service";
+import { TokenProvider } from "./token-generator.service";
 
 interface ClassDependencies {
   refreshTokenRepository: RefreshTokenRepository;
+  tokenProvider: TokenProvider;
   hasherService: HasherService;
 }
 
 interface SaveProps {
   userId: number;
-  jti: string;
-  token: string;
   refreshTokenDuration: number;
 }
 export class RefreshTokenPersistencyService {
   private readonly refreshTokenRepository: RefreshTokenRepository;
+  private readonly tokenProvider: TokenProvider;
   private readonly hasherService: HasherService;
 
   constructor(dependencies: ClassDependencies) {
-    const { refreshTokenRepository: refreshToeknRepository, hasherService } =
+    const { refreshTokenRepository, tokenProvider, hasherService } =
       dependencies;
-    this.refreshTokenRepository = refreshToeknRepository;
+    this.tokenProvider = tokenProvider;
+    this.refreshTokenRepository = refreshTokenRepository;
     this.hasherService = hasherService;
   }
 
-  public save = async ({
+  public createAndSave = async ({
     userId,
-    jti,
-    token,
     refreshTokenDuration,
-  }: SaveProps) => {
-    const hashedToken = await this.hasherService.hash(token);
+  }: SaveProps): Promise<string> => {
+    const jti = crypto.randomUUID();
+    const refreshToken = this.tokenProvider.generate(
+      { sub: { id: userId }, type: "refresh", jti },
+      refreshTokenDuration,
+    );
+
+    const hashedToken = await this.hasherService.hash(refreshToken);
     const tokenExpiresAt = new Date(
       Date.now() + refreshTokenDuration * 60 * 1000,
     );
@@ -39,5 +45,6 @@ export class RefreshTokenPersistencyService {
       userId,
       expiresAt: tokenExpiresAt,
     });
+    return refreshToken;
   };
 }

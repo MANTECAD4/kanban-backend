@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 interface ServerOptions {
   port: number;
@@ -23,6 +24,7 @@ export class Server {
 
     this.app.use(cors());
     this.app.use(helmet());
+    this.app.use(cookieParser());
   }
 
   public setRoutes(routes: Router) {

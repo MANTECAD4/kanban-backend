@@ -68,6 +68,7 @@ import { BoardsRoutes } from "./presentation/board/routes";
 import { StatusColumnsRoutes } from "./presentation/status-column/routes";
 import { TaskRoutes } from "./presentation/task/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
+import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-toke.use-case";
 
 (async () => {
   main();
@@ -100,6 +101,7 @@ function main() {
   const refreshTokenPersistencyService = new RefreshTokenPersistencyService({
     hasherService: softHasher,
     refreshTokenRepository,
+    tokenProvider,
   });
 
   //! MIDDLEWARES
@@ -127,6 +129,15 @@ function main() {
     accessTokenDuration,
     refreshTokenDuration,
     refreshTokenPersistencyService,
+  });
+
+  const refreshTokenUseCase = new RefreshTokenUseCase({
+    refreshTokenRepository,
+    tokenProvider,
+    hashService: softHasher,
+    refreshTokenPersistencyService,
+    refreshTokenDuration,
+    accessTokenDuration,
   });
 
   // BOARDS
@@ -195,6 +206,8 @@ function main() {
   const authController = new AuthController(
     registerUserUseCase,
     loginUserUseCase,
+    refreshTokenUseCase,
+    refreshTokenDuration,
   );
 
   const boardController = new BoardController(

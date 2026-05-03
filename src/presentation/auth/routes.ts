@@ -27,6 +27,9 @@ export class AuthRoutes {
       [this.authMiddlewares.registerDataValidation],
       this.controller.register,
     );
+
+    router.post("/refresh", this.controller.refresh);
+
     return router;
   }
 }

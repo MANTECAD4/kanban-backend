@@ -72,7 +72,7 @@ export class AuthMiddlewares {
       req.user = result.data;
       next();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       const { message } = error as VerifyErrors;
 
       let customErrorInstance;

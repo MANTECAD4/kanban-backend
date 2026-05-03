@@ -63,22 +63,15 @@ export class RegisterUserUseCase {
       this.accessTokenDuration,
     );
 
-    const jti = crypto.randomUUID();
-
-    const refreshToken = this.tokenProvider.generate(
-      { jti, sub: { id: rest.id }, type: "refresh" },
-      this.refreshTokenDuration,
-    );
-
-    await this.refreshTokenPersistencyService.save({
-      token: refreshToken,
-      jti,
-      userId: rest.id,
-      refreshTokenDuration: this.refreshTokenDuration,
-    });
+    const refreshToken =
+      await this.refreshTokenPersistencyService.createAndSave({
+        userId: rest.id,
+        refreshTokenDuration: this.refreshTokenDuration,
+      });
 
     return {
-      data: { user: rest, accessToken },
+      data: { user: rest },
+      accessToken,
       refreshToken,
     };
   }

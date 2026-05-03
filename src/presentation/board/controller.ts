@@ -33,6 +33,7 @@ export class BoardController {
 
   public getAll = async (req: Request, res: Response) => {
     try {
+      console.log(req.cookies);
       const result = await this.getBoardsUseCase.execute(req.user!.sub.id);
       return res.json({ message: `Boards loaded succesfully`, ...result });
     } catch (error) {

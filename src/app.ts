@@ -25,7 +25,8 @@ import {
 import { RefreshTokenPersistencyService } from "./domain/services/refresh-token-persistency.service";
 
 import {
-  LoginUserUseCase,
+  LoginUseCase,
+  LogoutUseCase,
   RegisterUserUseCase,
 } from "./application/use-cases/auth/";
 import {
@@ -68,7 +69,7 @@ import { BoardsRoutes } from "./presentation/board/routes";
 import { StatusColumnsRoutes } from "./presentation/status-column/routes";
 import { TaskRoutes } from "./presentation/task/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
-import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-toke.use-case";
+import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-token.use-case";
 
 (async () => {
   main();
@@ -113,7 +114,7 @@ function main() {
 
   //////////////// ! USE CASES ////////////////
   // AUTH
-  const loginUserUseCase = new LoginUserUseCase({
+  const loginUserUseCase = new LoginUseCase({
     accessTokenDuration,
     refreshTokenDuration,
     authRepository,
@@ -138,6 +139,12 @@ function main() {
     refreshTokenPersistencyService,
     refreshTokenDuration,
     accessTokenDuration,
+  });
+
+  const logoutUseCase = new LogoutUseCase({
+    tokenProvider,
+    refreshTokenRepository,
+    hashService: softHasher,
   });
 
   // BOARDS
@@ -206,6 +213,7 @@ function main() {
   const authController = new AuthController(
     registerUserUseCase,
     loginUserUseCase,
+    logoutUseCase,
     refreshTokenUseCase,
     refreshTokenDuration,
   );

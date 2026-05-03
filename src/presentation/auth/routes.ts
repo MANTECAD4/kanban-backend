@@ -29,6 +29,7 @@ export class AuthRoutes {
     );
 
     router.post("/refresh", this.controller.refresh);
+    router.post("/logout", this.controller.logout);
 
     return router;
   }

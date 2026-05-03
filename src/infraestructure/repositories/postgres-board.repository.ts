@@ -1,7 +1,6 @@
-import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
+import { CreateBoardDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { BoardEntity } from "../../domain/entities";
-import { CustomError } from "../../domain/errors/custom-error";
 import { BoardRepository } from "../../domain/repositories";
 
 export class PostgresBoardRepository implements BoardRepository {

@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import {
   RegisterUserUseCase,
-  LoginUserUseCase,
+  LoginUseCase,
+  LogoutUseCase,
   RefreshTokenUseCase,
 } from "../../application/use-cases/auth";
 import { CustomError } from "../../domain/errors/custom-error";
@@ -10,14 +11,15 @@ import { LoginUserDto, RegisterUserDto } from "../../application/dtos";
 export class AuthController {
   constructor(
     private readonly registerUserUseCase: RegisterUserUseCase,
-    private readonly loginUserUseCase: LoginUserUseCase,
+    private readonly loginUseCase: LoginUseCase,
+    private readonly logoutUseCase: LogoutUseCase,
     private readonly refreshTokenUseCase: RefreshTokenUseCase,
     private readonly refreshTokenDuration: number,
   ) {}
 
   public login = async (req: Request, res: Response) => {
     try {
-      const { refreshToken, ...rest } = await this.loginUserUseCase.execute(
+      const { refreshToken, ...rest } = await this.loginUseCase.execute(
         req.validatedBody! as LoginUserDto,
       );
       res.cookie("refreshToken", refreshToken, {
@@ -66,6 +68,18 @@ export class AuthController {
         path: "/api/auth",
       });
       return res.json({ accessToken });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
+
+  public logout = async (req: Request, res: Response) => {
+    try {
+      await this.logoutUseCase.execute(req.cookies.refreshToken);
+      res.clearCookie("refreshToken", {
+        path: "/api/auth",
+      });
+      return res.json({ message: "Logout succesfull" });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }

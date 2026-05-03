@@ -14,7 +14,7 @@ interface ClassDependencies {
   refreshTokenPersistencyService: RefreshTokenPersistencyService;
 }
 
-export class LoginUserUseCase {
+export class LoginUseCase {
   private readonly authRepository: AuthRepository;
   private readonly tokenProvider: TokenProvider;
   private readonly strongHasher: HasherService;

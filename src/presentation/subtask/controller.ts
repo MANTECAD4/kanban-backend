@@ -23,7 +23,11 @@ export class SubtaskController {
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
       });
-      return res.json({ message: "Subtasks loaded succesfully", ...result });
+      return res.json({
+        ok: true,
+        message: "Subtasks loaded succesfully",
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -35,7 +39,11 @@ export class SubtaskController {
         taskId: req.validatedParams!.taskId,
         data: req.validatedBody! as CreateSubtaskDto,
       });
-      return res.json({ message: "Subtask created succesfully", ...result });
+      return res.json({
+        ok: true,
+        message: "Subtask created succesfully",
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -47,7 +55,11 @@ export class SubtaskController {
         subtaskId: req.validatedParams!.subtaskId,
         data: req.validatedBody as UpdateSubtaskDto,
       });
-      return res.json({ message: "Subtask updated succesfully", ...result });
+      return res.json({
+        ok: true,
+        message: "Subtask updated succesfully",
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -58,7 +70,11 @@ export class SubtaskController {
         userId: req.user!.sub.id,
         subtaskId: req.validatedParams!.subtaskId,
       });
-      return res.json({ message: "Subtask deleted succesfully", ...result });
+      return res.json({
+        ok: true,
+        message: "Subtask deleted succesfully",
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }

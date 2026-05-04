@@ -25,7 +25,7 @@ export class BoardController {
 
       return res
         .status(201)
-        .json({ message: "Board created succesfully", ...result });
+        .json({ ok: true, message: "Board created succesfully", ...result });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -35,7 +35,11 @@ export class BoardController {
     try {
       console.log(req.cookies);
       const result = await this.getBoardsUseCase.execute(req.user!.sub.id);
-      return res.json({ message: `Boards loaded succesfully`, ...result });
+      return res.json({
+        ok: true,
+        message: `Boards loaded succesfully`,
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -48,7 +52,11 @@ export class BoardController {
         boardId: req.validatedParams!.boardId as number,
         data: req.validatedBody! as UpdateBoardDto,
       });
-      return res.json({ message: `Board updated succesfully`, ...result });
+      return res.json({
+        ok: true,
+        message: `Board updated succesfully`,
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -60,7 +68,11 @@ export class BoardController {
         req.user!.sub.id,
         req.validatedParams!.boardId as number,
       );
-      return res.json({ message: `Board with deleted succesfully`, ...result });
+      return res.json({
+        ok: true,
+        message: `Board with deleted succesfully`,
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }

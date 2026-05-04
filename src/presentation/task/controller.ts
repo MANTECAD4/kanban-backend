@@ -22,7 +22,11 @@ export class TaskController {
         userId: req.user!.sub.id,
         columnId: req.validatedParams!.columnId,
       });
-      return res.json({ message: "Tasks loaded succesfully", ...result });
+      return res.json({
+        ok: true,
+        message: "Tasks loaded succesfully",
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -37,7 +41,7 @@ export class TaskController {
       });
       return res
         .status(201)
-        .json({ message: "Task created succesfully", ...result });
+        .json({ ok: true, message: "Task created succesfully", ...result });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -51,6 +55,7 @@ export class TaskController {
         data: req.validatedBody!,
       });
       return res.json({
+        ok: true,
         message: `Task content updated succesfully`,
         ...result,
       });
@@ -67,6 +72,7 @@ export class TaskController {
         data: req.validatedBody! as UpdateColumnInTaskDto,
       });
       return res.json({
+        ok: true,
         message: "Task status updated succesfully",
         ...result,
       });
@@ -81,7 +87,11 @@ export class TaskController {
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
       });
-      return res.json({ message: "Task deleted succesfully", ...result });
+      return res.json({
+        ok: true,
+        message: "Task deleted succesfully",
+        ...result,
+      });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }

@@ -24,6 +24,7 @@ export class StatusColumnController {
         boardId: req.validatedParams!.boardId,
       });
       return res.json({
+        ok: true,
         message: `Status columns loaded succesfully`,
         ...result,
       });
@@ -41,7 +42,11 @@ export class StatusColumnController {
 
       return res
         .status(201)
-        .json({ message: `Status column created succesfully`, ...result });
+        .json({
+          ok: true,
+          message: `Status column created succesfully`,
+          ...result,
+        });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -56,6 +61,7 @@ export class StatusColumnController {
         data: req.validatedBody as UpdateStatusColumnDto,
       });
       return res.json({
+        ok: true,
         message: `Column with updated succesfully`,
         ...result,
       });
@@ -72,6 +78,7 @@ export class StatusColumnController {
       });
 
       return res.json({
+        ok: true,
         message: `Status column deleted succesfully`,
         ...result,
       });

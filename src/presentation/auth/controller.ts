@@ -29,7 +29,7 @@ export class AuthController {
         maxAge: this.refreshTokenDuration * 60 * 1000,
         path: "/api/auth",
       });
-      return res.json({ message: "Login succesful!", ...rest });
+      return res.json({ ok: true, message: "Login succesful!", ...rest });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -50,7 +50,7 @@ export class AuthController {
 
       return res
         .status(201)
-        .json({ message: "User registered succesfully", ...rest });
+        .json({ ok: true, message: "User registered succesfully", ...rest });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -67,7 +67,7 @@ export class AuthController {
         maxAge: this.refreshTokenDuration * 60 * 1000,
         path: "/api/auth",
       });
-      return res.json({ accessToken });
+      return res.json({ ok: true, accessToken });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }
@@ -79,7 +79,7 @@ export class AuthController {
       res.clearCookie("refreshToken", {
         path: "/api/auth",
       });
-      return res.json({ message: "Logout succesfull" });
+      return res.json({ ok: true, message: "Logout succesfull" });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }

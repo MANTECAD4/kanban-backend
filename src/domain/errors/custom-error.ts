@@ -49,6 +49,7 @@ export class CustomError extends Error {
   public static handleError = (error: any, req: Request, res: Response) => {
     if (error instanceof CustomError) {
       return res.status(error.statusCode).json({
+        ok: false,
         error: {
           message: error.message,
           code: error.code,
@@ -70,6 +71,7 @@ export class CustomError extends Error {
     });
 
     return res.status(500).json({
+      ok: false,
       error: {
         message: "Internal server error",
         code: ErrorCodes.INTERNAL_ERROR,

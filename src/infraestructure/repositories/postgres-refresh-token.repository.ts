@@ -40,14 +40,15 @@ export class PostgresRefreshTokenRepository implements RefreshTokenRepository {
   public revoke = async (jti: string): Promise<RefreshTokenEntity> => {
     const refreshTokenRegister = await prisma.refreshToken.update({
       where: { jti },
-      data: { revoked: true },
+      data: { revoked_at: new Date() },
     });
     return RefreshTokenEntity.fromObject(refreshTokenRegister);
   };
+
   public revokeAllByUser = async (userId: number): Promise<void> => {
     await prisma.refreshToken.updateMany({
       where: { user_id: userId },
-      data: { revoked: true },
+      data: { revoked_at: new Date() },
     });
   };
 }

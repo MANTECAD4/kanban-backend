@@ -2,7 +2,7 @@ interface ClassProperties {
   jti: string;
   hash: string;
   expiresAt: Date;
-  revoked: boolean;
+  revokedAt: Date | null;
   userId: number;
 }
 
@@ -10,15 +10,15 @@ export class RefreshTokenEntity {
   public readonly jti: string;
   public readonly hash: string;
   public readonly expiresAt: Date;
-  public readonly revoked: boolean;
+  public readonly revokedAt: Date | null;
   public readonly userId: number;
 
   constructor(props: ClassProperties) {
-    const { jti: jit, hash, expiresAt, revoked, userId } = props;
+    const { jti: jit, hash, expiresAt, revokedAt, userId } = props;
     this.jti = jit;
     this.hash = hash;
     this.expiresAt = expiresAt;
-    this.revoked = revoked;
+    this.revokedAt = revokedAt;
     this.userId = userId;
   }
 
@@ -30,7 +30,7 @@ export class RefreshTokenEntity {
       jti: jti,
       hash,
       expiresAt: expiresAt ?? expires_at,
-      revoked,
+      revokedAt: revoked,
       userId: userId ?? user_id,
     });
   };

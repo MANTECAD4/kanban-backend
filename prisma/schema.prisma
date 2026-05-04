@@ -25,7 +25,7 @@ model RefreshToken{
   jti String @id @db.Uuid 
   hash String
   expires_at DateTime
-  revoked Boolean @default(false)
+  revoked_at DateTime? 
   user User @relation(fields:[user_id], references: [id])
   user_id Int
 }

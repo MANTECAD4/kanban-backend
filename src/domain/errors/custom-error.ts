@@ -7,6 +7,8 @@ export enum ErrorCodes {
   "NOT_FOUND" = "NOT_FOUND",
   "INTERNAL_ERROR" = "INTERNAL_ERROR",
 
+  "MALFORMED_ENTITY" = "MALFORMED_ENTITY",
+
   "EXPIRED_TOKEN" = "EXPIRED_TOKEN",
   "INVALID_TOKEN" = "INVALID_TOKEN",
 
@@ -42,9 +44,9 @@ export class CustomError extends Error {
   public static notFound(message: string, code: ErrorCodes) {
     return new CustomError(404, message, code);
   }
-  // public static internalServer(message: string, code: ErrorCodes) {
-  //   return new CustomError(500, message, code);
-  // }
+  public static internalServer(message: string, code: ErrorCodes) {
+    return new CustomError(500, message, code);
+  }
 
   public static handleError = (error: any, req: Request, res: Response) => {
     if (error instanceof CustomError) {

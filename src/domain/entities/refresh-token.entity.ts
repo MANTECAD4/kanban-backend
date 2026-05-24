@@ -14,8 +14,8 @@ export class RefreshTokenEntity {
   public readonly userId: number;
 
   constructor(props: ClassProperties) {
-    const { jti: jit, hash, expiresAt, revokedAt, userId } = props;
-    this.jti = jit;
+    const { jti, hash, expiresAt, revokedAt, userId } = props;
+    this.jti = jti;
     this.hash = hash;
     this.expiresAt = expiresAt;
     this.revokedAt = revokedAt;

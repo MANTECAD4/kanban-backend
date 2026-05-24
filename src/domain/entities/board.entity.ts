@@ -1,5 +1,4 @@
-import { StatusColumnEntity } from "./status-column.entity";
-import { UserEntity } from "./user.entity";
+import { CustomError, ErrorCodes } from "../errors/custom-error";
 
 interface BoardProps {
   id: number;
@@ -25,11 +24,38 @@ export class BoardEntity {
 
   public static fromObject = (object: Record<string, any>): BoardEntity => {
     const { id, _id, name, userId, user_id, description } = object;
-    return new BoardEntity({
+
+    const boardInstace = new BoardEntity({
       id: id ?? _id,
       name,
       userId: user_id ?? userId,
       description,
     });
+
+    if (boardInstace.id === undefined || typeof boardInstace.id !== "number") {
+      throw new Error(
+        "Data from BD is corrupted. Invalid value for id property",
+      );
+    }
+
+    if (
+      boardInstace.name === undefined ||
+      typeof boardInstace.name !== "string"
+    ) {
+      throw new Error(
+        "Data from BD is corrupted. Invalid value for name property",
+      );
+    }
+
+    if (
+      boardInstace.userId === undefined ||
+      typeof boardInstace.userId !== "number"
+    ) {
+      throw new Error(
+        "Data from BD is corrupted. Invalid value for userId property",
+      );
+    }
+
+    return boardInstace;
   };
 }

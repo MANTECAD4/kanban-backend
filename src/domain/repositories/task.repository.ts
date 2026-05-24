@@ -1,4 +1,4 @@
-import { CreateTaskDto, UpdateBoardDto } from "../../application/dtos";
+import { CreateTaskDto } from "../../application/dtos";
 import { TaskEntity } from "../entities/task.entity";
 
 export abstract class TaskRepository {

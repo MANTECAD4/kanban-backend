@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     setupFiles: "setup-test.ts",
-
+    fileParallelism: false,
     // exclude: [...configDefaults.exclude, "packages/template/*"],
   },
 });

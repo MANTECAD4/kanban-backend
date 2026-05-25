@@ -25,6 +25,12 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
     return rawColumns.map((column) => StatusColumnEntity.fromObject(column));
   };
 
+  /**
+   * Checks if the board already has a status column using specified name
+   * @param boardId
+   * @param name
+   * @returns
+   */
   public getByBoardAndName = async (
     boardId: number,
     name: string,
@@ -52,6 +58,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
     });
     return StatusColumnEntity.fromObject(createdColumn);
   };
+
   public update = async (
     columnId: number,
     data: Record<string, any>,

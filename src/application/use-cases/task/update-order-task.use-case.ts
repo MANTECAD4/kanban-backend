@@ -11,7 +11,7 @@ export class UpdateOrderInTaskUseCase {
   constructor(private readonly kanbanTaskRepository: TaskRepository) {}
 
   public execute = async ({ userId, taskId, newOrder }: UseCaseParams) => {
-    const taskOwnedByUser = await this.kanbanTaskRepository.checkRelationship(
+    const taskOwnedByUser = await this.kanbanTaskRepository.checkRelation(
       userId,
       taskId,
     );

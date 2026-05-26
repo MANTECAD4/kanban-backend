@@ -22,7 +22,7 @@ export class UpdateStatusColumnUseCase {
   }
 
   public execute = async ({ columnId, userId, data }: ExecutionProps) => {
-    const existRelation = await this.statusColumnRepository.checkRelationship(
+    const existRelation = await this.statusColumnRepository.checkRelation(
       userId,
       columnId,
     );

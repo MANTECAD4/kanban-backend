@@ -21,7 +21,7 @@ export class UpdateBoardUseCase {
   }
 
   public execute = async ({ userId, boardId, data }: ExecutionProps) => {
-    const existsRelationship = await this.boardRepository.checkRelationship(
+    const existsRelationship = await this.boardRepository.checkRelation(
       userId,
       boardId,
     );

@@ -17,54 +17,48 @@ import { PostgresBoardRepository } from "../../../src/infraestructure/repositori
 import { BoardEntity } from "../../../src/domain/entities";
 import { UpdateBoardDto } from "../../../src/application/dtos";
 
-describe("Postgres Board Repository", () => {
+describe("Postgres Board Repository", async () => {
   beforeAll(async () => {
     await prisma.$connect();
   });
 
   beforeEach(async () => {
-    await prisma.user.deleteMany({});
     await prisma.board.deleteMany({});
   });
 
   afterAll(async () => {
+    await prisma.user.deleteMany({});
     await prisma.$disconnect();
   });
 
   const postgresBoardRepository = new PostgresBoardRepository();
 
+  const { id: userId } = await prisma.user.create({
+    data: { ...mockUserData1 },
+  });
   describe("Success cases", () => {
     test(`'create' should return a board entity`, async () => {
-      const registeredUser = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
       const createdBoard = await postgresBoardRepository.create(
-        registeredUser.id,
+        userId,
         mockBoardData1,
       );
       expect(createdBoard).toBeInstanceOf(BoardEntity);
-      expect(createdBoard.userId).toBe(registeredUser.id);
+      expect(createdBoard.userId).toBe(userId);
     });
 
-    test(`'checkRelationship' returns true if entities are related`, async () => {
-      const registeredUser = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
+    test(`'checkRelation' returns true if entities are related`, async () => {
       const createdBoard = await postgresBoardRepository.create(
-        registeredUser.id,
+        userId,
         mockBoardData1,
       );
-      const relationExists = await postgresBoardRepository.checkRelationship(
-        registeredUser.id,
+      const relationExists = await postgresBoardRepository.checkRelation(
+        userId,
         createdBoard.id,
       );
-      expect(relationExists).toBe(true);
+      expect(relationExists).toBeInstanceOf(BoardEntity);
     });
 
     test(`'getAll' returns an array of board entities`, async () => {
-      const { id: userId } = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
       await postgresBoardRepository.create(userId, mockBoardData1);
       await postgresBoardRepository.create(userId, mockBoardData2);
       await postgresBoardRepository.create(userId, mockBoardData3);
@@ -74,9 +68,6 @@ describe("Postgres Board Repository", () => {
     });
 
     test(`'getByUserAndBoardName' returns a board entity if user has a board with specified name in their collection`, async () => {
-      const { id: userId } = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
       await postgresBoardRepository.create(userId, mockBoardData1);
 
       const existingBoard = await postgresBoardRepository.getByUserAndBoardName(
@@ -87,9 +78,6 @@ describe("Postgres Board Repository", () => {
     });
 
     test(`'getById' returns a board entity if id matches`, async () => {
-      const { id: userId } = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
       const createdBoard = await postgresBoardRepository.create(
         userId,
         mockBoardData1,
@@ -102,9 +90,7 @@ describe("Postgres Board Repository", () => {
 
     test(`'update' modifies the stored board & returns a board entity showing made changes`, async () => {
       const newData: UpdateBoardDto = { name: "new name uwu" };
-      const { id: userId } = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
+
       const { id: boardId } = await postgresBoardRepository.create(
         userId,
         mockBoardData1,
@@ -121,9 +107,6 @@ describe("Postgres Board Repository", () => {
     });
 
     test(`'delete' returns deleted board entity`, async () => {
-      const { id: userId } = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
       const { id: boardId } = await postgresBoardRepository.create(
         userId,
         mockBoardData1,
@@ -138,25 +121,18 @@ describe("Postgres Board Repository", () => {
   });
 
   describe("Failure cases", () => {
-    test(`'checkRelationship' returns false if entities are not related`, async () => {
-      const registeredUser = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
+    test(`'checkRelation' returns false if entities are not related`, async () => {
       const createdBoard = await postgresBoardRepository.create(
-        registeredUser.id,
+        userId,
         mockBoardData1,
       );
-      const relationExists = await postgresBoardRepository.checkRelationship(
+      const relationExists = await postgresBoardRepository.checkRelation(
         10100101,
         createdBoard.id,
       );
-      expect(relationExists).toBe(false);
+      expect(relationExists).toBeNull();
     });
     test(`'getByUserAndBoardName' returns null if user doesn't have a board with specified name in their collection`, async () => {
-      const { id: userId } = await prisma.user.create({
-        data: { ...mockUserData1 },
-      });
-
       const existingBoard = await postgresBoardRepository.getByUserAndBoardName(
         userId,
         mockBoardData1.name,

@@ -21,7 +21,7 @@ export class UpdateSubtaskUseCase {
     this.subtaskRepository = subtaskRepository;
   }
   public execute = async ({ userId, subtaskId, data }: ExecutionProps) => {
-    const subtaskOwnedByUser = await this.subtaskRepository.checkRelationship(
+    const subtaskOwnedByUser = await this.subtaskRepository.checkRelation(
       userId,
       subtaskId,
     );

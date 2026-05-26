@@ -17,7 +17,7 @@ export class DeleteTaskUseCase {
     this.taskRepository = kanbanTaskRepository;
   }
   public execute = async ({ userId, taskId }: ExecutionProps) => {
-    const existRelation = await this.taskRepository.checkRelationship(
+    const existRelation = await this.taskRepository.checkRelation(
       userId,
       taskId,
     );

@@ -4,15 +4,16 @@ import { BoardEntity } from "../../domain/entities";
 import { BoardRepository } from "../../domain/repositories";
 
 export class PostgresBoardRepository implements BoardRepository {
-  public checkRelationship = async (
+  public checkRelation = async (
     userId: number,
     boardId: number,
-  ): Promise<boolean> => {
+  ): Promise<BoardEntity | null> => {
     const board = await prisma.board.findFirst({
       where: { id: boardId, user: { id: userId } },
     });
-    return board ? true : false;
+    return board ? BoardEntity.fromObject(board) : null;
   };
+
   public getAll = async (userId: number): Promise<BoardEntity[]> => {
     const rawBoards = await prisma.board.findMany({
       where: { user_id: userId },
@@ -20,14 +21,11 @@ export class PostgresBoardRepository implements BoardRepository {
     return rawBoards.map((board) => BoardEntity.fromObject(board));
   };
 
-  public getByName = async (name: string): Promise<BoardEntity | null> => {
-    const board = await prisma.board.findFirst({ where: { name } });
-    return board === null ? null : BoardEntity.fromObject(board);
-  };
   public getById = async (boardId: number): Promise<BoardEntity | null> => {
     const board = await prisma.board.findFirst({ where: { id: boardId } });
     return board === null ? null : BoardEntity.fromObject(board);
   };
+
   public getByUserAndBoardName = async (
     userId: number,
     boardName: string,

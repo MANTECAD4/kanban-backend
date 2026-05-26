@@ -57,17 +57,16 @@ describe(`Status Column Repository`, async () => {
       expect(createdStatusColumn).toBeInstanceOf(StatusColumnEntity);
     });
 
-    test(`'checkRelationship' returns a status column entity if relation between entities exist`, async () => {
+    test(`'checkRelation' returns a status column entity if relation between entities exist`, async () => {
       const { id: columnId } = await postgresStatusColumnRepository.create(
         boardId,
         mockStatusColumnData1,
       );
-      const existRelation =
-        await postgresStatusColumnRepository.checkRelationship(
-          userId,
-          columnId,
-        );
-      expect(existRelation).toBe(true);
+      const existRelation = await postgresStatusColumnRepository.checkRelation(
+        userId,
+        columnId,
+      );
+      expect(existRelation).toBeInstanceOf(StatusColumnEntity);
     });
 
     test(`'getAll' returns an array of cstatus column entities`, async () => {
@@ -150,18 +149,17 @@ describe(`Status Column Repository`, async () => {
   });
 
   describe("Failure cases", () => {
-    test(`'checkRelationship' returns null if there's no relation between entities`, async () => {
+    test(`'checkRelation' returns null if there's no relation between entities`, async () => {
       const { id: columnId } = await postgresStatusColumnRepository.create(
         boardId,
         mockStatusColumnData1,
       );
 
-      const existRelation =
-        await postgresStatusColumnRepository.checkRelationship(
-          101010,
-          columnId,
-        );
-      expect(existRelation).toBe(false);
+      const existRelation = await postgresStatusColumnRepository.checkRelation(
+        101010,
+        columnId,
+      );
+      expect(existRelation).toBeNull();
     });
 
     test(`'getById' returns null if column doesn't exist`, async () => {

@@ -4,15 +4,15 @@ import { StatusColumnEntity } from "../../domain/entities";
 import { StatusColumnRepository } from "../../domain/repositories";
 
 export class PostgresStatusColumnRepository implements StatusColumnRepository {
-  public checkRelationship = async (
+  public checkRelation = async (
     userId: number,
     columnId: number,
-  ): Promise<boolean> => {
+  ): Promise<StatusColumnEntity | null> => {
     const column = await prisma.statusColumn.findFirst({
       where: { id: columnId, board: { user: { id: userId } } },
     });
 
-    return column ? true : false;
+    return column ? StatusColumnEntity.fromObject(column) : null;
   };
 
   public getAll = async (boardId: number): Promise<StatusColumnEntity[]> => {

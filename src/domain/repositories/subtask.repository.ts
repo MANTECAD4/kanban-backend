@@ -2,7 +2,7 @@ import { CreateSubtaskDto } from "../../application/dtos/subtask.dto";
 import { SubtaskEntity } from "../entities/subtask.entity";
 
 export abstract class SubtaskRepository {
-  abstract checkRelationship: (
+  abstract checkRelation: (
     userId: number,
     subtaskId: number,
   ) => Promise<SubtaskEntity | null>;

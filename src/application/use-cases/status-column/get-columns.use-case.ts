@@ -24,7 +24,7 @@ export class GetStatusColumnsUseCase {
     this.boardRepository = boardRepository;
   }
   public execute = async ({ userId, boardId }: ExecutioProps) => {
-    const existRelationship = await this.boardRepository.checkRelationship(
+    const existRelationship = await this.boardRepository.checkRelation(
       userId,
       boardId,
     );

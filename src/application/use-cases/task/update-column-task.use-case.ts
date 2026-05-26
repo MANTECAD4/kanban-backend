@@ -31,7 +31,7 @@ export class UpdateStatusColumnInTaskUseCase {
     taskId,
     data: { statusColumnId },
   }: ExecutionProps) => {
-    const taskOwnedByUser = await this.taskRepository.checkRelationship(
+    const taskOwnedByUser = await this.taskRepository.checkRelation(
       userId,
       taskId,
     );

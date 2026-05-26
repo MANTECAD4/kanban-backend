@@ -4,7 +4,7 @@ import { TaskEntity } from "../../domain/entities";
 import { TaskRepository } from "../../domain/repositories";
 
 export class PostgresTaskRepository implements TaskRepository {
-  public checkRelationship = async (
+  public checkRelation = async (
     userId: number,
     taskId: number,
   ): Promise<TaskEntity | null> => {
@@ -32,11 +32,6 @@ export class PostgresTaskRepository implements TaskRepository {
 
   public getById = async (taskId: number): Promise<TaskEntity | null> => {
     const task = await prisma.task.findFirst({ where: { id: taskId } });
-    return task ? TaskEntity.fromObject(task) : null;
-  };
-
-  public getByTitle = async (title: string): Promise<TaskEntity | null> => {
-    const task = await prisma.task.findFirst({ where: { title } });
     return task ? TaskEntity.fromObject(task) : null;
   };
 

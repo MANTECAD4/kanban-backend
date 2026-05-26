@@ -4,7 +4,7 @@ import { SubtaskEntity } from "../../domain/entities/subtask.entity";
 import { SubtaskRepository } from "../../domain/repositories/subtask.repository";
 
 export class PostgresSubtaskRepository implements SubtaskRepository {
-  public checkRelationship = async (
+  public checkRelation = async (
     userId: number,
     subtaskId: number,
   ): Promise<SubtaskEntity | null> => {

@@ -27,7 +27,7 @@ export class CreateTaskUseCase {
   }
 
   public execute = async ({ userId, columnId, data }: ExecutionProps) => {
-    const existRelation = await this.statusColumnRepository.checkRelationship(
+    const existRelation = await this.statusColumnRepository.checkRelation(
       userId,
       columnId,
     );

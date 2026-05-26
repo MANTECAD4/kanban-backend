@@ -31,7 +31,7 @@ export class CreateStatusColumnUseCase {
     boardId,
     createStatusColumnDto,
   }: ExecutionProps) => {
-    const existsRelationship = await this.boardRepository.checkRelationship(
+    const existsRelationship = await this.boardRepository.checkRelation(
       userId,
       boardId,
     );

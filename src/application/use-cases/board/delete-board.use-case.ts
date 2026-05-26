@@ -12,7 +12,7 @@ export class DeleteBoardUseCase {
     this.boardRepository = boardRepository;
   }
   public execute = async (userId: number, boardId: number) => {
-    const existRelationship = await this.boardRepository.checkRelationship(
+    const existRelationship = await this.boardRepository.checkRelation(
       userId,
       boardId,
     );

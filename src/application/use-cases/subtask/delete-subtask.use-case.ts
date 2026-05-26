@@ -18,7 +18,7 @@ export class DeleteSubtaskUseCase {
     this.subtaskRepository = subtaskRepository;
   }
   public execute = async ({ userId, subtaskId }: ExecutionProps) => {
-    const subtaskOwnedByUser = await this.subtaskRepository.checkRelationship(
+    const subtaskOwnedByUser = await this.subtaskRepository.checkRelation(
       userId,
       subtaskId,
     );

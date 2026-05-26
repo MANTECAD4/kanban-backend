@@ -2,10 +2,10 @@ import { CreateStatusColumnDto } from "../../application/dtos";
 import { StatusColumnEntity } from "../entities/status-column.entity";
 
 export abstract class StatusColumnRepository {
-  public abstract checkRelationship: (
+  public abstract checkRelation: (
     userId: number,
     columnId: number,
-  ) => Promise<boolean>;
+  ) => Promise<StatusColumnEntity | null>;
   public abstract getAll: (
     boardId: number, // DTO
   ) => Promise<StatusColumnEntity[]>;

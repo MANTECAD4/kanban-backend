@@ -20,7 +20,7 @@ export class UpdateDataInTaskUseCase {
     this.taskRepository = kanbanTaskRepository;
   }
   public execute = async ({ userId, taskId, data }: ExecutionProps) => {
-    const taskOwnedByUser = await this.taskRepository.checkRelationship(
+    const taskOwnedByUser = await this.taskRepository.checkRelation(
       userId,
       taskId,
     );

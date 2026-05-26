@@ -19,7 +19,7 @@ export class DeleteStatusColumnUseCase {
   }
 
   public execute = async ({ userId, columnId }: ExecutionProps) => {
-    const existRelation = await this.statusColumnRepository.checkRelationship(
+    const existRelation = await this.statusColumnRepository.checkRelation(
       userId,
       columnId,
     );

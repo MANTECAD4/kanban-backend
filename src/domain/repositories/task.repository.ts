@@ -2,7 +2,7 @@ import { CreateTaskDto } from "../../application/dtos";
 import { TaskEntity } from "../entities/task.entity";
 
 export abstract class TaskRepository {
-  public abstract checkRelationship: (
+  public abstract checkRelation: (
     userId: number,
     taskId: number,
   ) => Promise<TaskEntity | null>;
@@ -10,7 +10,6 @@ export abstract class TaskRepository {
     columnId: number,
   ) => Promise<TaskEntity[]>;
   public abstract getById: (taskId: number) => Promise<TaskEntity | null>;
-  public abstract getByTitle: (title: string) => Promise<TaskEntity | null>;
   public abstract create: (
     columnId: number,
     data: CreateTaskDto,

@@ -1,6 +1,7 @@
 import {
   CreateBoardDto,
   CreateStatusColumnDto,
+  CreateTaskDto,
   RegisterUserDto,
 } from "../src/application/dtos";
 
@@ -49,4 +50,21 @@ export const mockStatusColumnData2: CreateStatusColumnDto = {
 export const mockStatusColumnData3: CreateStatusColumnDto = {
   name: "test status column 3",
   description: "some description uwu",
+};
+
+// Tasks
+export const mockTask1: CreateTaskDto = {
+  title: "test task 1",
+  description: "some description for task 1",
+  order: 1,
+};
+export const mockTask2: CreateTaskDto = {
+  title: "test task 2",
+  description: "some description for task 2",
+  order: 1,
+};
+export const mockTask3: CreateTaskDto = {
+  title: "test task 3",
+  description: "some description for task 3",
+  order: 1,
 };

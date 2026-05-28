@@ -46,7 +46,6 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     data: Record<string, any>,
   ): Promise<SubtaskEntity> => {
     const { isCompleted, ...rest } = data;
-    console.log({ data });
     const updatedSubtask = await prisma.subtasks.update({
       where: { id: subtaskId },
       data: { ...rest, is_completed: isCompleted },

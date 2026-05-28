@@ -17,10 +17,7 @@ import {
 } from "../../fixtures";
 import { PostgresTaskRepository } from "../../../src/infraestructure/repositories";
 import { TaskEntity } from "../../../src/domain/entities";
-import {
-  UpdateColumnInTaskDto,
-  UpdateDataInTaskDto,
-} from "../../../src/application/dtos";
+import { UpdateDataInTaskDto } from "../../../src/application/dtos";
 
 describe("Postgres Task Repository", async () => {
   beforeAll(async () => {

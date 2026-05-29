@@ -23,14 +23,14 @@ export class RefreshTokenEntity {
   }
 
   public static fromObject = (object: Record<string, any>) => {
-    const { jti, hash, expiresAt, expires_at, revoked, userId, user_id } =
+    const { jti, hash, expiresAt, expires_at, revoked_at, userId, user_id } =
       object;
 
     return new RefreshTokenEntity({
       jti: jti,
       hash,
       expiresAt: expiresAt ?? expires_at,
-      revokedAt: revoked,
+      revokedAt: revoked_at,
       userId: userId ?? user_id,
     });
   };

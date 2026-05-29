@@ -19,9 +19,9 @@ describe(`Status Column Repository`, async () => {
 
   beforeAll(async () => {
     await prisma.$connect();
-    await prisma.user.deleteMany({});
-    await prisma.board.deleteMany({});
     await prisma.statusColumn.deleteMany({});
+    await prisma.board.deleteMany({});
+    await prisma.user.deleteMany({});
 
     postgresStatusColumnRepository = new PostgresStatusColumnRepository();
 

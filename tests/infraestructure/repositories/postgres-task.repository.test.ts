@@ -28,10 +28,10 @@ describe("Postgres Task Repository", async () => {
 
   beforeAll(async () => {
     await prisma.$connect();
-    await prisma.user.deleteMany({});
-    await prisma.board.deleteMany({});
-    await prisma.statusColumn.deleteMany({});
     await prisma.task.deleteMany({});
+    await prisma.statusColumn.deleteMany({});
+    await prisma.board.deleteMany({});
+    await prisma.user.deleteMany({});
 
     const createdUser = await prisma.user.create({ data: mockUserData1 });
     userId = createdUser.id;

@@ -16,8 +16,8 @@ describe("Postgres Board Repository", async () => {
 
   beforeAll(async () => {
     await prisma.$connect();
-    await prisma.user.deleteMany({});
     await prisma.board.deleteMany({});
+    await prisma.user.deleteMany({});
     const createdUser = await prisma.user.create({
       data: { ...mockUserData1 },
     });

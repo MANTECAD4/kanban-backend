@@ -1,11 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-} from "vitest";
+import { afterAll, beforeAll, afterEach, describe, expect, test } from "vitest";
 import { prisma } from "../../../src/data/init-postgres";
 import { PostgresSubtaskRepository } from "../../../src/infraestructure/repositories/postgres-subtask.repository";
 import {
@@ -21,32 +14,44 @@ import { SubtaskEntity } from "../../../src/domain/entities/subtask.entity";
 import { UpdateSubtaskDto } from "../../../src/application/dtos";
 
 describe("Subtask Repository", async () => {
+  let userId: number;
+  let boardId: number;
+  let columnId: number;
+  let taskId: number;
+  let postgresSubtaskRepository: PostgresSubtaskRepository;
   beforeAll(async () => {
     await prisma.$connect();
-  });
-  beforeEach(async () => {
-    await prisma.subtasks.deleteMany({});
-  });
-
-  afterAll(async () => {
     await prisma.user.deleteMany({});
     await prisma.board.deleteMany({});
     await prisma.statusColumn.deleteMany({});
     await prisma.task.deleteMany({});
+    await prisma.subtasks.deleteMany({});
+    const createdUser = await prisma.user.create({ data: mockUserData1 });
+    userId = createdUser.id;
+
+    const createdBoard = await prisma.board.create({
+      data: { ...mockBoardData1, user_id: userId },
+    });
+    boardId = createdBoard.id;
+
+    const createdColumn = await prisma.statusColumn.create({
+      data: { ...mockBoardData1, board_id: boardId },
+    });
+    columnId = createdColumn.id;
+
+    const createdTask = await prisma.task.create({
+      data: { ...mockTask1, status_column_id: columnId },
+    });
+    taskId = createdTask.id;
+    postgresSubtaskRepository = new PostgresSubtaskRepository();
+  });
+  afterEach(async () => {
+    await prisma.subtasks.deleteMany({});
   });
 
-  const { id: userId } = await prisma.user.create({ data: mockUserData1 });
-  const { id: boardId } = await prisma.board.create({
-    data: { ...mockBoardData1, user_id: userId },
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
-  const { id: columnId } = await prisma.statusColumn.create({
-    data: { ...mockStatusColumnData1, board_id: boardId },
-  });
-  const { id: taskId } = await prisma.task.create({
-    data: { ...mockTask1, status_column_id: columnId },
-  });
-
-  const postgresSubtaskRepository = new PostgresSubtaskRepository();
 
   describe("Success cases", () => {
     test(`'create' returns a subtask entity`, async () => {

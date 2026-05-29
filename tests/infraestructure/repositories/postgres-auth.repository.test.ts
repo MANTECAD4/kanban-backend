@@ -1,26 +1,21 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-} from "vitest";
+import { afterAll, beforeAll, afterEach, describe, expect, test } from "vitest";
 import { prisma } from "../../../src/data/init-postgres";
 import { PostgresAuthRepository } from "../../../src/infraestructure/repositories/postgres-auth.repository";
 import { UserEntity } from "../../../src/domain/entities";
 import { mockUserData1 } from "../../fixtures";
 
 describe("Postgres Auth Repository", () => {
+  let postgresAuthRepository: PostgresAuthRepository;
+
   beforeAll(async () => {
     await prisma.$connect();
+    await prisma.user.deleteMany({});
+    postgresAuthRepository = new PostgresAuthRepository();
   });
-  beforeEach(async () => {
+  afterEach(async () => {
     await prisma.user.deleteMany({});
   });
   afterAll(async () => await prisma.$disconnect());
-
-  const postgresAuthRepository = new PostgresAuthRepository();
 
   describe("Success cases", () => {
     test("'register' should create a new instace of user Model & return an instace of User Entity", async () => {

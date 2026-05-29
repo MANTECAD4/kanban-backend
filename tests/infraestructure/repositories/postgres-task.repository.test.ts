@@ -20,8 +20,38 @@ import { TaskEntity } from "../../../src/domain/entities";
 import { UpdateDataInTaskDto } from "../../../src/application/dtos";
 
 describe("Postgres Task Repository", async () => {
+  let userId: number;
+  let boardId: number;
+  let columnId1: number;
+  let columnId2: number;
+  let postgresTaskRepository: PostgresTaskRepository;
+
   beforeAll(async () => {
     await prisma.$connect();
+    await prisma.user.deleteMany({});
+    await prisma.board.deleteMany({});
+    await prisma.statusColumn.deleteMany({});
+    await prisma.task.deleteMany({});
+
+    const createdUser = await prisma.user.create({ data: mockUserData1 });
+    userId = createdUser.id;
+
+    const createdBoard = await prisma.board.create({
+      data: { ...mockBoardData1, user_id: userId },
+    });
+    boardId = createdBoard.id;
+
+    const createdColumn1 = await prisma.statusColumn.create({
+      data: { ...mockBoardData1, board_id: boardId },
+    });
+    columnId1 = createdColumn1.id;
+
+    const createdColumn2 = await prisma.statusColumn.create({
+      data: { ...mockBoardData2, board_id: boardId },
+    });
+    columnId2 = createdColumn2.id;
+
+    postgresTaskRepository = new PostgresTaskRepository();
   });
 
   beforeEach(async () => {
@@ -29,24 +59,8 @@ describe("Postgres Task Repository", async () => {
   });
 
   afterAll(async () => {
-    await prisma.user.deleteMany({});
-    await prisma.board.deleteMany({});
-    await prisma.statusColumn.deleteMany({});
     await prisma.$disconnect();
   });
-
-  const { id: userId } = await prisma.user.create({ data: mockUserData1 });
-  const { id: boardId } = await prisma.board.create({
-    data: { ...mockBoardData1, user_id: userId },
-  });
-  const { id: columnId1 } = await prisma.statusColumn.create({
-    data: { ...mockBoardData1, board_id: boardId },
-  });
-  const { id: columnId2 } = await prisma.statusColumn.create({
-    data: { ...mockBoardData2, board_id: boardId },
-  });
-
-  const postgresTaskRepository = new PostgresTaskRepository();
 
   describe("Success cases", () => {
     test(`'create' returns a task entiity`, async () => {

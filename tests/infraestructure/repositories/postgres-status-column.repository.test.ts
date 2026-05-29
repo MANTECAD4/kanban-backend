@@ -1,11 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-} from "vitest";
+import { afterAll, beforeAll, afterEach, describe, expect, test } from "vitest";
 import { prisma } from "../../../src/data/init-postgres";
 import {
   mockBoardData1,
@@ -14,39 +7,43 @@ import {
   mockStatusColumnData3,
   mockUserData1,
 } from "../../fixtures";
-import {
-  PostgresBoardRepository,
-  PostgresStatusColumnRepository,
-} from "../../../src/infraestructure/repositories";
+import { PostgresStatusColumnRepository } from "../../../src/infraestructure/repositories";
 import { StatusColumnEntity } from "../../../src/domain/entities";
 import { UpdateStatusColumnDto } from "../../../src/application/dtos";
 
 describe(`Status Column Repository`, async () => {
+  let userId: number;
+  let boardId: number;
+
+  let postgresStatusColumnRepository: PostgresStatusColumnRepository;
+
   beforeAll(async () => {
     await prisma.$connect();
+    await prisma.user.deleteMany({});
+    await prisma.board.deleteMany({});
+    await prisma.statusColumn.deleteMany({});
+
+    postgresStatusColumnRepository = new PostgresStatusColumnRepository();
+
+    const createdUser = await prisma.user.create({
+      data: { ...mockUserData1 },
+    });
+
+    userId = createdUser.id;
+
+    const createdBoard = await prisma.board.create({
+      data: { user_id: userId, ...mockBoardData1 },
+    });
+    boardId = createdBoard.id;
   });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await prisma.statusColumn.deleteMany({});
   });
 
   afterAll(async () => {
-    await prisma.user.deleteMany({});
-    await prisma.board.deleteMany({});
     await prisma.$disconnect();
   });
-
-  const postgresBoardRepository = new PostgresBoardRepository();
-  const postgresStatusColumnRepository = new PostgresStatusColumnRepository();
-
-  const { id: userId } = await prisma.user.create({
-    data: { ...mockUserData1 },
-  });
-
-  const { id: boardId } = await postgresBoardRepository.create(
-    userId,
-    mockBoardData1,
-  );
 
   describe("Success cases", () => {
     test(`'create' returns a status column entity`, async () => {

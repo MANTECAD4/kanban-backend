@@ -1,11 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-} from "vitest";
+import { afterAll, beforeAll, afterEach, describe, expect, test } from "vitest";
 import { prisma } from "../../../src/data/init-postgres";
 import {
   mockBoardData1,
@@ -18,24 +11,28 @@ import { BoardEntity } from "../../../src/domain/entities";
 import { UpdateBoardDto } from "../../../src/application/dtos";
 
 describe("Postgres Board Repository", async () => {
+  let userId: number;
+  let postgresBoardRepository: PostgresBoardRepository;
+
   beforeAll(async () => {
     await prisma.$connect();
+    await prisma.user.deleteMany({});
+    await prisma.board.deleteMany({});
+    const createdUser = await prisma.user.create({
+      data: { ...mockUserData1 },
+    });
+    userId = createdUser.id;
+    postgresBoardRepository = new PostgresBoardRepository();
   });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await prisma.board.deleteMany({});
   });
 
   afterAll(async () => {
-    await prisma.user.deleteMany({});
     await prisma.$disconnect();
   });
 
-  const postgresBoardRepository = new PostgresBoardRepository();
-
-  const { id: userId } = await prisma.user.create({
-    data: { ...mockUserData1 },
-  });
   describe("Success cases", () => {
     test(`'create' should return a board entity`, async () => {
       const createdBoard = await postgresBoardRepository.create(

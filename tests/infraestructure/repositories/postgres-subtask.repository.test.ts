@@ -4,7 +4,6 @@ import { PostgresSubtaskRepository } from "../../../src/infraestructure/reposito
 import {
   mockUserData1,
   mockBoardData1,
-  mockStatusColumnData1,
   mockTask1,
   mockSubtask1,
   mockSubtask3,

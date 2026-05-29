@@ -4,7 +4,7 @@ import {
   CreateSubtaskDto,
   CreateTaskDto,
   RegisterUserDto,
-} from "../src/application/dtos";
+} from "../../src/application/dtos";
 
 // Auth
 export const mockUserData1: RegisterUserDto = {

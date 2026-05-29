@@ -19,18 +19,10 @@ export class JwtGenerator implements TokenProvider {
       return tokenContent as unknown as TokenPayload;
     } catch (error) {
       const { message } = error as VerifyErrors;
-      let customErrorInstance;
-      if (message.match(/expires/i)) {
-        customErrorInstance = CustomError.unauthorized(
-          "Token expired",
-          ErrorCodes.EXPIRED_TOKEN,
-        );
-      } else {
-        customErrorInstance = CustomError.unauthorized(
-          "Invalid token",
-          ErrorCodes.UNAUTHORIZED,
-        );
-      }
+      const customErrorInstance = CustomError.unauthorized(
+        message,
+        ErrorCodes.INVALID_TOKEN,
+      );
       throw customErrorInstance;
     }
   };

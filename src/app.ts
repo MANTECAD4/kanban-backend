@@ -98,7 +98,6 @@ function main() {
   const softHasher = new CryptoHasher();
 
   //! APPLICATION SERVICES
-
   const refreshTokenPersistencyService = new RefreshTokenPersistencyService({
     hasherService: softHasher,
     refreshTokenRepository,

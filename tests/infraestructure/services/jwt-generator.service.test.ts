@@ -17,11 +17,6 @@ describe("Jwt Generator service", () => {
   const secret = "some-secret-uwu";
   const duration = 15;
   const payloadAccessToken: TokenPayload = { sub: { id: 777 }, type: "access" };
-  const payloadRefreshToken: TokenPayload = {
-    sub: { id: 777 },
-    type: "refresh",
-    jti: crypto.randomUUID(),
-  };
   const jwtGenerator = new JwtGenerator(secret);
 
   beforeEach(() => {
@@ -57,19 +52,21 @@ describe("Jwt Generator service", () => {
   });
 
   describe("Failure cases", () => {
-    test(`'validate' throws an error if token has already expired`, () => {
+    test(`'validate' throws an error if provided token has already expired`, () => {
       const token = jwtGenerator.generate(payloadAccessToken, duration);
       vi.advanceTimersByTime(1000 * 60 * (duration + 1));
 
       expect(() => jwtGenerator.validate(token)).toThrow(/expired/i);
     });
-    test(`'validate' throws an error if token is corrupted`, () => {
+
+    test(`'validate' throws an error if provided token is corrupted`, () => {
       const token = jwtGenerator.generate(payloadAccessToken, duration);
       const corrupted = token.substring(0, 8) + "ñ" + token.substring(8 + 1);
 
       expect(() => jwtGenerator.validate(corrupted)).toThrow(/invalid/i);
     });
-    test(`'validate' throws an error if token is malformed`, () => {
+
+    test(`'validate' throws an error if provided token is malformed`, () => {
       expect(() => jwtGenerator.validate("not-a-jwt")).toThrow(/malformed/i);
     });
   });

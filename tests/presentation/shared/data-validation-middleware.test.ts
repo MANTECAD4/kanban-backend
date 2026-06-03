@@ -106,10 +106,11 @@ describe("Data validation middleware factory", () => {
       );
 
       createdMiddleware(mockRequest as Request, {} as Response, vi.fn());
+
       expect(spyBadRequest).toHaveBeenCalledWith(
         errorMsg,
         ErrorCodes.INVALID_DATA,
-        expect.anything(),
+        expect.any(Object),
       );
       expect(spyHandleError).toHaveBeenCalledWith(
         expect.any(CustomError),

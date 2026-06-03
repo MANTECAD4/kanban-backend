@@ -18,13 +18,13 @@ export class AuthMiddlewares {
 
   public loginDataValidation = dataValidationMiddlewareFactory(
     LoginSchema,
-    "Invalid data recieved. Login denied",
+    "Invalid request data",
     RequestValidationTarget.BODY,
   );
 
   public registerDataValidation = dataValidationMiddlewareFactory(
     RegisterUserSchema,
-    "Invalid data recieved. Register failed",
+    "Invalid request data",
     RequestValidationTarget.BODY,
   );
 

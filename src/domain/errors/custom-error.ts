@@ -44,9 +44,9 @@ export class CustomError extends Error {
   public static notFound(message: string, code: ErrorCodes) {
     return new CustomError(404, message, code);
   }
-  public static internalServer(message: string, code: ErrorCodes) {
-    return new CustomError(500, message, code);
-  }
+  // public static internalServerr(message: string, code: ErrorCodes) {
+  //   return new CustomError(500, message, code);
+  // }
 
   public static handleError = (error: any, req: Request, res: Response) => {
     if (error instanceof CustomError) {

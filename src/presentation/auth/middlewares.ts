@@ -53,6 +53,13 @@ export class AuthMiddlewares {
 
     try {
       const payload = this.tokenGenerator.validate(token);
+      // if (!payload!.type || payload!.type !== "access") {
+      //   const error = CustomError.unauthorized(
+      //     "Invalid token type",
+      //     ErrorCodes.INVALID_TOKEN,
+      //   );
+      //   return CustomError.handleError(error, req, res);
+      // }
       const result = AccessTokenPayloadSchema.safeParse(payload);
       if (!result.success) {
         const error = CustomError.unauthorized(
@@ -61,31 +68,13 @@ export class AuthMiddlewares {
         );
         return CustomError.handleError(error, req, res);
       }
-      if (result.data.type !== "access") {
-        const error = CustomError.unauthorized(
-          "Invalid token type",
-          ErrorCodes.INVALID_TOKEN,
-        );
-        return CustomError.handleError(error, req, res);
-      }
 
-      req.user = result.data;
+      req.user = result.data!;
       next();
     } catch (error) {
-      // console.log(error);
       const { message } = error as VerifyErrors;
-
-      let customErrorInstance;
-      if (message.match(/expired/i)) {
-        customErrorInstance = CustomError.unauthorized(
-          "Expired token",
-          ErrorCodes.EXPIRED_TOKEN,
-        );
-        return CustomError.handleError(customErrorInstance, req, res);
-      }
-
-      customErrorInstance = CustomError.unauthorized(
-        "Invalid token",
+      const customErrorInstance = CustomError.unauthorized(
+        message,
         ErrorCodes.INVALID_TOKEN,
       );
       return CustomError.handleError(customErrorInstance, req, res);

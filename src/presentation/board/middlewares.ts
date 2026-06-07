@@ -11,6 +11,7 @@ export class BoardMiddlewares {
     "Invalid data recieved. Board creation failed.",
     RequestValidationTarget.BODY,
   );
+
   public updateBoardDataValidation = dataValidationMiddlewareFactory(
     UpdateBoardSchema,
     "Invalid data recieved. Board update failed.",

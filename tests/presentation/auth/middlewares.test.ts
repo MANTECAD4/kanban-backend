@@ -1,7 +1,7 @@
+import { Request, Response } from "express";
 import { beforeEach, describe, expect, expectTypeOf, test, vi } from "vitest";
 import { TokenProvider } from "../../../src/domain/services/token-generator.service";
 import { AuthMiddlewares } from "../../../src/presentation/auth/middlewares";
-import { Request, Response } from "express";
 import {
   AccessTokenPayload,
   LoginUserDto,
@@ -81,6 +81,7 @@ describe("Auth Middlewares", () => {
       expect(mockNextFn).not.toHaveBeenCalled();
     });
   });
+
   describe("Register Data Validation Middleware", () => {
     test("should store validated data into 'validatedBody' property inside Request", () => {
       const authMiddlewares = new AuthMiddlewares({} as TokenProvider);

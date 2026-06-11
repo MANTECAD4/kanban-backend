@@ -1,4 +1,4 @@
-export * from "./postgres-auth.repository";
+export * from "./postgres-user.repository";
 export * from "./postgres-board.repository";
 export * from "./postgres-refresh-token.repository";
 export * from "./postgres-status-column.repository";

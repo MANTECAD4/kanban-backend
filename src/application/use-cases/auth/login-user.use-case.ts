@@ -1,12 +1,12 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { AuthRepository } from "../../../domain/repositories";
+import { UserRepository } from "../../../domain/repositories";
 import { HasherService } from "../../../domain/services/hasher.service";
 import { TokenProvider } from "../../../domain/services/token-generator.service";
 import { LoginUserDto } from "../../dtos";
 import { RefreshTokenPersistencyService } from "../../../domain/services/refresh-token-persistency.service";
 
 interface ClassDependencies {
-  authRepository: AuthRepository;
+  userRepository: UserRepository;
   tokenProvider: TokenProvider;
   strongHasher: HasherService;
   accessTokenDuration: number;
@@ -16,14 +16,14 @@ interface ClassDependencies {
 
 export class LoginUseCase {
   private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
-  private readonly authRepository: AuthRepository;
+  private readonly userRepository: UserRepository;
   private readonly tokenProvider: TokenProvider;
   private readonly strongHasher: HasherService;
   private readonly accessTokenDuration: number;
   private readonly refreshTokenDuration: number;
   constructor(dependencies: ClassDependencies) {
     const {
-      authRepository,
+      userRepository,
       tokenProvider,
       strongHasher,
       accessTokenDuration,
@@ -31,7 +31,7 @@ export class LoginUseCase {
       refreshTokenPersistencyService,
     } = dependencies;
 
-    this.authRepository = authRepository;
+    this.userRepository = userRepository;
     this.tokenProvider = tokenProvider;
     this.strongHasher = strongHasher;
     this.accessTokenDuration = accessTokenDuration;
@@ -42,7 +42,7 @@ export class LoginUseCase {
   public execute = async (data: LoginUserDto) => {
     const { email, password: rawPassword } = data;
 
-    const existentUser = await this.authRepository.getByEmail(email);
+    const existentUser = await this.userRepository.getByEmail(email);
     if (!existentUser)
       throw CustomError.notFound({
         title: "Login failed",

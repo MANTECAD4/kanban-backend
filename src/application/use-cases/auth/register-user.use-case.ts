@@ -1,12 +1,12 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { AuthRepository } from "../../../domain/repositories";
+import { UserRepository } from "../../../domain/repositories";
 import { TokenProvider } from "../../../domain/services";
 import { HasherService } from "../../../domain/services/hasher.service";
 import { RegisterUserDto } from "../../dtos";
 import { RefreshTokenPersistencyService } from "../../../domain/services/refresh-token-persistency.service";
 
 interface ClassDependencies {
-  authRepository: AuthRepository;
+  userRepository: UserRepository;
   tokenProvider: TokenProvider;
   strongHasher: HasherService;
   accessTokenDuration: number;
@@ -15,7 +15,7 @@ interface ClassDependencies {
 }
 
 export class RegisterUserUseCase {
-  private readonly authRepository: AuthRepository;
+  private readonly userRepository: UserRepository;
   private readonly tokenProvider: TokenProvider;
   private readonly strongHasher: HasherService;
   private readonly accessTokenDuration: number;
@@ -23,7 +23,7 @@ export class RegisterUserUseCase {
   private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   constructor(dependencies: ClassDependencies) {
     const {
-      authRepository,
+      userRepository,
       tokenProvider,
       strongHasher,
       accessTokenDuration,
@@ -31,7 +31,7 @@ export class RegisterUserUseCase {
       refreshTokenPersistencyService,
     } = dependencies;
 
-    this.authRepository = authRepository;
+    this.userRepository = userRepository;
     this.tokenProvider = tokenProvider;
     this.strongHasher = strongHasher;
     this.accessTokenDuration = accessTokenDuration;
@@ -42,7 +42,7 @@ export class RegisterUserUseCase {
   public async execute(data: RegisterUserDto) {
     const { email, password: rawPassword, name } = data;
 
-    const existentUser = await this.authRepository.getByEmail(email);
+    const existentUser = await this.userRepository.getByEmail(email);
 
     if (existentUser)
       throw CustomError.badRequest({
@@ -54,7 +54,7 @@ export class RegisterUserUseCase {
 
     const hashedPassword = await this.strongHasher.hash(rawPassword);
 
-    const { password, ...rest } = await this.authRepository.register({
+    const { password, ...rest } = await this.userRepository.register({
       email,
       password: hashedPassword,
       name,

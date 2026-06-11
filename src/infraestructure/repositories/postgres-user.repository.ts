@@ -1,9 +1,9 @@
 import { RegisterUserDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { UserEntity } from "../../domain/entities";
-import { AuthRepository } from "../../domain/repositories";
+import { UserRepository } from "../../domain/repositories";
 
-export class PostgresAuthRepository implements AuthRepository {
+export class PostgresUserRepository implements UserRepository {
   public register = async (registerUserDto: RegisterUserDto) => {
     const registeredUser = await prisma.user.create({
       data: registerUserDto,

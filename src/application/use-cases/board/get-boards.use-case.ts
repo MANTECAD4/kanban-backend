@@ -1,27 +1,30 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { AuthRepository, BoardRepository } from "../../../domain/repositories";
+import { UserRepository, BoardRepository } from "../../../domain/repositories";
 
 interface ClassDependencies {
-  authRepository: AuthRepository;
+  userRepository: UserRepository;
   boardRepository: BoardRepository;
 }
 
 export class GetBoardsUseCase {
-  private readonly authRepository: AuthRepository;
+  private readonly userRepository: UserRepository;
   private readonly boardRepository: BoardRepository;
   constructor(dependencies: ClassDependencies) {
-    const { authRepository, boardRepository } = dependencies;
-    this.authRepository = authRepository;
+    const { userRepository, boardRepository } = dependencies;
+    this.userRepository = userRepository;
     this.boardRepository = boardRepository;
   }
 
   public execute = async (userId: number) => {
-    const existingUser = await this.authRepository.getById(userId);
-    if (!existingUser)
-      throw CustomError.notFound(
-        `User with id ${userId} not found`,
-        ErrorCodes["NOT_FOUND"],
-      );
+    const existingUser = await this.userRepository.getById(userId);
+    if (!existingUser) {
+      throw CustomError.notFound({
+        title: "Loading boards failed",
+        message: `User not found`,
+        code: ErrorCodes["NOT_FOUND"],
+        details: null,
+      });
+    }
     const boards = await this.boardRepository.getAll(userId);
     return {
       data: boards,

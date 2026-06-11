@@ -3,7 +3,7 @@ import { Server } from "./presentation/server";
 import { envs } from "./configs/envs";
 
 import {
-  PostgresAuthRepository,
+  PostgresUserRepository,
   PostgresBoardRepository,
   PostgresRefreshTokenRepository,
   PostgresStatusColumnRepository,
@@ -85,7 +85,7 @@ function main() {
   } = envs();
 
   //! REPOSITORIES
-  const authRepository = new PostgresAuthRepository();
+  const userRepository = new PostgresUserRepository();
   const boardRepository = new PostgresBoardRepository();
   const statusColumnRepository = new PostgresStatusColumnRepository();
   const taskRepository = new PostgresTaskRepository();
@@ -120,14 +120,14 @@ function main() {
   const loginUserUseCase = new LoginUseCase({
     accessTokenDuration,
     refreshTokenDuration,
-    authRepository,
+    userRepository,
     tokenProvider,
     strongHasher,
     refreshTokenPersistencyService,
   });
 
   const registerUserUseCase = new RegisterUserUseCase({
-    authRepository,
+    userRepository,
     strongHasher,
     tokenProvider,
     accessTokenDuration,
@@ -150,11 +150,11 @@ function main() {
   // BOARDS
   const createBoardUseCase = new CreateBoardUseCase({
     boardRepository,
-    authRepository,
+    userRepository,
   });
 
   const getBoardsUseCase = new GetBoardsUseCase({
-    authRepository,
+    userRepository,
     boardRepository,
   });
   const updateBoardUseCase = new UpdateBoardUseCase({ boardRepository });

@@ -1,3 +1,4 @@
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { RefreshTokenRepository } from "../../../domain/repositories";
 import { TokenProvider } from "../../../domain/services";
 import { RefreshTokenPersistencyService } from "../../../domain/services/refresh-token-persistency.service";
@@ -35,6 +36,13 @@ export class RefreshTokenUseCase {
   }
 
   public execute = async (user: RefreshTokenPayload) => {
+    if (!user)
+      throw CustomError.unauthorized({
+        title: "Operation denied",
+        message: "Missing refresh token",
+        code: ErrorCodes.UNAUTHORIZED,
+        details: null,
+      });
     const {
       sub: { id: userId },
       jti,

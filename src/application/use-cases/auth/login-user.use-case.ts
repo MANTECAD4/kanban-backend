@@ -15,12 +15,12 @@ interface ClassDependencies {
 }
 
 export class LoginUseCase {
+  private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   private readonly authRepository: AuthRepository;
   private readonly tokenProvider: TokenProvider;
   private readonly strongHasher: HasherService;
   private readonly accessTokenDuration: number;
   private readonly refreshTokenDuration: number;
-  private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   constructor(dependencies: ClassDependencies) {
     const {
       authRepository,
@@ -44,14 +44,22 @@ export class LoginUseCase {
 
     const existentUser = await this.authRepository.getByEmail(email);
     if (!existentUser)
-      throw CustomError.notFound("Email not registered", ErrorCodes.NOT_FOUND);
+      throw CustomError.notFound(
+        "Email not found. ",
+        ErrorCodes.NOT_FOUND,
+        "Login failed",
+      );
 
     const passwordMatches = await this.strongHasher.compare(
       rawPassword,
       existentUser.password,
     );
     if (!passwordMatches)
-      throw CustomError.unauthorized("Invalid login", ErrorCodes.UNAUTHORIZED);
+      throw CustomError.unauthorized(
+        "Invalid login",
+        ErrorCodes.UNAUTHORIZED,
+        "Login failed",
+      );
 
     const { password, ...rest } = existentUser;
     const accessToken = this.tokenProvider.generate(

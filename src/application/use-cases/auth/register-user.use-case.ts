@@ -48,6 +48,7 @@ export class RegisterUserUseCase {
       throw CustomError.badRequest(
         "Email already registered",
         ErrorCodes["ALREADY_REGISTERED"],
+        "Register failed",
       );
 
     const hashedPassword = await this.strongHasher.hash(rawPassword);

@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
 interface ServerOptions {
@@ -25,6 +26,7 @@ export class Server {
     this.app.use(cors({ origin: "http://localhost:5173", credentials: true }));
     this.app.use(helmet());
     this.app.use(cookieParser());
+    this.app.use(morgan("dev"));
   }
 
   public setRoutes(routes: Router) {

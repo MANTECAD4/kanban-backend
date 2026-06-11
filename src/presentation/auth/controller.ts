@@ -27,7 +27,7 @@ export class AuthController {
         secure: true, // True en produccion,
         sameSite: "none", // Lax tambien
         maxAge: this.refreshTokenDuration * 60 * 1000,
-        path: "/api/auth",
+        path: "/",
       });
       return res.json({ ok: true, message: "Login succesful!", ...rest });
     } catch (error) {
@@ -43,9 +43,9 @@ export class AuthController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: this.refreshTokenDuration * 60 * 1000,
-        path: "/api/auth",
+        path: "/",
       });
 
       return res
@@ -65,7 +65,7 @@ export class AuthController {
         secure: true,
         sameSite: "strict",
         maxAge: this.refreshTokenDuration * 60 * 1000,
-        path: "/api/auth",
+        path: "/",
       });
       return res.json({ ok: true, accessToken });
     } catch (error) {
@@ -77,7 +77,7 @@ export class AuthController {
     try {
       await this.logoutUseCase.execute(req.cookies.refreshToken);
       res.clearCookie("refreshToken", {
-        path: "/api/auth",
+        path: "/",
       });
       return res.json({ ok: true, message: "Logout succesfull" });
     } catch (error) {

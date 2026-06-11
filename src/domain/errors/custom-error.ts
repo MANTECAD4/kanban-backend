@@ -18,31 +18,63 @@ export enum ErrorCodes {
 
 type ErrorDetails = Record<string, string[] | undefined>;
 
+interface CustomErrorProps {
+  statusCode: number;
+  title: string;
+  message: string;
+  code: ErrorCodes;
+  details: ErrorDetails | null;
+}
 export class CustomError extends Error {
-  private constructor(
-    public readonly statusCode: number,
-    public readonly message: string,
-    public readonly code: ErrorCodes,
-    private readonly detals?: ErrorDetails,
-  ) {
+  public readonly statusCode: number;
+  public readonly title: string;
+  public readonly message: string;
+  public readonly code: ErrorCodes;
+  private readonly details: ErrorDetails | null;
+  private constructor(props: CustomErrorProps) {
+    const { statusCode, title, message, code, details } = props;
     super(message);
+    this.statusCode = statusCode;
+    this.title = title;
+    this.message = message;
+    this.code = code;
+    this.details = details;
   }
 
   public static badRequest(
     message: string,
     code: ErrorCodes,
-    details?: ErrorDetails,
+    title: string,
+    details: ErrorDetails,
   ) {
-    return new CustomError(400, message, code, details);
+    return new CustomError({ statusCode: 400, message, code, title, details });
   }
-  public static unauthorized(message: string, code: ErrorCodes) {
-    return new CustomError(401, message, code);
+  public static unauthorized(message: string, code: ErrorCodes, title: string) {
+    return new CustomError({
+      statusCode: 401,
+      message,
+      code,
+      title,
+      details: null,
+    });
   }
-  public static forbidden(message: string, code: ErrorCodes) {
-    return new CustomError(403, message, code);
+  public static forbidden(message: string, code: ErrorCodes, title: string) {
+    return new CustomError({
+      statusCode: 403,
+      message,
+      code,
+      title,
+      details: null,
+    });
   }
-  public static notFound(message: string, code: ErrorCodes) {
-    return new CustomError(404, message, code);
+  public static notFound(message: string, code: ErrorCodes, title: string) {
+    return new CustomError({
+      statusCode: 404,
+      message,
+      code,
+      title,
+      details: null,
+    });
   }
   // public static internalServerr(message: string, code: ErrorCodes) {
   //   return new CustomError(500, message, code);
@@ -53,9 +85,10 @@ export class CustomError extends Error {
       return res.status(error.statusCode).json({
         ok: false,
         error: {
+          title: error.title,
           message: error.message,
           code: error.code,
-          details: error.detals,
+          details: error.details,
         },
       });
     }

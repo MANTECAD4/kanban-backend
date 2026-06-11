@@ -1,11 +1,10 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { RefreshTokenRepository } from "../../../domain/repositories";
-import { HasherService, TokenProvider } from "../../../domain/services";
+import { TokenProvider } from "../../../domain/services";
 import { RefreshTokenPersistencyService } from "../../../domain/services/refresh-token-persistency.service";
+import { RefreshTokenPayload } from "../../dtos";
 
 interface ClassDependencies {
   tokenProvider: TokenProvider;
-  hashService: HasherService;
   refreshTokenRepository: RefreshTokenRepository;
   refreshTokenPersistencyService: RefreshTokenPersistencyService;
   refreshTokenDuration: number;
@@ -14,7 +13,6 @@ interface ClassDependencies {
 
 export class RefreshTokenUseCase {
   private readonly tokenProvider: TokenProvider;
-  private readonly hashService: HasherService;
   private readonly refreshTokenRepository: RefreshTokenRepository;
   private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   private readonly refreshTokenDuration: number;
@@ -27,54 +25,20 @@ export class RefreshTokenUseCase {
       refreshTokenDuration,
       refreshTokenPersistencyService,
       accessTokenDuration,
-      hashService,
     } = dependencies;
 
     this.tokenProvider = tokenProvider;
-    this.hashService = hashService;
     this.refreshTokenRepository = refreshTokenRepository;
     this.refreshTokenPersistencyService = refreshTokenPersistencyService;
     this.refreshTokenDuration = refreshTokenDuration;
     this.accessTokenDuration = accessTokenDuration;
   }
 
-  public execute = async (refreshToken: string) => {
-    if (!refreshToken) {
-      throw CustomError.unauthorized("Missing token", ErrorCodes.UNAUTHORIZED);
-    }
-    const payload = this.tokenProvider.validate(refreshToken);
-    if (!payload || payload.type !== "refresh")
-      throw CustomError.unauthorized(
-        "Invalid token 1",
-        ErrorCodes.UNAUTHORIZED,
-      );
+  public execute = async (user: RefreshTokenPayload) => {
     const {
-      jti,
       sub: { id: userId },
-    } = payload;
-    const tokenInDb = await this.refreshTokenRepository.getByJti(jti);
-    if (!tokenInDb)
-      throw CustomError.notFound("Token not found in DB", ErrorCodes.NOT_FOUND);
-    if (tokenInDb.revokedAt) {
-      throw CustomError.unauthorized(
-        "Token is no longer available to use. It is revoked",
-        ErrorCodes.UNAUTHORIZED,
-      );
-    }
-
-    if (new Date() > new Date(tokenInDb.expiresAt)) {
-      throw CustomError.unauthorized("Token expired", ErrorCodes.EXPIRED_TOKEN);
-    }
-    const hashMatches = await this.hashService.compare(
-      refreshToken,
-      tokenInDb.hash,
-    );
-    if (!hashMatches) {
-      throw CustomError.unauthorized(
-        "Recieved token and the stored one doesn't match",
-        ErrorCodes.UNAUTHORIZED,
-      );
-    }
+      jti,
+    } = user;
 
     await this.refreshTokenRepository.revoke(jti);
 

@@ -44,22 +44,24 @@ export class LoginUseCase {
 
     const existentUser = await this.authRepository.getByEmail(email);
     if (!existentUser)
-      throw CustomError.notFound(
-        "Email not found. ",
-        ErrorCodes.NOT_FOUND,
-        "Login failed",
-      );
+      throw CustomError.notFound({
+        title: "Login failed",
+        message: "Email not found",
+        code: ErrorCodes.NOT_FOUND,
+        details: null,
+      });
 
     const passwordMatches = await this.strongHasher.compare(
       rawPassword,
       existentUser.password,
     );
     if (!passwordMatches)
-      throw CustomError.unauthorized(
-        "Invalid login",
-        ErrorCodes.UNAUTHORIZED,
-        "Login failed",
-      );
+      throw CustomError.unauthorized({
+        message: "Invalid password",
+        code: ErrorCodes.UNAUTHORIZED,
+        title: "Login failed",
+        details: null,
+      });
 
     const { password, ...rest } = existentUser;
     const accessToken = this.tokenProvider.generate(

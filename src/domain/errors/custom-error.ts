@@ -18,20 +18,23 @@ export enum ErrorCodes {
 
 type ErrorDetails = Record<string, string[] | undefined>;
 
-interface CustomErrorProps {
+interface ErrorProps {
   statusCode: number;
   title: string;
   message: string;
   code: ErrorCodes;
   details: ErrorDetails | null;
 }
+
+type VariableErrorProps = Omit<ErrorProps, "statusCode">;
+
 export class CustomError extends Error {
   public readonly statusCode: number;
   public readonly title: string;
   public readonly message: string;
   public readonly code: ErrorCodes;
   private readonly details: ErrorDetails | null;
-  private constructor(props: CustomErrorProps) {
+  private constructor(props: ErrorProps) {
     const { statusCode, title, message, code, details } = props;
     super(message);
     this.statusCode = statusCode;
@@ -41,39 +44,38 @@ export class CustomError extends Error {
     this.details = details;
   }
 
-  public static badRequest(
-    message: string,
-    code: ErrorCodes,
-    title: string,
-    details: ErrorDetails,
-  ) {
+  public static badRequest(props: VariableErrorProps) {
+    const { title, message, details, code } = props;
     return new CustomError({ statusCode: 400, message, code, title, details });
   }
-  public static unauthorized(message: string, code: ErrorCodes, title: string) {
+  public static unauthorized(props: VariableErrorProps) {
+    const { title, message, details, code } = props;
     return new CustomError({
       statusCode: 401,
       message,
       code,
       title,
-      details: null,
+      details,
     });
   }
-  public static forbidden(message: string, code: ErrorCodes, title: string) {
+  public static forbidden(props: VariableErrorProps) {
+    const { title, message, details, code } = props;
     return new CustomError({
       statusCode: 403,
       message,
       code,
       title,
-      details: null,
+      details,
     });
   }
-  public static notFound(message: string, code: ErrorCodes, title: string) {
+  public static notFound(props: VariableErrorProps) {
+    const { title, message, details, code } = props;
     return new CustomError({
       statusCode: 404,
       message,
       code,
       title,
-      details: null,
+      details,
     });
   }
   // public static internalServerr(message: string, code: ErrorCodes) {

@@ -1,9 +1,9 @@
-import { AccessTokenPayload } from "../application/dtos";
+import { TokenPayload } from "../application/dtos";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: AccessTokenPayload;
+      user?: TokenPayload;
       validatedBody?: Record<string, any>;
       validatedParams?: Record<string, any>;
       validatedQuery?: Record<string, any>;

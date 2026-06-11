@@ -14,32 +14,40 @@ describe("Custom Error class", () => {
     expect(CustomError).toHaveProperty("handleError");
   });
   test("should have a static method to return an error of type bad request", () => {
-    const customErrorInstace = CustomError.badRequest(
-      "Invalid data",
-      ErrorCodes.BAD_REQUEST,
-    );
+    const customErrorInstace = CustomError.badRequest({
+      title: "Test error",
+      message: "Invalid data",
+      code: ErrorCodes.BAD_REQUEST,
+      details: null,
+    });
     expect(customErrorInstace.statusCode).toBe(400);
   });
   test("should have a static method to return an error of type unauthorized", () => {
-    const customErrorInstace = CustomError.unauthorized(
-      "Login failed",
-      ErrorCodes.UNAUTHORIZED,
-    );
+    const customErrorInstace = CustomError.unauthorized({
+      title: "Test error",
+      message: "Login failed",
+      code: ErrorCodes.UNAUTHORIZED,
+      details: null,
+    });
     expect(customErrorInstace.statusCode).toBe(401);
   });
   test("should have a static method to return an error of type forbidden", () => {
-    const customErrorInstace = CustomError.forbidden(
-      "user doesn't have access to this resource",
-      ErrorCodes.FORBIDDEN,
-    );
+    const customErrorInstace = CustomError.forbidden({
+      title: "Test error",
+      message: "user doesn't have access to this resource",
+      code: ErrorCodes.FORBIDDEN,
+      details: null,
+    });
     expect(customErrorInstace.statusCode).toBe(403);
   });
 
   test("should have a static method to return an error of type not-found", () => {
-    const customErrorInstace = CustomError.notFound(
-      "Product not found",
-      ErrorCodes.NOT_FOUND,
-    );
+    const customErrorInstace = CustomError.notFound({
+      title: "Test error",
+      message: "Product not found",
+      code: ErrorCodes.NOT_FOUND,
+      details: null,
+    });
     expect(customErrorInstace.statusCode).toBe(404);
   });
 
@@ -52,10 +60,12 @@ describe("Custom Error class", () => {
   //   });
 
   test("handleError should use CustomError Instace content", () => {
-    const customErrorInstance = CustomError.badRequest(
-      "Invalid data",
-      ErrorCodes.BAD_REQUEST,
-    );
+    const customErrorInstance = CustomError.badRequest({
+      title: "Test error",
+      message: "Invalid data",
+      code: ErrorCodes.BAD_REQUEST,
+      details: null,
+    });
 
     const jsonMock = vi.fn();
     const statusMock = vi.fn().mockReturnValue({

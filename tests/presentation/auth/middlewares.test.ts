@@ -13,10 +13,18 @@ import {
   ErrorCodes,
 } from "../../../src/domain/errors/custom-error";
 import { JwtGenerator } from "../../../src/infraestructure/services/jwt-generator.service";
+import {
+  HasherService,
+  RefreshTokenPersistencyService,
+} from "../../../src/domain/services";
 
 describe("Auth Middlewares", () => {
   test("should have login data validation, register data validation & validate access token middlewares", () => {
-    const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+    const authMiddlewares = new AuthMiddlewares({
+      refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+      softHashService: {} as HasherService,
+      tokenProvider: {} as TokenProvider,
+    });
     expect(authMiddlewares).toHaveProperty("loginDataValidation");
     expect(authMiddlewares).toHaveProperty("registerDataValidation");
     expect(authMiddlewares).toHaveProperty("validateAccessToken");
@@ -28,7 +36,11 @@ describe("Auth Middlewares", () => {
 
   describe("Login Data Validation Middleware", () => {
     test("should store validated data into 'validatedBody' property inside Request", () => {
-      const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+      const authMiddlewares = new AuthMiddlewares({
+        refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+        softHashService: {} as HasherService,
+        tokenProvider: {} as TokenProvider,
+      });
 
       const mockBody: LoginUserDto = {
         email: "test@gmail.com",
@@ -68,7 +80,11 @@ describe("Auth Middlewares", () => {
 
       const mockNextFn = vi.fn();
 
-      const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+      const authMiddlewares = new AuthMiddlewares({
+        refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+        softHashService: {} as HasherService,
+        tokenProvider: {} as TokenProvider,
+      });
       authMiddlewares.loginDataValidation(mockRequest, mockReponse, mockNextFn);
 
       expect(badRequestErrorSpy).toHaveBeenCalled();
@@ -84,7 +100,11 @@ describe("Auth Middlewares", () => {
 
   describe("Register Data Validation Middleware", () => {
     test("should store validated data into 'validatedBody' property inside Request", () => {
-      const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+      const authMiddlewares = new AuthMiddlewares({
+        refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+        softHashService: {} as HasherService,
+        tokenProvider: {} as TokenProvider,
+      });
 
       const mockBody: RegisterUserDto = {
         name: "test user",
@@ -122,7 +142,11 @@ describe("Auth Middlewares", () => {
 
       const mockNextFn = vi.fn();
 
-      const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+      const authMiddlewares = new AuthMiddlewares({
+        refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+        softHashService: {} as HasherService,
+        tokenProvider: {} as TokenProvider,
+      });
       authMiddlewares.registerDataValidation(
         mockRequest,
         mockReponse,
@@ -165,7 +189,7 @@ describe("Auth Middlewares", () => {
     });
     describe("Positive cases", () => {
       test("'validateAccessToken' should extract authorization header and validate its content with given token provider & finally call next Fn", () => {
-        const mockTokenGenerator: TokenProvider = {
+        const mockTokenProvider: TokenProvider = {
           generate: vi.fn(),
           validate: vi.fn().mockReturnValue(mockAccessTokenPayload),
         };
@@ -175,7 +199,11 @@ describe("Auth Middlewares", () => {
           header: vi.fn().mockReturnValue(`Bearer ${mockToken}`),
         } as unknown as Request;
 
-        const authMiddlewares = new AuthMiddlewares(mockTokenGenerator);
+        const authMiddlewares = new AuthMiddlewares({
+          tokenProvider: mockTokenProvider,
+          refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+          softHashService: {} as HasherService,
+        });
 
         authMiddlewares.validateAccessToken(
           mockRequest,
@@ -183,13 +211,17 @@ describe("Auth Middlewares", () => {
           mockNextFn,
         );
 
-        expect(mockTokenGenerator.validate).toHaveBeenCalledWith(mockToken);
+        expect(mockTokenProvider.validate).toHaveBeenCalledWith(mockToken);
         expect(mockNextFn).toHaveBeenCalled();
       });
     });
     describe("Negative cases", () => {
       test(`Validate Access token should respond with an error if 'authorization' header is not included`, () => {
-        const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+        const authMiddlewares = new AuthMiddlewares({
+          refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+          softHashService: {} as HasherService,
+          tokenProvider: {} as TokenProvider,
+        });
 
         const mockRequest = {
           header: vi.fn(),
@@ -203,8 +235,10 @@ describe("Auth Middlewares", () => {
         );
 
         expect(unauthorizedErrorSpy).toHaveBeenCalledWith(
-          "No token provided",
-          ErrorCodes.UNAUTHORIZED,
+          expect.objectContaining({
+            message: "No token provided",
+            code: ErrorCodes.UNAUTHORIZED,
+          }),
         );
 
         expect(handleErrorSpy).toHaveBeenCalledWith(
@@ -217,7 +251,11 @@ describe("Auth Middlewares", () => {
       });
 
       test(`Validate access token should respond with an error if authorization header doens't start with 'Bearer ', like a Bearer token should do `, () => {
-        const authMiddlewares = new AuthMiddlewares({} as TokenProvider);
+        const authMiddlewares = new AuthMiddlewares({
+          refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+          softHashService: {} as HasherService,
+          tokenProvider: {} as TokenProvider,
+        });
         const mockRequest = {
           header: vi.fn().mockReturnValue("not-a-bearer-token"),
         } as unknown as Request;
@@ -229,8 +267,10 @@ describe("Auth Middlewares", () => {
         );
 
         expect(unauthorizedErrorSpy).toHaveBeenCalledWith(
-          "Invalid token",
-          ErrorCodes.INVALID_TOKEN,
+          expect.objectContaining({
+            message: "Invalid token",
+            code: ErrorCodes.INVALID_TOKEN,
+          }),
         );
 
         expect(handleErrorSpy).toHaveBeenCalledWith(
@@ -244,7 +284,11 @@ describe("Auth Middlewares", () => {
 
       test("Validate access should respond with an error if recieved token is invalid (corrupted, malformed)", () => {
         const jwtProvider = new JwtGenerator(tokenSecret);
-        const authMiddlewares = new AuthMiddlewares(jwtProvider);
+        const authMiddlewares = new AuthMiddlewares({
+          refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+          softHashService: {} as HasherService,
+          tokenProvider: jwtProvider,
+        });
 
         const invalidToken = "this-is-an-invalid-token";
         const mockRequest = {
@@ -259,8 +303,10 @@ describe("Auth Middlewares", () => {
         );
 
         expect(unauthorizedErrorSpy).toHaveBeenCalledWith(
-          expect.any(String),
-          ErrorCodes.INVALID_TOKEN,
+          expect.objectContaining({
+            message: expect.any(String),
+            code: ErrorCodes.INVALID_TOKEN,
+          }),
         );
         expect(handleErrorSpy).toHaveBeenCalledWith(
           expect.any(CustomError),
@@ -272,7 +318,11 @@ describe("Auth Middlewares", () => {
 
       test("Valuidate access token should respond with an error if an expired token is recieved", () => {
         const jwtProvider = new JwtGenerator(tokenSecret);
-        const authMiddlewares = new AuthMiddlewares(jwtProvider);
+        const authMiddlewares = new AuthMiddlewares({
+          refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+          softHashService: {} as HasherService,
+          tokenProvider: jwtProvider,
+        });
 
         const expiredAccessToken = jwtProvider.generate(
           mockAccessTokenPayload,
@@ -292,8 +342,10 @@ describe("Auth Middlewares", () => {
         );
 
         expect(unauthorizedErrorSpy).toHaveBeenCalledWith(
-          expect.stringMatching(/expired/i),
-          ErrorCodes.INVALID_TOKEN,
+          expect.objectContaining({
+            message: expect.stringMatching(/expired/i),
+            code: ErrorCodes.INVALID_TOKEN,
+          }),
         );
         expect(handleErrorSpy).toHaveBeenCalledWith(
           expect.any(CustomError),
@@ -305,7 +357,11 @@ describe("Auth Middlewares", () => {
 
       test("Validate access token should throw an error if a valid token with wrong type is recieved", () => {
         const jwtProvider = new JwtGenerator("im-a-token-secret");
-        const authMiddlewares = new AuthMiddlewares(jwtProvider);
+        const authMiddlewares = new AuthMiddlewares({
+          refreshTokenPersistencyService: {} as RefreshTokenPersistencyService,
+          softHashService: {} as HasherService,
+          tokenProvider: jwtProvider,
+        });
         const refreshTokenPayload: RefreshTokenPayload = {
           sub: { id: 1 },
           type: "refresh",
@@ -327,8 +383,10 @@ describe("Auth Middlewares", () => {
         );
 
         expect(unauthorizedErrorSpy).toHaveBeenCalledWith(
-          "Invalid token payload",
-          ErrorCodes.INVALID_TOKEN,
+          expect.objectContaining({
+            message: "Invalid token payload",
+            code: ErrorCodes.INVALID_TOKEN,
+          }),
         );
 
         expect(handleErrorSpy).toHaveBeenCalledWith(

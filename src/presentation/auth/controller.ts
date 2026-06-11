@@ -6,7 +6,12 @@ import {
   RefreshTokenUseCase,
 } from "../../application/use-cases/auth";
 import { CustomError } from "../../domain/errors/custom-error";
-import { LoginUserDto, RegisterUserDto } from "../../application/dtos";
+import {
+  LoginUserDto,
+  RefreshTokenPayload,
+  RegisterUserDto,
+} from "../../application/dtos";
+import { RefreshTokenGetPayload } from "../../generated/models";
 
 export class AuthController {
   constructor(
@@ -59,7 +64,7 @@ export class AuthController {
   public refresh = async (req: Request, res: Response) => {
     try {
       const { accessToken, newRefreshToken } =
-        await this.refreshTokenUseCase.execute(req.cookies.refreshToken);
+        await this.refreshTokenUseCase.execute(req.user as RefreshTokenPayload);
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         secure: true,
@@ -75,7 +80,7 @@ export class AuthController {
 
   public logout = async (req: Request, res: Response) => {
     try {
-      await this.logoutUseCase.execute(req.cookies.refreshToken);
+      await this.logoutUseCase.execute(req.user as RefreshTokenPayload);
       res.clearCookie("refreshToken", {
         path: "/",
       });

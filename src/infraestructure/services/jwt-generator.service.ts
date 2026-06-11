@@ -19,10 +19,12 @@ export class JwtGenerator implements TokenProvider {
       return tokenContent as unknown as TokenPayload;
     } catch (error) {
       const { message } = error as VerifyErrors;
-      const customErrorInstance = CustomError.unauthorized(
+      const customErrorInstance = CustomError.unauthorized({
+        title: "Invalid token",
         message,
-        ErrorCodes.INVALID_TOKEN,
-      );
+        code: ErrorCodes.INVALID_TOKEN,
+        details: null,
+      });
       throw customErrorInstance;
     }
   };

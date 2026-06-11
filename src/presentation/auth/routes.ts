@@ -28,8 +28,16 @@ export class AuthRoutes {
       this.controller.register,
     );
 
-    router.post("/refresh", this.controller.refresh);
-    router.post("/logout", this.controller.logout);
+    router.post(
+      "/refresh",
+      [this.authMiddlewares.validateRefreshToken],
+      this.controller.refresh,
+    );
+    router.post(
+      "/logout",
+      [this.authMiddlewares.validateRefreshToken],
+      this.controller.logout,
+    );
 
     return router;
   }

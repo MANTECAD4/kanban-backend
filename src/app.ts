@@ -105,7 +105,11 @@ function main() {
   });
 
   //! MIDDLEWARES
-  const authMiddlewares = new AuthMiddlewares(tokenProvider);
+  const authMiddlewares = new AuthMiddlewares({
+    tokenProvider,
+    softHashService: softHasher,
+    refreshTokenPersistencyService,
+  });
   const boardMiddlewares = new BoardMiddlewares();
   const statusColumnMiddlewares = new StatusColumnMiddlewares();
   const taskMiddlewares = new TaskMiddlewares();
@@ -134,16 +138,13 @@ function main() {
   const refreshTokenUseCase = new RefreshTokenUseCase({
     refreshTokenRepository,
     tokenProvider,
-    hashService: softHasher,
     refreshTokenPersistencyService,
     refreshTokenDuration,
     accessTokenDuration,
   });
 
   const logoutUseCase = new LogoutUseCase({
-    tokenProvider,
     refreshTokenRepository,
-    hashService: softHasher,
   });
 
   // BOARDS

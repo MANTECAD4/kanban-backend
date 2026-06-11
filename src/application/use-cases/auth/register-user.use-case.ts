@@ -45,11 +45,12 @@ export class RegisterUserUseCase {
     const existentUser = await this.authRepository.getByEmail(email);
 
     if (existentUser)
-      throw CustomError.badRequest(
-        "Email already registered",
-        ErrorCodes["ALREADY_REGISTERED"],
-        "Register failed",
-      );
+      throw CustomError.badRequest({
+        title: "Register failed",
+        message: "Email already registered",
+        code: ErrorCodes["ALREADY_REGISTERED"],
+        details: null,
+      });
 
     const hashedPassword = await this.strongHasher.hash(rawPassword);
 

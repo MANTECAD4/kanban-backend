@@ -18,14 +18,15 @@ export const dataValidationMiddlewareFactory = (
 
     const result = schema.safeParse(targetObject);
     if (!result.success) {
-      const error = CustomError.badRequest(
-        mainErrorMsg,
-        ErrorCodes.INVALID_DATA,
-        {
+      const error = CustomError.badRequest({
+        title: "Invalid data",
+        message: mainErrorMsg,
+        code: ErrorCodes.INVALID_DATA,
+        details: {
           ...z.flattenError(result.error).fieldErrors,
           formErrors: z.flattenError(result.error).formErrors,
         },
-      );
+      });
 
       return CustomError.handleError(error, req, res);
     }

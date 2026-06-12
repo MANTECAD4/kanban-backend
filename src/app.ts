@@ -70,6 +70,9 @@ import { StatusColumnsRoutes } from "./presentation/status-column/routes";
 import { TaskRoutes } from "./presentation/task/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
 import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-token.use-case";
+import { UserRoutes } from "./presentation/user/routes";
+import { UserController } from "./presentation/user/controller";
+import { GetUserInfoUseCase } from "./application/use-cases/user/get-me-info.use-case";
 
 (async () => {
   main();
@@ -208,6 +211,9 @@ function main() {
     statusColumnRepository,
   });
 
+  // USERS
+  const getUserInfoUseCase = new GetUserInfoUseCase({ userRepository });
+
   const deleteTaskUsecase = new DeleteTaskUseCase({ taskRepository });
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
@@ -246,6 +252,10 @@ function main() {
     deleteTaskUsecase,
   );
 
+  const userController = new UserController({
+    getUserInfoUseCase,
+  });
+
   //! ROUTERS
   const boardRouter = new BoardsRoutes({
     controller: boardController,
@@ -271,6 +281,11 @@ function main() {
     subtaskMiddlewares,
   });
 
+  const userRouter = new UserRoutes({
+    controller: userController,
+    authMiddlewares,
+  });
+
   const appRouter = new AppRoutes(
     authMiddlewares,
     authRouter,
@@ -278,6 +293,7 @@ function main() {
     statusColumnRouter,
     taskRouter,
     subtaskRouter,
+    userRouter,
   );
 
   // !SERVER INIT
@@ -286,7 +302,6 @@ function main() {
   server.setRoutes(appRouter.routes);
 
   const httpServer = createServer(server.app);
-  console.log({ port: port, type: typeof port });
 
   httpServer.listen(port, () => {
     console.log(`Server running on ${port}`);

@@ -1,8 +1,8 @@
-import z, { ZodObject } from "zod";
+import z from "zod";
 
 /**
- * Returns a zod object that validates an object with an id-like property
- * @param idPropertyName specific name for the id variante p.e -> 'userId' | 'boardId' | 'id' etc...
+ * Returns a zod object that validates an object containing an id-like property
+ * @param idPropertyName specifies the name for the id variant p.e -> 'userId' | 'boardId' | 'id' etc...
  * @returns
  */
 export const ParamsWithIdSchema = (idPropertyName: string = "id") =>

@@ -23,10 +23,12 @@ export class DeleteSubtaskUseCase {
       subtaskId,
     );
     if (!subtaskOwnedByUser)
-      throw CustomError.forbidden(
-        `User doesn't have access to this subtask`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Subtask deletion failed",
+        message: `User doesn't have access to this subtask`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const deletedSubtask = await this.subtaskRepository.delete(subtaskId);
     return { data: deletedSubtask };
   };

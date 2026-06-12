@@ -24,10 +24,12 @@ export class DeleteStatusColumnUseCase {
       columnId,
     );
     if (!existRelation)
-      throw CustomError.forbidden(
-        `User doesn't own specified status column`,
-        ErrorCodes["FORBIDDEN"],
-      );
+      throw CustomError.forbidden({
+        title: "Status column deletion failed",
+        message: `User doesn't own specified status column`,
+        code: ErrorCodes["FORBIDDEN"],
+        details: null,
+      });
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
     return {
       data: deletedColumn,

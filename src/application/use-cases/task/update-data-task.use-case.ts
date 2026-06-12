@@ -26,10 +26,12 @@ export class UpdateDataInTaskUseCase {
     );
 
     if (!taskOwnedByUser)
-      throw CustomError.forbidden(
-        `User doesn't own this task`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Task update failed",
+        message: `User doesn't own this task`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
 
     const definedProperties = getDefinedFields(data);
 

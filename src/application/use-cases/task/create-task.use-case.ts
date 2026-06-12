@@ -32,10 +32,12 @@ export class CreateTaskUseCase {
       columnId,
     );
     if (!existRelation)
-      throw CustomError.forbidden(
-        `User doesn't own this staus column`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Task creation failed",
+        message: `User doesn't own this staus column`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const createdTask = await this.taskRepository.create(columnId, data);
     return { data: createdTask };
   };

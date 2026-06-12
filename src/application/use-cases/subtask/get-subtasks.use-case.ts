@@ -27,10 +27,12 @@ export class GetSubtasksUseCase {
       taskId,
     );
     if (!taskOwnedByUser)
-      throw CustomError.forbidden(
-        `User doesn't own this task. Can't insert here`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Subtasks query failed",
+        message: `User doesn't own this task. Can't insert here`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const subtasks = await this.subtaskRepository.getAllByTask(taskId);
     return {
       data: subtasks,

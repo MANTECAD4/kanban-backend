@@ -27,10 +27,12 @@ export class UpdateBoardUseCase {
     );
 
     if (!existsRelationship)
-      throw CustomError.forbidden(
-        `User doesn't own this board`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Board update failed",
+        message: `User doesn't own this board`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
 
     const definedFields = getDefinedFields(data);
 

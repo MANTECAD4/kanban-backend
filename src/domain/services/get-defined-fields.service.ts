@@ -7,9 +7,11 @@ export const getDefinedFields = (data: Record<string, any>) => {
   });
 
   if (Object.keys(definedFields).length === 0)
-    throw CustomError.badRequest(
-      "No values were recieved for board updating.",
-      ErrorCodes.BAD_REQUEST,
-    );
+    throw CustomError.badRequest({
+      title: "Update failed",
+      message: "No values were recieved for updating.",
+      code: ErrorCodes.BAD_REQUEST,
+      details: null,
+    });
   return definedFields;
 };

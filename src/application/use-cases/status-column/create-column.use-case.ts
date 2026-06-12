@@ -36,10 +36,12 @@ export class CreateStatusColumnUseCase {
       boardId,
     );
     if (!existsRelationship)
-      throw CustomError.forbidden(
-        `User doesn't own this board`,
-        ErrorCodes["FORBIDDEN"],
-      );
+      throw CustomError.forbidden({
+        title: "Status column creation failed",
+        message: `User doesn't own this board`,
+        code: ErrorCodes["FORBIDDEN"],
+        details: null,
+      });
     const existingColumnInBoard =
       await this.statusColumnRepository.getByBoardAndName(
         boardId,
@@ -47,10 +49,13 @@ export class CreateStatusColumnUseCase {
       );
 
     if (existingColumnInBoard)
-      throw CustomError.badRequest(
-        "Status column name is already registered in this board's collection",
-        ErrorCodes["ALREADY_REGISTERED"],
-      );
+      throw CustomError.badRequest({
+        title: "Status column creation failed",
+        message:
+          "Status column name is already registered in this board's collection",
+        code: ErrorCodes["ALREADY_REGISTERED"],
+        details: null,
+      });
 
     const createdColumn = await this.statusColumnRepository.create(
       boardId,

@@ -17,10 +17,12 @@ export class DeleteBoardUseCase {
       boardId,
     );
     if (!existRelationship)
-      throw CustomError.forbidden(
-        `User doesn't own this board`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Board deletion failed",
+        message: `User doesn't own this board`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const deletedBoard = await this.boardRepository.delete(boardId);
     return {
       data: deletedBoard,

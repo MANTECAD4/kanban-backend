@@ -30,10 +30,12 @@ export class GetTasksByColumnUseCase {
       columnId,
     );
     if (!existRelation)
-      throw CustomError.forbidden(
-        `Relation between entities doesn't exist`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Task query failed",
+        message: `Relation between entities doesn't exist`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const tasks = await this.taskRepository.getAllByStatusColumn(columnId);
     return { data: tasks, meta: { total: tasks.length } };
   };

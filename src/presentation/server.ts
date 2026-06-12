@@ -34,7 +34,6 @@ export class Server {
   }
 
   public async start() {
-    console.log({ port: this.port, type: typeof this.port });
     this.serverListener = this.app.listen(this.port, () => {
       console.log(`Server listening on port ${this.port}`);
     });

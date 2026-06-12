@@ -28,10 +28,12 @@ export class UpdateStatusColumnUseCase {
     );
 
     if (!existRelation)
-      throw CustomError.forbidden(
-        `User doesn't have access to this column`,
-        ErrorCodes["FORBIDDEN"],
-      );
+      throw CustomError.forbidden({
+        title: "Status column update failed",
+        message: `User doesn't have access to this column`,
+        code: ErrorCodes["FORBIDDEN"],
+        details: null,
+      });
 
     const definedProperties = getDefinedFields(data);
     const updatedColumn = await this.statusColumnRepository.update(

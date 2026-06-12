@@ -29,10 +29,12 @@ export class CreateSubtaskUseCase {
       taskId,
     );
     if (!taskOwnedByUser)
-      throw CustomError.forbidden(
-        `User doesn't have access to specified task`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Subtask creation failed",
+        message: `User doesn't have access to specified task`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const createdSubtask = await this.subtaskRepository.create(taskId, data);
     return {
       data: createdSubtask,

@@ -22,10 +22,12 @@ export class DeleteTaskUseCase {
       taskId,
     );
     if (!existRelation)
-      throw CustomError.forbidden(
-        `User doesn't own this task`,
-        ErrorCodes.FORBIDDEN,
-      );
+      throw CustomError.forbidden({
+        title: "Task deletion failed",
+        message: `User doesn't own this task`,
+        code: ErrorCodes.FORBIDDEN,
+        details: null,
+      });
     const deletedTask = await this.taskRepository.delete(taskId);
     return { data: deletedTask };
   };

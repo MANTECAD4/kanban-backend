@@ -286,6 +286,7 @@ function main() {
   server.setRoutes(appRouter.routes);
 
   const httpServer = createServer(server.app);
+  console.log({ port: port, type: typeof port });
 
   httpServer.listen(port, () => {
     console.log(`Server running on ${port}`);

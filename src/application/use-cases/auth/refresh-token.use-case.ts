@@ -38,8 +38,8 @@ export class RefreshTokenUseCase {
   public execute = async (user: RefreshTokenPayload) => {
     if (!user)
       throw CustomError.unauthorized({
-        title: "Operation denied",
-        message: "Missing refresh token",
+        title: "Sign in",
+        message: "Session not found",
         code: ErrorCodes.UNAUTHORIZED,
         details: null,
       });

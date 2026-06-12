@@ -212,7 +212,11 @@ function main() {
   });
 
   // USERS
-  const getUserInfoUseCase = new GetUserInfoUseCase({ userRepository });
+  const getUserInfoUseCase = new GetUserInfoUseCase({
+    userRepository,
+    tokenProvider,
+    accessTokenDuration,
+  });
 
   const deleteTaskUsecase = new DeleteTaskUseCase({ taskRepository });
   //////////////// ! CONTROLLERS ////////////////

@@ -112,12 +112,14 @@ export class AuthMiddlewares {
     res: Response,
     next: NextFunction,
   ) => {
+    const errorTitle = "Sign in";
+
     try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
         const error = CustomError.unauthorized({
-          title: "Logout failed",
-          message: "Missing token",
+          title: errorTitle,
+          message: "Session not found",
           code: ErrorCodes.UNAUTHORIZED,
           details: null,
         });
@@ -130,8 +132,8 @@ export class AuthMiddlewares {
 
       if (!result.success) {
         const error = CustomError.unauthorized({
-          title: "Operation denied",
-          message: "Invalid token payload",
+          title: errorTitle,
+          message: "Something went wrong with your credetntials.",
           code: ErrorCodes.INVALID_TOKEN,
           details: null,
         });
@@ -144,16 +146,16 @@ export class AuthMiddlewares {
 
       if (!tokenInDb)
         throw CustomError.notFound({
-          title: "Logout failed",
-          message: "Token not found in DB",
+          title: errorTitle,
+          message: "Something went wrong with your credentials",
           code: ErrorCodes.NOT_FOUND,
           details: null,
         });
 
       if (tokenInDb.revokedAt)
         throw CustomError.unauthorized({
-          title: "Logout failed",
-          message: "Invalid token. It was already revoked",
+          title: errorTitle,
+          message: "Session closed",
           code: ErrorCodes.UNAUTHORIZED,
           details: null,
         });
@@ -164,8 +166,8 @@ export class AuthMiddlewares {
       );
       if (!hashMatches)
         throw CustomError.unauthorized({
-          title: "Logout failed",
-          message: `Provided token doesn't match with DB`,
+          title: errorTitle,
+          message: `Something went wrong with your credentials`,
           code: ErrorCodes.UNAUTHORIZED,
           details: null,
         });

@@ -1,15 +1,22 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { UserRepository } from "../../../domain/repositories";
+import { TokenProvider } from "../../../domain/services";
 
 interface Dependencies {
   userRepository: UserRepository;
+  tokenProvider: TokenProvider;
+  accessTokenDuration: number;
 }
 
 export class GetUserInfoUseCase {
   private readonly userRepository: UserRepository;
+  private readonly tokenProvider: TokenProvider;
+  private readonly accessTokenDuration: number;
   constructor(dependencies: Dependencies) {
-    const { userRepository } = dependencies;
+    const { userRepository, tokenProvider, accessTokenDuration } = dependencies;
     this.userRepository = userRepository;
+    this.tokenProvider = tokenProvider;
+    this.accessTokenDuration = accessTokenDuration;
   }
   public execute = async (userId: number) => {
     if (typeof userId !== "number") {
@@ -31,7 +38,12 @@ export class GetUserInfoUseCase {
       });
     }
 
+    const accessToken = this.tokenProvider.generate(
+      { sub: { id: userFound.id }, type: "access" },
+      this.accessTokenDuration,
+    );
+
     const { password, ...rest } = userFound;
-    return { data: rest };
+    return { data: { user: rest }, accessToken };
   };
 }

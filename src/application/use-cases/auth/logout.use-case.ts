@@ -1,4 +1,3 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { RefreshTokenRepository } from "../../../domain/repositories";
 import { RefreshTokenPayload } from "../../dtos";
 
@@ -16,18 +15,12 @@ export class LogoutUseCase {
   }
 
   public execute = async (user: RefreshTokenPayload) => {
-    if (!user)
-      throw CustomError.unauthorized({
-        title: "Operation denied",
-        message: "Missing refresh token",
-        code: ErrorCodes.UNAUTHORIZED,
-        details: null,
-      });
+    if (user) {
+      const {
+        sub: { id: userId },
+      } = user;
 
-    const {
-      sub: { id: userId },
-    } = user;
-
-    await this.refreshTokenRepository.revokeAllByUser(userId);
+      await this.refreshTokenRepository.revokeAllByUser(userId);
+    }
   };
 }

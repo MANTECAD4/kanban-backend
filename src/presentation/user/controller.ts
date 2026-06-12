@@ -14,13 +14,14 @@ export class UserController {
   }
   public getMeInfo = async (req: Request, res: Response) => {
     try {
+      console.log({ user: req.user });
       const {
         sub: { id: userId },
       } = req.user!;
       const result = await this.getUserInfoUseCase.execute(userId);
       return res.json({
         ok: true,
-        message: "User loaded successfully",
+        message: "Session loaded successfully",
         ...result,
       });
     } catch (error) {

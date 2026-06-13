@@ -35,7 +35,7 @@ export class CustomError extends Error {
   public readonly code: ErrorCodes;
   private readonly details: ErrorDetails | null;
   private constructor(props: ErrorProps) {
-    const { statusCode, title, message, code, details = null } = props;
+    const { statusCode, title, message, code, details } = props;
     super(message);
     this.statusCode = statusCode;
     this.title = title;

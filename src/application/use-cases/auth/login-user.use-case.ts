@@ -55,6 +55,7 @@ export class LoginUseCase {
       rawPassword,
       existentUser.password,
     );
+
     if (!passwordMatches)
       throw CustomError.unauthorized({
         title: "Login denied",

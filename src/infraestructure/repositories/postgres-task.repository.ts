@@ -37,10 +37,10 @@ export class PostgresTaskRepository implements TaskRepository {
 
   public create = async (
     columnId: number,
-    data: CreateTaskDto,
+    { dueDate, ...rest }: CreateTaskDto,
   ): Promise<TaskEntity> => {
     const createdTask = await prisma.task.create({
-      data: { ...data, status_column_id: columnId },
+      data: { ...rest, due_date: dueDate, status_column_id: columnId },
     });
     return TaskEntity.fromObject(createdTask);
   };

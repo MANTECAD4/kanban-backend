@@ -21,6 +21,7 @@ model User {
   boards Board[]
   refresh_tokens RefreshToken[]
 }
+
 model RefreshToken{
   jti String @id @db.Uuid 
   hash String
@@ -37,6 +38,7 @@ model Board{
   user   User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
   user_id Int
   status_colummns StatusColumn[]
+  tags Tag[]
 }
 
 model StatusColumn{
@@ -47,20 +49,40 @@ model StatusColumn{
   board_id Int
   tasks Task[]
 }
+
 model Task{
   id Int @id @default(autoincrement())
   title String
   description String
+  priority Priority @default(MEDIUM)
+  due_date DateTime
   order Int
-  status_column StatusColumn @relation(fields: [status_column_id], references: [id], onDelete: Cascade)
   status_column_id Int
-  subtasks Subtasks[] 
+  tags Tag[]
+  status_column StatusColumn @relation(fields: [status_column_id], references: [id], onDelete: Cascade)
+  subtasks Subtask[] 
 }
 
-model Subtasks {
+model Subtask {
   id Int @id @default(autoincrement())
   description String
   is_completed Boolean @default(false)
   task Task @relation(fields:[task_id], references: [id], onDelete: Cascade)
   task_id Int
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+  name String
+  color String
+  board Board @relation(fields:[board_id], references: [id])
+  board_id Int
+  tasks Task[]
+}
+
+enum Priority {
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
 }

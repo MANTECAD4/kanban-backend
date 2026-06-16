@@ -8,7 +8,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     userId: number,
     subtaskId: number,
   ): Promise<SubtaskEntity | null> => {
-    const subtask = await prisma.subtasks.findFirst({
+    const subtask = await prisma.subtask.findFirst({
       where: {
         id: subtaskId,
         task: { status_column: { board: { user: { id: userId } } } },
@@ -18,14 +18,14 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
   };
 
   public getAllByTask = async (taskId: number): Promise<SubtaskEntity[]> => {
-    const subtasks = await prisma.subtasks.findMany({
+    const subtasks = await prisma.subtask.findMany({
       where: { task_id: taskId },
     });
     return subtasks.map((subtask) => SubtaskEntity.fromObject(subtask));
   };
 
   public getById = async (subtaskId: number): Promise<SubtaskEntity | null> => {
-    const subtask = await prisma.subtasks.findUnique({
+    const subtask = await prisma.subtask.findUnique({
       where: { id: subtaskId },
     });
     return subtask ? SubtaskEntity.fromObject(subtask) : null;
@@ -35,7 +35,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     taskId: number,
     data: CreateSubtaskDto,
   ): Promise<SubtaskEntity> => {
-    const createdSubtask = await prisma.subtasks.create({
+    const createdSubtask = await prisma.subtask.create({
       data: { ...data, task_id: taskId, is_completed: false },
     });
     return SubtaskEntity.fromObject(createdSubtask);
@@ -46,7 +46,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     data: Record<string, any>,
   ): Promise<SubtaskEntity> => {
     const { isCompleted, ...rest } = data;
-    const updatedSubtask = await prisma.subtasks.update({
+    const updatedSubtask = await prisma.subtask.update({
       where: { id: subtaskId },
       data: { ...rest, is_completed: isCompleted },
     });
@@ -54,7 +54,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
   };
 
   public delete = async (subtaskId: number): Promise<SubtaskEntity> => {
-    const deletedSubtask = await prisma.subtasks.delete({
+    const deletedSubtask = await prisma.subtask.delete({
       where: { id: subtaskId },
     });
     return SubtaskEntity.fromObject(deletedSubtask);

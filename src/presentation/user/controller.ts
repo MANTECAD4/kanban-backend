@@ -14,7 +14,6 @@ export class UserController {
   }
   public getMeInfo = async (req: Request, res: Response) => {
     try {
-      console.log({ user: req.user });
       const {
         sub: { id: userId },
       } = req.user!;

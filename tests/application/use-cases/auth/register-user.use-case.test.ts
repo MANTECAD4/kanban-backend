@@ -17,6 +17,7 @@ describe("Register use case", () => {
     generate: vi.fn(),
     validate: vi.fn(),
   };
+
   const strongHasher = {
     hash: vi.fn(),
     compare: vi.fn(),
@@ -40,6 +41,7 @@ describe("Register use case", () => {
       strongHasher.hash.mockResolvedValue(mockHashedPassword);
       userRepository.register.mockResolvedValue(mockUserEntity);
       tokenProvider.generate.mockReturnValue(mockAccessToken);
+      //@ts-expect-error
       refreshTokenPersistencyService.createAndSave.mockResolvedValue(
         mockRefreshToken,
       );

@@ -1,4 +1,8 @@
-import { LoginUserDto, RegisterUserDto } from "../../src/application/dtos";
+import {
+  LoginUserDto,
+  RefreshTokenPayload,
+  RegisterUserDto,
+} from "../../src/application/dtos";
 import { UserEntity } from "../../src/domain/entities/user.entity";
 
 const name = "test user uwu";
@@ -20,4 +24,10 @@ export const mockUserEntity: UserEntity = {
   name,
   email,
   password,
+};
+
+export const mockRefreshTokenPayload: RefreshTokenPayload = {
+  sub: { id: 10 },
+  type: "refresh",
+  jti: "this-should-be-a-uuid",
 };

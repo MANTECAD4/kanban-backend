@@ -36,13 +36,14 @@ export class RefreshTokenUseCase {
   }
 
   public execute = async (user: RefreshTokenPayload) => {
-    if (!user)
+    if (!user) {
       throw CustomError.unauthorized({
         title: "Sign in",
         message: "Session not found",
         code: ErrorCodes.UNAUTHORIZED,
         details: null,
       });
+    }
     const {
       sub: { id: userId },
       jti,

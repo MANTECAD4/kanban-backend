@@ -5,6 +5,7 @@ import {
   CreateTaskDto,
   RegisterUserDto,
 } from "../../src/application/dtos";
+import { Priority } from "../../src/domain/entities";
 
 // Auth
 export const mockUserData1: RegisterUserDto = {
@@ -58,16 +59,22 @@ export const mockTask1: CreateTaskDto = {
   title: "test task 1",
   description: "some description for task 1",
   order: 1,
+  dueDate: new Date("2026-01-01"),
+  priority: Priority.URGENT,
 };
 export const mockTask2: CreateTaskDto = {
   title: "test task 2",
   description: "some description for task 2",
   order: 1,
+  dueDate: new Date("2026-01-01"),
+  priority: Priority.MEDIUM,
 };
 export const mockTask3: CreateTaskDto = {
   title: "test task 3",
   description: "some description for task 3",
   order: 1,
+  dueDate: new Date("2026-01-01"),
+  priority: Priority.LOW,
 };
 
 // Subtasks

@@ -20,7 +20,7 @@ describe("Subtask Repository", async () => {
   let postgresSubtaskRepository: PostgresSubtaskRepository;
   beforeAll(async () => {
     await prisma.$connect();
-    await prisma.subtasks.deleteMany({});
+    await prisma.subtask.deleteMany({});
     await prisma.task.deleteMany({});
     await prisma.statusColumn.deleteMany({});
     await prisma.board.deleteMany({});
@@ -38,14 +38,15 @@ describe("Subtask Repository", async () => {
     });
     columnId = createdColumn.id;
 
+    const { dueDate, ...rest } = mockTask1;
     const createdTask = await prisma.task.create({
-      data: { ...mockTask1, status_column_id: columnId },
+      data: { ...rest, due_date: dueDate, status_column_id: columnId },
     });
     taskId = createdTask.id;
     postgresSubtaskRepository = new PostgresSubtaskRepository();
   });
   afterEach(async () => {
-    await prisma.subtasks.deleteMany({});
+    await prisma.subtask.deleteMany({});
   });
 
   afterAll(async () => {

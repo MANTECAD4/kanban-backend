@@ -1,8 +1,11 @@
 import z from "zod";
+import { Priority } from "../../domain/entities";
 
 export const CreateTaskSchema = z.object({
   title: z.string().normalize().min(3),
   description: z.string().normalize().nonempty(),
+  dueDate: z.date(),
+  priority: z.enum(Priority),
   order: z.coerce.number().int().min(1),
 });
 

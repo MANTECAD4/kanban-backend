@@ -8,17 +8,23 @@ export class PostgresUserRepository implements UserRepository {
     const registeredUser = await prisma.user.create({
       data: registerUserDto,
     });
-    const userEntity = new UserEntity(registeredUser);
+    const userEntity = new UserEntity({ ...registeredUser, boards: null });
     return userEntity;
   };
   public getByEmail = async (email: string): Promise<UserEntity | null> => {
     const rawUser = await prisma.user.findFirst({ where: { email } });
-    return rawUser === null ? null : new UserEntity(rawUser);
+    return rawUser === null
+      ? null
+      : new UserEntity({ ...rawUser, boards: null });
   };
 
   public getById = async (userId: number): Promise<UserEntity | null> => {
-    const rawUser = await prisma.user.findFirst({ where: { id: userId } });
+    const rawUser = await prisma.user.findFirst({
+      where: { id: userId },
+    });
 
-    return rawUser === null ? null : new UserEntity(rawUser);
+    return rawUser === null
+      ? null
+      : new UserEntity({ ...rawUser, boards: null });
   };
 }

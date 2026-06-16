@@ -44,14 +44,6 @@ describe("Login use case execution", () => {
         mockRefreshToken,
       );
 
-      const getByEmailSPy = vi.spyOn(userRepository, "getByEmail");
-      const compareHashSpy = vi.spyOn(strongHasher, "compare");
-      const generateTokenSpy = vi.spyOn(tokenProvider, "generate");
-      const createAndSaveRefreshTokenSpy = vi.spyOn(
-        refreshTokenPersistencyService,
-        "createAndSave",
-      );
-
       const loginUseCase = new LoginUseCase({
         refreshTokenDuration,
         accessTokenDuration,
@@ -63,21 +55,25 @@ describe("Login use case execution", () => {
 
       const result = await loginUseCase.execute(mockLoginData);
 
-      expect(getByEmailSPy).toHaveBeenCalledWith(mockLoginData.email);
-      expect(compareHashSpy).toHaveBeenCalledWith(
+      expect(userRepository.getByEmail).toHaveBeenCalledWith(
+        mockLoginData.email,
+      );
+      expect(strongHasher.compare).toHaveBeenCalledWith(
         mockLoginData.password,
         mockUserEntity.password,
       );
 
-      expect(generateTokenSpy).toHaveBeenCalledWith(
+      expect(tokenProvider.generate).toHaveBeenCalledWith(
         { sub: { id: mockUserEntity.id }, type: "access" },
         accessTokenDuration,
       );
 
-      expect(createAndSaveRefreshTokenSpy).toHaveBeenCalledWith({
-        userId: mockUserEntity.id,
-        refreshTokenDuration,
-      });
+      expect(refreshTokenPersistencyService.createAndSave).toHaveBeenCalledWith(
+        {
+          userId: mockUserEntity.id,
+          refreshTokenDuration,
+        },
+      );
 
       expect(result).toMatchObject({
         accessToken: mockAccessToken,

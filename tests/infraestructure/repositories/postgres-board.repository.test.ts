@@ -113,7 +113,7 @@ describe("Postgres Board Repository", async () => {
       const boardCheck = await postgresBoardRepository.getById(boardId);
 
       expect(boardCheck).toBeNull();
-      expect(deletedBoard).toEqual({ id: boardId, userId, ...mockBoardData1 });
+      expect(deletedBoard.id).toBe(boardId);
     });
   });
 

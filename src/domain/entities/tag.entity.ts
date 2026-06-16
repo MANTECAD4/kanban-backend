@@ -1,46 +1,40 @@
 import { BoardEntity } from "./board.entity";
 import { TaskEntity } from "./task.entity";
 
-interface ColumnProps {
+interface Props {
   id: number;
   name: string;
-  description: string;
+  color: string;
   boardId: number;
   board: BoardEntity | null;
   tasks: TaskEntity[] | null;
 }
 
-export class StatusColumnEntity {
+export class TagEntity {
   public id: number;
   public name: string;
-  public description: string;
+  public color: string;
   public boardId: number;
   public board: BoardEntity | null;
   public tasks: TaskEntity[] | null;
 
-  constructor(options: ColumnProps) {
-    const {
-      id,
-      name,
-      description,
-      boardId,
-      board = null,
-      tasks = null,
-    } = options;
+  constructor(props: Props) {
+    const { id, name, color, boardId, board = null, tasks = null } = props;
     this.id = id;
     this.name = name;
-    this.description = description;
+    this.color = color;
     this.boardId = boardId;
     this.board = board;
     this.tasks = tasks;
   }
 
-  static fromObject = (object: Record<string, any>) => {
-    const { id, _id, name, description, board_id, board, tasks } = object;
-    return new StatusColumnEntity({
+  public static fromObject = (object: Record<string, any>): TagEntity => {
+    const { id, _id, name, color, board_id, board, tasks } = object;
+
+    return new TagEntity({
       id: id ?? _id,
       name,
-      description,
+      color,
       boardId: board_id,
       board,
       tasks,

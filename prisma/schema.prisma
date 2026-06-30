@@ -18,7 +18,7 @@ model User {
   email String @unique
   name String
   password String
-  boards Board[]
+  projects Project[]
   refresh_tokens RefreshToken[]
 }
 
@@ -37,10 +37,10 @@ model Project {
   description String
   icon String
   icon_color String
+  user_id Int
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
   boards Board[]
 }
-
-
 
 model Board{
   id Int @id @default(autoincrement())
@@ -48,8 +48,6 @@ model Board{
   description String?
   icon String
   icon_color String
-  user   User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
-  user_id Int
   project Project @relation(fields:[project_id], references:[id])
   project_id Int 
   status_colummns StatusColumn[]
@@ -73,8 +71,8 @@ model Task{
   due_date DateTime
   order Int
   status_column_id Int
-  tags Tag[]
   status_column StatusColumn @relation(fields: [status_column_id], references: [id], onDelete: Cascade)
+  tags Tag[]
   subtasks Subtask[] 
 }
 

@@ -28,7 +28,7 @@ export class ProjectEntity {
     this.boards = boards;
   }
 
-  public fromObject = (object: Record<string, any>): ProjectEntity => {
+  public static fromObject = (object: Record<string, any>): ProjectEntity => {
     const { id, _id, name, description, icon, icon_color, boards } = object;
     const projectInstace = new ProjectEntity({
       id: id ?? _id,

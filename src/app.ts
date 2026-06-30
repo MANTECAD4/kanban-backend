@@ -56,25 +56,25 @@ import {
   GetSubtasksUseCase,
   UpdateSubtaskUseCase,
 } from "./application/use-cases/subtask";
+import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-token.use-case";
+import { GetUserInfoUseCase } from "./application/use-cases/user/get-me-info.use-case";
 
 import { AuthController } from "./presentation/auth/controller";
 import { BoardController } from "./presentation/board/controller";
 import { StatusColumnController } from "./presentation/status-column/controller";
 import { TaskController } from "./presentation/task/controller";
 import { SubtaskController } from "./presentation/subtask/controller";
+import { UserController } from "./presentation/user/controller";
+import { ProjectController } from "./presentation/project/controller";
 
 import { AppRoutes } from "./presentation/routes";
 import { AuthRoutes } from "./presentation/auth/routes";
 import { BoardsRoutes } from "./presentation/board/routes";
 import { StatusColumnsRoutes } from "./presentation/status-column/routes";
 import { TaskRoutes } from "./presentation/task/routes";
-import { SubtaskRoutes } from "./presentation/subtask/routes";
-import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-token.use-case";
-import { UserRoutes } from "./presentation/user/routes";
-import { UserController } from "./presentation/user/controller";
-import { GetUserInfoUseCase } from "./application/use-cases/user/get-me-info.use-case";
-import { ProjectController } from "./presentation/project/controller";
 import { ProjectRoutes } from "./presentation/project/routes";
+import { SubtaskRoutes } from "./presentation/subtask/routes";
+import { UserRoutes } from "./presentation/user/routes";
 
 (async () => {
   main();

@@ -75,6 +75,9 @@ import { TaskRoutes } from "./presentation/task/routes";
 import { ProjectRoutes } from "./presentation/project/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
 import { UserRoutes } from "./presentation/user/routes";
+import { CreateProjectUseCase } from "./application/use-cases/project/create-project.use-case";
+import { PostgresProjectRepository } from "./infraestructure/repositories/postgres-project.repository";
+import { ProjectMiddlewares } from "./presentation/project/middlewares";
 
 (async () => {
   main();
@@ -96,6 +99,7 @@ function main() {
   const taskRepository = new PostgresTaskRepository();
   const subtaskRepository = new PostgresSubtaskRepository();
   const refreshTokenRepository = new PostgresRefreshTokenRepository();
+  const projectRepository = new PostgresProjectRepository();
 
   //! SERVCIES
   const tokenProvider = new JwtGenerator(TOKEN_SECRET);
@@ -119,6 +123,7 @@ function main() {
   const statusColumnMiddlewares = new StatusColumnMiddlewares();
   const taskMiddlewares = new TaskMiddlewares();
   const subtaskMiddlewares = new SubtaskMiddlewares();
+  const projectMiddlewares = new ProjectMiddlewares();
 
   //////////////// ! USE CASES ////////////////
   // AUTH
@@ -221,6 +226,14 @@ function main() {
   });
 
   const deleteTaskUsecase = new DeleteTaskUseCase({ taskRepository });
+
+  // PROJECTS
+
+  const createProjectUseCase = new CreateProjectUseCase({
+    projectRepository,
+    userRepository,
+  });
+
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -262,7 +275,7 @@ function main() {
     getUserInfoUseCase,
   });
 
-  const projectController = new ProjectController();
+  const projectController = new ProjectController(createProjectUseCase);
 
   //! ROUTERS
   const boardRouter = new BoardsRoutes({
@@ -296,6 +309,7 @@ function main() {
 
   const projectRoutes = new ProjectRoutes({
     controller: projectController,
+    projectMiddlewares,
   });
 
   const appRouter = new AppRoutes(

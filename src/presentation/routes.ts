@@ -52,7 +52,11 @@ export class AppRoutes {
     );
 
     router.use("/api/users", this.userRouter.routes);
-    router.use("/api/projects", this.projectRouter.routes);
+    router.use(
+      "/api/projects",
+      [this.authMiddlewares.validateAccessToken],
+      this.projectRouter.routes,
+    );
 
     return router;
   }

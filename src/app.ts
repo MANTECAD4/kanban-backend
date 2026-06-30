@@ -73,6 +73,8 @@ import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-token.
 import { UserRoutes } from "./presentation/user/routes";
 import { UserController } from "./presentation/user/controller";
 import { GetUserInfoUseCase } from "./application/use-cases/user/get-me-info.use-case";
+import { ProjectController } from "./presentation/project/controller";
+import { ProjectRoutes } from "./presentation/project/routes";
 
 (async () => {
   main();
@@ -260,6 +262,8 @@ function main() {
     getUserInfoUseCase,
   });
 
+  const projectController = new ProjectController();
+
   //! ROUTERS
   const boardRouter = new BoardsRoutes({
     controller: boardController,
@@ -290,6 +294,10 @@ function main() {
     authMiddlewares,
   });
 
+  const projectRoutes = new ProjectRoutes({
+    controller: projectController,
+  });
+
   const appRouter = new AppRoutes(
     authMiddlewares,
     authRouter,
@@ -298,6 +306,7 @@ function main() {
     taskRouter,
     subtaskRouter,
     userRouter,
+    projectRoutes,
   );
 
   // !SERVER INIT

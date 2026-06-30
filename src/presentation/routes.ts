@@ -8,6 +8,7 @@ import { SubtaskRoutes } from "./subtask/routes";
 
 import { AuthMiddlewares } from "./auth/middlewares";
 import { UserRoutes } from "./user/routes";
+import { ProjectRoutes } from "./project/routes";
 
 export class AppRoutes {
   constructor(
@@ -18,6 +19,7 @@ export class AppRoutes {
     private readonly taskRouter: TaskRoutes,
     private readonly subtaskRouter: SubtaskRoutes,
     private readonly userRouter: UserRoutes,
+    private readonly projectRouter: ProjectRoutes,
   ) {}
 
   public get routes(): Router {
@@ -50,6 +52,7 @@ export class AppRoutes {
     );
 
     router.use("/api/users", this.userRouter.routes);
+    router.use("/api/projects", this.projectRouter.routes);
 
     return router;
   }

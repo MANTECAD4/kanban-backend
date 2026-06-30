@@ -31,12 +31,27 @@ model RefreshToken{
   user_id Int
 }
 
+model Project {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  icon String
+  icon_color String
+  boards Board[]
+}
+
+
+
 model Board{
   id Int @id @default(autoincrement())
   name String
   description String?
+  icon String
+  icon_color String
   user   User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
   user_id Int
+  project Project @relation(fields:[project_id], references:[id])
+  project_id Int 
   status_colummns StatusColumn[]
   tags Tag[]
 }

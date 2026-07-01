@@ -36,7 +36,7 @@ model Project {
   name String
   description String
   icon String
-  icon_color String
+  icon_color IconColor
   user_id Int
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
   boards Board[]
@@ -98,4 +98,17 @@ enum Priority {
   HIGH
   MEDIUM
   LOW
+}
+
+enum IconColor {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+  SKY
+  CYAN
+  INDIGO
+  PURPLE
+  PINK
+  GRAY
 }

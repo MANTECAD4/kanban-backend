@@ -1,3 +1,4 @@
+import { IconColor } from "../../application/dtos/project.dto";
 import { BoardEntity } from "./board.entity";
 
 interface ProjectProps {
@@ -5,7 +6,7 @@ interface ProjectProps {
   name: string;
   description: string;
   icon: string;
-  iconColor: string;
+  iconColor: IconColor;
   boards: BoardEntity[] | null;
 }
 
@@ -14,7 +15,7 @@ export class ProjectEntity {
   public readonly name: string;
   public readonly description: string;
   public readonly icon: string;
-  public readonly iconColor: string;
+  public readonly iconColor: IconColor;
   public readonly boards: BoardEntity[] | null;
 
   constructor(props: ProjectProps) {

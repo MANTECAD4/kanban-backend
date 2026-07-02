@@ -78,6 +78,7 @@ import { UserRoutes } from "./presentation/user/routes";
 import { CreateProjectUseCase } from "./application/use-cases/project/create-project.use-case";
 import { PostgresProjectRepository } from "./infraestructure/repositories/postgres-project.repository";
 import { ProjectMiddlewares } from "./presentation/project/middlewares";
+import { GetUserProjectsUseCase } from "./application/use-cases/project/get-user-projects.use-case";
 
 (async () => {
   main();
@@ -234,6 +235,11 @@ function main() {
     userRepository,
   });
 
+  const getUserProjectsUseCase = new GetUserProjectsUseCase({
+    projectRepository,
+    userRepository,
+  });
+
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -275,7 +281,10 @@ function main() {
     getUserInfoUseCase,
   });
 
-  const projectController = new ProjectController(createProjectUseCase);
+  const projectController = new ProjectController(
+    createProjectUseCase,
+    getUserProjectsUseCase,
+  );
 
   //! ROUTERS
   const boardRouter = new BoardsRoutes({

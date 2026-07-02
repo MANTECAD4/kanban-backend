@@ -34,6 +34,7 @@ model RefreshToken{
 model Project {
   id Int @id @default(autoincrement())
   name String
+  slug String
   description String
   icon String
   icon_color IconColor
@@ -45,6 +46,7 @@ model Project {
 model Board{
   id Int @id @default(autoincrement())
   name String
+  slug String
   description String?
   icon String
   icon_color String

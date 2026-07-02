@@ -11,9 +11,9 @@ export abstract class ProjectRepository {
 
   public abstract getById: (projectId: number) => Promise<ProjectEntity | null>;
 
-  public abstract getByUserAndProjectName: (
+  public abstract getByUserAndSlug: (
     userId: number,
-    projectName: string,
+    slug: string,
   ) => Promise<ProjectEntity | null>;
 
   public abstract create: (

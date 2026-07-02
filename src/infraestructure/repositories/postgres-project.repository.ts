@@ -29,12 +29,12 @@ export class PostgresProjectRepository implements ProjectRepository {
     return project ? ProjectEntity.fromObject(project) : null;
   };
 
-  public getByUserAndProjectName = async (
+  public getByUserAndSlug = async (
     userId: number,
-    projectName: string,
+    slug: string,
   ): Promise<ProjectEntity | null> => {
     const project = await prisma.project.findFirst({
-      where: { name: projectName, user: { id: userId } },
+      where: { slug, user: { id: userId } },
     });
 
     return project ? ProjectEntity.fromObject(project) : null;

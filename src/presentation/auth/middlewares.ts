@@ -120,7 +120,7 @@ export class AuthMiddlewares {
         const error = CustomError.unauthorized({
           title: errorTitle,
           message: "Session not found",
-          code: ErrorCodes.UNAUTHORIZED,
+          code: ErrorCodes.MISSING_SESSION,
           details: null,
         });
         return CustomError.handleError(error, req, res);
@@ -133,8 +133,8 @@ export class AuthMiddlewares {
       if (!result.success) {
         const error = CustomError.unauthorized({
           title: errorTitle,
-          message: "Something went wrong with your credetntials.",
-          code: ErrorCodes.INVALID_TOKEN,
+          message: "Something went wrong with your credentials.",
+          code: ErrorCodes.BAD_SESSION,
           details: null,
         });
         return CustomError.handleError(error, req, res);
@@ -148,7 +148,7 @@ export class AuthMiddlewares {
         throw CustomError.notFound({
           title: errorTitle,
           message: "Something went wrong with your credentials",
-          code: ErrorCodes.NOT_FOUND,
+          code: ErrorCodes.MISSING_SESSION,
           details: null,
         });
 
@@ -156,7 +156,7 @@ export class AuthMiddlewares {
         throw CustomError.unauthorized({
           title: errorTitle,
           message: "Session closed",
-          code: ErrorCodes.UNAUTHORIZED,
+          code: ErrorCodes.SESSION_REVOKED,
           details: null,
         });
 
@@ -168,7 +168,7 @@ export class AuthMiddlewares {
         throw CustomError.unauthorized({
           title: errorTitle,
           message: `Something went wrong with your credentials`,
-          code: ErrorCodes.UNAUTHORIZED,
+          code: ErrorCodes.BAD_SESSION,
           details: null,
         });
 
@@ -180,7 +180,7 @@ export class AuthMiddlewares {
         const customErrorInstance = CustomError.unauthorized({
           title: "Operation denied",
           message,
-          code: ErrorCodes.INVALID_TOKEN,
+          code: ErrorCodes.BAD_SESSION,
           details: null,
         });
         return CustomError.handleError(customErrorInstance, req, res);

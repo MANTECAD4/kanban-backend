@@ -20,12 +20,24 @@ export class ProjectRoutes {
   public get routes(): Router {
     const router = Router();
     router.get("/", this.controller.getAllByUser);
+    router.get(
+      "/:projectSlug",
+      [this.projectMiddlewares.validateProjectSlug],
+      this.controller.getByUserAndSlug,
+    );
     router.post(
       "/",
-      [this.projectMiddlewares.createProjectDataValidation],
+      [this.projectMiddlewares.submitProjectDataValidation],
       this.controller.create,
     );
-    router.put("/:projectId", this.controller.update);
+    router.put(
+      "/:projectId",
+      [
+        this.projectMiddlewares.validateProjectId,
+        this.projectMiddlewares.submitProjectDataValidation,
+      ],
+      this.controller.update,
+    );
     router.delete("/:projectId", this.controller.delete);
     return router;
   }

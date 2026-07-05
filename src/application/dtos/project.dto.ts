@@ -13,12 +13,13 @@ export enum IconColor {
   GRAY = "GRAY",
 }
 
-export const CreateProjectSchema = z.object({
+export const SubmitProjectSchema = z.object({
   name: z
     .string()
     .trim()
     .min(3)
     .transform((value) => value.replace(/\s+/g, " ")),
+  slug: z.string().nonempty(),
   description: z
     .string()
     .trim()
@@ -26,10 +27,6 @@ export const CreateProjectSchema = z.object({
     .transform((value) => value.replace(/\s+/g, " ")),
   icon: z.string().nonempty(),
   iconColor: z.enum(IconColor),
-  slug: z.string().nonempty(),
 });
 
-export const UpdateProjectSchema = CreateProjectSchema.partial();
-
-export type CreateProjectDto = z.infer<typeof CreateProjectSchema>;
-export type UpdateProjectDto = z.infer<typeof UpdateProjectSchema>;
+export type SubmitProjectDto = z.infer<typeof SubmitProjectSchema>;

@@ -79,6 +79,8 @@ import { CreateProjectUseCase } from "./application/use-cases/project/create-pro
 import { PostgresProjectRepository } from "./infraestructure/repositories/postgres-project.repository";
 import { ProjectMiddlewares } from "./presentation/project/middlewares";
 import { GetUserProjectsUseCase } from "./application/use-cases/project/get-user-projects.use-case";
+import { GetProjectBySlugUseCase } from "./application/use-cases/project/get-project-by-slug.use-case";
+import { UpdateProjectUseCase } from "./application/use-cases/project/update-project.use-case";
 
 (async () => {
   main();
@@ -240,6 +242,13 @@ function main() {
     userRepository,
   });
 
+  const getProjectBySlugUseCase = new GetProjectBySlugUseCase({
+    projectRepository,
+    userRepository,
+  });
+
+  const updateProjectUseCase = new UpdateProjectUseCase({ projectRepository });
+
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -284,6 +293,8 @@ function main() {
   const projectController = new ProjectController(
     createProjectUseCase,
     getUserProjectsUseCase,
+    getProjectBySlugUseCase,
+    updateProjectUseCase,
   );
 
   //! ROUTERS

@@ -1,4 +1,4 @@
-import { CreateProjectDto } from "../../application/dtos/project.dto";
+import { SubmitProjectDto } from "../../application/dtos/project.dto";
 import { ProjectEntity } from "../entities/project.entity";
 
 export abstract class ProjectRepository {
@@ -18,12 +18,12 @@ export abstract class ProjectRepository {
 
   public abstract create: (
     userId: number,
-    createProjectDto: CreateProjectDto,
+    createProjectDto: SubmitProjectDto,
   ) => Promise<ProjectEntity>;
 
   public abstract update: (
     projectId: number,
-    data: Record<string, any>,
+    data: SubmitProjectDto,
   ) => Promise<ProjectEntity>;
 
   public abstract delete: (ProjectId: number) => Promise<ProjectEntity>;

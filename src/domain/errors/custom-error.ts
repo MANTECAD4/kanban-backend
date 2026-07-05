@@ -14,6 +14,10 @@ export enum ErrorCodes {
 
   "ALREADY_REGISTERED" = "ALREADY_REGISTERED",
   "INVALID_DATA" = "INVALID_DATA",
+
+  MISSING_SESSION = "MISSING_SESSION",
+  BAD_SESSION = "BAD_SESSION",
+  SESSION_REVOKED = "SESSION_REVOKED",
 }
 
 type ErrorDetails = Record<string, string[] | undefined>;

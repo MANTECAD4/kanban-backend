@@ -1,4 +1,4 @@
-import { CreateProjectDto } from "../../application/dtos/project.dto";
+import { SubmitProjectDto } from "../../application/dtos/project.dto";
 import { prisma } from "../../data/init-postgres";
 import { ProjectEntity } from "../../domain/entities/project.entity";
 import { ProjectRepository } from "../../domain/repositories/project.repository";
@@ -42,7 +42,7 @@ export class PostgresProjectRepository implements ProjectRepository {
 
   public create = async (
     userId: number,
-    { iconColor, ...rest }: CreateProjectDto,
+    { iconColor, ...rest }: SubmitProjectDto,
   ): Promise<ProjectEntity> => {
     const project = await prisma.project.create({
       data: { user_id: userId, icon_color: iconColor, ...rest },
@@ -53,7 +53,7 @@ export class PostgresProjectRepository implements ProjectRepository {
 
   public update = async (
     projectId: number,
-    { iconColor, ...rest }: Record<string, any>,
+    { iconColor, ...rest }: SubmitProjectDto,
   ): Promise<ProjectEntity> => {
     const project = await prisma.project.update({
       where: { id: projectId },

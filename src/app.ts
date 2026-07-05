@@ -81,6 +81,7 @@ import { ProjectMiddlewares } from "./presentation/project/middlewares";
 import { GetUserProjectsUseCase } from "./application/use-cases/project/get-user-projects.use-case";
 import { GetProjectBySlugUseCase } from "./application/use-cases/project/get-project-by-slug.use-case";
 import { UpdateProjectUseCase } from "./application/use-cases/project/update-project.use-case";
+import { DeleteProjectUseCase } from "./application/use-cases/project/delete-project.use-case";
 
 (async () => {
   main();
@@ -249,6 +250,8 @@ function main() {
 
   const updateProjectUseCase = new UpdateProjectUseCase({ projectRepository });
 
+  const deleteProjectUseCase = new DeleteProjectUseCase({ projectRepository });
+
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -295,6 +298,7 @@ function main() {
     getUserProjectsUseCase,
     getProjectBySlugUseCase,
     updateProjectUseCase,
+    deleteProjectUseCase,
   );
 
   //! ROUTERS

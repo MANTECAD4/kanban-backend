@@ -10,4 +10,4 @@ services:
       - ./postgres:/var/lib/postgresql/18/docker
 
     ports:
-      - 5432:5432
+      - 55432:5432

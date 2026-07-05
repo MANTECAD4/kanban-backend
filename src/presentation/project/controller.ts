@@ -5,6 +5,7 @@ import { SubmitProjectDto } from "../../application/dtos/project.dto";
 import { GetUserProjectsUseCase } from "../../application/use-cases/project/get-user-projects.use-case";
 import { GetProjectBySlugUseCase } from "../../application/use-cases/project/get-project-by-slug.use-case";
 import { UpdateProjectUseCase } from "../../application/use-cases/project/update-project.use-case";
+import { DeleteProjectUseCase } from "../../application/use-cases/project/delete-project.use-case";
 
 export class ProjectController {
   constructor(
@@ -12,6 +13,7 @@ export class ProjectController {
     private readonly getUserProjectsUseCase: GetUserProjectsUseCase,
     private readonly getProjectBySlugUseCase: GetProjectBySlugUseCase,
     private readonly updateProjectUseCase: UpdateProjectUseCase,
+    private readonly deleteProjectUseCase: DeleteProjectUseCase,
   ) {}
 
   public getAllByUser = async (req: Request, res: Response) => {
@@ -76,7 +78,18 @@ export class ProjectController {
       return CustomError.handleError(error, req, res);
     }
   };
-  public delete = (req: Request, res: Response) => {
-    return res.json("deleteProject");
+  public delete = async (req: Request, res: Response) => {
+    try {
+      const result = await this.deleteProjectUseCase.execute(
+        req.validatedParams!.projectId,
+      );
+      return res.json({
+        ok: true,
+        message: "Project deleted successfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
   };
 }

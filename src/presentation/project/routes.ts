@@ -38,7 +38,11 @@ export class ProjectRoutes {
       ],
       this.controller.update,
     );
-    router.delete("/:projectId", this.controller.delete);
+    router.delete(
+      "/:projectId",
+      [this.projectMiddlewares.validateProjectId],
+      this.controller.delete,
+    );
     return router;
   }
 }

@@ -27,7 +27,7 @@ model RefreshToken{
   hash String
   expires_at DateTime
   revoked_at DateTime? 
-  user User @relation(fields:[user_id], references: [id])
+  user User @relation(fields:[user_id], references: [id], onDelete: Cascade)
   user_id Int
 }
 
@@ -50,7 +50,7 @@ model Board{
   description String?
   icon String
   icon_color String
-  project Project @relation(fields:[project_id], references:[id])
+  project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
   project_id Int 
   status_colummns StatusColumn[]
   tags Tag[]
@@ -90,7 +90,7 @@ model Tag {
   id Int @id @default(autoincrement())
   name String
   color String
-  board Board @relation(fields:[board_id], references: [id])
+  board Board @relation(fields:[board_id], references: [id], onDelete: Cascade)
   board_id Int
   tasks Task[]
 }

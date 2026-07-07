@@ -47,11 +47,11 @@ model Board{
   id Int @id @default(autoincrement())
   name String
   slug String
-  description String?
+  description String
   icon String
-  icon_color String
-  project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
+  icon_color IconColor
   project_id Int 
+  project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
   status_colummns StatusColumn[]
   tags Tag[]
 }

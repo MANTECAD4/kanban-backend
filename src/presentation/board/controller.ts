@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CustomError } from "../../domain/errors/custom-error";
-import { CreateBoardDto, UpdateBoardDto } from "../../application/dtos";
+import { SubmitBoardDto } from "../../application/dtos";
 import {
   GetBoardsUseCase,
   CreateBoardUseCase,
@@ -20,7 +20,7 @@ export class BoardController {
     try {
       const result = await this.createBoardUseCase.execute(
         req.user!.sub.id,
-        req.validatedBody! as CreateBoardDto,
+        req.validatedBody! as SubmitBoardDto,
       );
 
       return res
@@ -34,7 +34,9 @@ export class BoardController {
   public getAll = async (req: Request, res: Response) => {
     try {
       console.log(req.cookies);
-      const result = await this.getBoardsUseCase.execute(req.user!.sub.id);
+      const result = await this.getBoardsUseCase.execute(
+        req.validatedParams!.projectId,
+      );
       return res.json({
         ok: true,
         message: `Boards loaded succesfully`,
@@ -47,11 +49,10 @@ export class BoardController {
 
   public update = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateBoardUseCase.execute({
-        userId: req.user!.sub.id,
-        boardId: req.validatedParams!.boardId as number,
-        data: req.validatedBody! as UpdateBoardDto,
-      });
+      const result = await this.updateBoardUseCase.execute(
+        req.validatedParams!.boardId,
+        req.validatedBody! as SubmitBoardDto,
+      );
       return res.json({
         ok: true,
         message: `Board updated succesfully`,
@@ -65,7 +66,6 @@ export class BoardController {
   public delete = async (req: Request, res: Response) => {
     try {
       const result = await this.deleteBoardUseCase.execute(
-        req.user!.sub.id,
         req.validatedParams!.boardId as number,
       );
       return res.json({

@@ -127,7 +127,7 @@ function main() {
   const statusColumnMiddlewares = new StatusColumnMiddlewares();
   const taskMiddlewares = new TaskMiddlewares();
   const subtaskMiddlewares = new SubtaskMiddlewares();
-  const projectMiddlewares = new ProjectMiddlewares();
+  const projectMiddlewares = new ProjectMiddlewares({ projectRepository });
 
   //////////////// ! USE CASES ////////////////
   // AUTH
@@ -245,7 +245,6 @@ function main() {
 
   const getProjectBySlugUseCase = new GetProjectBySlugUseCase({
     projectRepository,
-    userRepository,
   });
 
   const updateProjectUseCase = new UpdateProjectUseCase({ projectRepository });
@@ -305,6 +304,7 @@ function main() {
   const boardRouter = new BoardsRoutes({
     controller: boardController,
     boardMiddlewares,
+    projectMiddlewares,
   });
   const authRouter = new AuthRoutes({
     authMiddlewares,

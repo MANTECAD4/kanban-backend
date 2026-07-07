@@ -1,16 +1,8 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
-import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateBoardDto } from "../../dtos";
+import { SubmitBoardDto } from "../../dtos";
 
 interface ClassDependencies {
   boardRepository: BoardRepository;
-}
-
-interface ExecutionProps {
-  userId: number;
-  boardId: number;
-  data: UpdateBoardDto;
 }
 
 export class UpdateBoardUseCase {
@@ -20,28 +12,10 @@ export class UpdateBoardUseCase {
     this.boardRepository = boardRepository;
   }
 
-  public execute = async ({ userId, boardId, data }: ExecutionProps) => {
-    const existsRelationship = await this.boardRepository.checkRelation(
-      userId,
-      boardId,
-    );
-
-    if (!existsRelationship)
-      throw CustomError.forbidden({
-        title: "Board update failed",
-        message: `User doesn't own this board`,
-        code: ErrorCodes.FORBIDDEN,
-        details: null,
-      });
-
-    const definedFields = getDefinedFields(data);
-
-    const { userId: _, ...rest } = await this.boardRepository.update(
-      boardId,
-      definedFields,
-    );
+  public execute = async (boardId: number, data: SubmitBoardDto) => {
+    const board = await this.boardRepository.update(boardId, data);
     return {
-      data: rest,
+      board,
     };
   };
 }

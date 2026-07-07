@@ -22,7 +22,10 @@ export class ProjectRoutes {
     router.get("/", this.controller.getAllByUser);
     router.get(
       "/:projectSlug",
-      [this.projectMiddlewares.validateProjectSlug],
+      [
+        this.projectMiddlewares.validateProjectSlug,
+        this.projectMiddlewares.validateRelation,
+      ],
       this.controller.getByUserAndSlug,
     );
     router.post(
@@ -34,13 +37,17 @@ export class ProjectRoutes {
       "/:projectId",
       [
         this.projectMiddlewares.validateProjectId,
+        this.projectMiddlewares.validateRelation,
         this.projectMiddlewares.submitProjectDataValidation,
       ],
       this.controller.update,
     );
     router.delete(
       "/:projectId",
-      [this.projectMiddlewares.validateProjectId],
+      [
+        this.projectMiddlewares.validateProjectId,
+        this.projectMiddlewares.validateRelation,
+      ],
       this.controller.delete,
     );
     return router;

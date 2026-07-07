@@ -1,6 +1,6 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { UserRepository, BoardRepository } from "../../../domain/repositories";
-import { CreateBoardDto } from "../../dtos";
+import { SubmitBoardDto } from "../../dtos";
 
 interface ClassDependencies {
   boardRepository: BoardRepository;
@@ -16,7 +16,7 @@ export class CreateBoardUseCase {
     this.userRepository = userRepository;
   }
 
-  public execute = async (userId: number, data: CreateBoardDto) => {
+  public execute = async (userId: number, data: SubmitBoardDto) => {
     const existingUser = await this.userRepository.getById(userId);
     if (!existingUser) {
       throw CustomError.notFound({
@@ -28,7 +28,7 @@ export class CreateBoardUseCase {
     }
 
     const existingBoardInUserCollection =
-      await this.boardRepository.getByUserAndBoardName(userId, data.name);
+      await this.boardRepository.checkCollection(userId, data.slug);
     if (existingBoardInUserCollection)
       throw CustomError.badRequest({
         title: "Board creation failed",
@@ -38,7 +38,7 @@ export class CreateBoardUseCase {
       });
     const createdBoard = await this.boardRepository.create(userId, data);
     return {
-      data: createdBoard,
+      board: createdBoard,
     };
   };
 }

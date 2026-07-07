@@ -1,29 +1,31 @@
-import { CreateBoardDto } from "../../application/dtos";
+import { SubmitBoardDto } from "../../application/dtos";
 import { BoardEntity } from "../entities/board.entity";
 
 export abstract class BoardRepository {
-  public abstract checkRelation: (
-    userId: number,
-    boardId: number,
-  ) => Promise<BoardEntity | null>;
-
-  public abstract getAll: (userId: number) => Promise<BoardEntity[]>;
+  public abstract getAllByProject: (
+    projectId: number,
+  ) => Promise<BoardEntity[]>;
 
   public abstract getById: (boardId: number) => Promise<BoardEntity | null>;
 
-  public abstract getByUserAndBoardName: (
+  public abstract checkRelation: (
     userId: number,
-    boardName: string,
+    searchKey: string | number,
   ) => Promise<BoardEntity | null>;
+
+  public abstract checkCollection: (
+    projectId: number,
+    slug: string,
+  ) => Promise<null | BoardEntity>;
 
   public abstract create: (
     userId: number,
-    createBoardDto: CreateBoardDto,
+    createBoardDto: SubmitBoardDto,
   ) => Promise<BoardEntity>;
 
   public abstract update: (
     boardId: number,
-    data: Record<string, any>,
+    data: SubmitBoardDto,
   ) => Promise<BoardEntity>;
 
   public abstract delete: (boardId: number) => Promise<BoardEntity>;

@@ -1,22 +1,14 @@
-import { CreateBoardDto } from "../../application/dtos";
+import { SubmitBoardDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { BoardEntity } from "../../domain/entities";
 import { BoardRepository } from "../../domain/repositories";
 
 export class PostgresBoardRepository implements BoardRepository {
-  public checkRelation = async (
-    userId: number,
-    boardId: number,
-  ): Promise<BoardEntity | null> => {
-    const board = await prisma.board.findFirst({
-      where: { id: boardId, user: { id: userId } },
-    });
-    return board ? BoardEntity.fromObject(board) : null;
-  };
-
-  public getAll = async (userId: number): Promise<BoardEntity[]> => {
+  public getAllByProject = async (
+    projectId: number,
+  ): Promise<BoardEntity[]> => {
     const rawBoards = await prisma.board.findMany({
-      where: { user_id: userId },
+      where: { project_id: projectId },
     });
     return rawBoards.map((board) => BoardEntity.fromObject(board));
   };
@@ -26,35 +18,54 @@ export class PostgresBoardRepository implements BoardRepository {
     return board === null ? null : BoardEntity.fromObject(board);
   };
 
-  public getByUserAndBoardName = async (
+  public checkRelation = async (
     userId: number,
-    boardName: string,
+    searchKey: string | number,
   ): Promise<BoardEntity | null> => {
-    const board = await prisma.board.findFirst({
-      where: { name: boardName, user_id: userId },
-    });
+    let board;
+    if (typeof searchKey === "string") {
+      board = await prisma.board.findFirst({
+        where: { slug: searchKey, project: { user_id: userId } },
+      });
+    } else {
+      board = await prisma.board.findUnique({
+        where: { id: searchKey, project: { user_id: userId } },
+      });
+    }
     return board === null ? null : BoardEntity.fromObject(board);
   };
 
+  public checkCollection = async (
+    projectId: number,
+    slug: string,
+  ): Promise<null | BoardEntity> => {
+    const board = await prisma.board.findFirst({
+      where: { slug, project_id: projectId },
+    });
+
+    return board ? BoardEntity.fromObject(board) : null;
+  };
+
   public create = async (
-    userId: number,
-    createBoardDto: CreateBoardDto,
+    projectId: number,
+    { iconColor, ...rest }: SubmitBoardDto,
   ): Promise<BoardEntity> => {
     const createdBoard = await prisma.board.create({
       data: {
-        ...createBoardDto,
-        user_id: userId,
+        icon_color: iconColor,
+        ...rest,
+        project_id: projectId,
       },
     });
     return BoardEntity.fromObject(createdBoard);
   };
   public update = async (
     boardId: number,
-    data: Record<string, any>,
+    { iconColor, ...rest }: SubmitBoardDto,
   ): Promise<BoardEntity> => {
     const updatedBoard = await prisma.board.update({
       where: { id: boardId },
-      data,
+      data: { icon_color: iconColor, ...rest },
     });
     return BoardEntity.fromObject(updatedBoard);
   };

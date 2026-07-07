@@ -1,4 +1,4 @@
-import { CreateBoardSchema, UpdateBoardSchema } from "../../application/dtos";
+import { SubmitBoardSchema } from "../../application/dtos";
 import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
@@ -6,15 +6,9 @@ import {
 import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
 
 export class BoardMiddlewares {
-  public createBoardDataValidation = dataValidationMiddlewareFactory(
-    CreateBoardSchema,
-    "Invalid data recieved. Board creation failed.",
-    RequestValidationTarget.BODY,
-  );
-
-  public updateBoardDataValidation = dataValidationMiddlewareFactory(
-    UpdateBoardSchema,
-    "Invalid data recieved. Board update failed.",
+  public submitBoardDataValidation = dataValidationMiddlewareFactory(
+    SubmitBoardSchema,
+    "Invalid data recieved",
     RequestValidationTarget.BODY,
   );
 

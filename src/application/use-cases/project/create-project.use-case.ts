@@ -32,7 +32,7 @@ export class CreateProjectUseCase {
     }
 
     const existingProjectInUserCollection =
-      await this.projectRepository.getByUserAndSlug(userId, data.slug);
+      await this.projectRepository.checkRelation(userId, data.slug);
 
     if (existingProjectInUserCollection) {
       throw CustomError.badRequest({

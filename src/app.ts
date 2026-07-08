@@ -82,6 +82,7 @@ import { GetUserProjectsUseCase } from "./application/use-cases/project/get-user
 import { GetProjectBySlugUseCase } from "./application/use-cases/project/get-project-by-slug.use-case";
 import { UpdateProjectUseCase } from "./application/use-cases/project/update-project.use-case";
 import { DeleteProjectUseCase } from "./application/use-cases/project/delete-project.use-case";
+import { GetBoardBySlugUseCase } from "./application/use-cases/board/get-board-by-slug.use-case";
 
 (async () => {
   main();
@@ -168,9 +169,10 @@ function main() {
   });
 
   const getBoardsUseCase = new GetBoardsUseCase({
-    userRepository,
     boardRepository,
   });
+
+  const getBoardBySlugUseCase = new GetBoardBySlugUseCase({ boardRepository });
   const updateBoardUseCase = new UpdateBoardUseCase({ boardRepository });
   const deleteBoardUseCase = new DeleteBoardUseCase({ boardRepository });
 
@@ -265,6 +267,7 @@ function main() {
     getBoardsUseCase,
     updateBoardUseCase,
     deleteBoardUseCase,
+    getBoardBySlugUseCase,
   );
   const statusColumnController = new StatusColumnController(
     getStatusColumnsUseCase,

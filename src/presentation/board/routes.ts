@@ -29,6 +29,13 @@ export class BoardsRoutes {
       [this.projectMiddlewares.validateProjectId],
       this.controller.getAll,
     );
+
+    router.get(
+      "/:boardSlug",
+      [this.boardMiddlewares.boardSlugParamValidation],
+      this.controller.getBySlug,
+    );
+
     router.post(
       "/in-project/:projectId",
       [this.projectMiddlewares.validateProjectId],

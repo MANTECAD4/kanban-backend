@@ -3,7 +3,10 @@ import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
 } from "../shared/factories/data-validation-middleware";
-import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
+import {
+  ParamsWithIdSchema,
+  ParamsWithSlugSchema,
+} from "../shared/schemas/int-id.schema";
 
 export class BoardMiddlewares {
   public submitBoardDataValidation = dataValidationMiddlewareFactory(
@@ -15,6 +18,12 @@ export class BoardMiddlewares {
   public boardIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("boardId"),
     "Invalid board id provided.",
+    RequestValidationTarget.PARAMS,
+  );
+
+  public boardSlugParamValidation = dataValidationMiddlewareFactory(
+    ParamsWithSlugSchema("boardSlug"),
+    "Invalid board slug provided",
     RequestValidationTarget.PARAMS,
   );
 }

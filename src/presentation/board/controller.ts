@@ -7,6 +7,7 @@ import {
   UpdateBoardUseCase,
   DeleteBoardUseCase,
 } from "../../application/use-cases/board";
+import { GetBoardBySlugUseCase } from "../../application/use-cases/board/get-board-by-slug.use-case";
 
 export class BoardController {
   constructor(
@@ -14,6 +15,7 @@ export class BoardController {
     private readonly getBoardsUseCase: GetBoardsUseCase,
     private readonly updateBoardUseCase: UpdateBoardUseCase,
     private readonly deleteBoardUseCase: DeleteBoardUseCase,
+    private readonly getBoardBySlugUseCase: GetBoardBySlugUseCase,
   ) {}
 
   public create = async (req: Request, res: Response) => {
@@ -44,6 +46,23 @@ export class BoardController {
       });
     } catch (error) {
       return CustomError.handleError(error, req, res);
+    }
+  };
+
+  public getBySlug = async (req: Request, res: Response) => {
+    try {
+      const result = await this.getBoardBySlugUseCase.execute(
+        req.user!.sub.id,
+        req.validatedParams!.boardSlug,
+      );
+
+      return res.json({
+        ok: true,
+        message: `Board ${result.board.name} loaded succesfully`,
+        ...result,
+      });
+    } catch (error) {
+      CustomError.handleError(error, req, res);
     }
   };
 

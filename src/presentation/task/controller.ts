@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { GetTasksByColumnUseCase } from "../../application/use-cases/task/get-tasks.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
 import { CreateTaskUseCase } from "../../application/use-cases/task/create-task.use-case";
-import { CreateTaskDto, UpdateColumnInTaskDto } from "../../application/dtos";
+import { SubmitTaskDto } from "../../application/dtos";
 import { DeleteTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
@@ -37,7 +37,7 @@ export class TaskController {
       const result = await this.createTaskUseCase.execute({
         userId: req.user!.sub.id,
         columnId: req.validatedParams!.columnId,
-        data: req.validatedBody as CreateTaskDto,
+        data: req.validatedBody as SubmitTaskDto,
       });
       return res
         .status(201)
@@ -69,7 +69,7 @@ export class TaskController {
       const result = await this.updateColumnInKanbanTaskUseCase.execute({
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
-        data: req.validatedBody! as UpdateColumnInTaskDto,
+        data: req.validatedBody! as SubmitTaskDto,
       });
       return res.json({
         ok: true,

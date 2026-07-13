@@ -34,7 +34,7 @@ export class TaskRoutes {
       "/in-column/:columnId",
       [
         this.statusColumnMiddlewares.columnIdParamValidation,
-        this.taskMiddlewares.createTaskDataValidation,
+        this.taskMiddlewares.submitTaskDataValidation,
       ],
       this.controller.create,
     );
@@ -43,7 +43,7 @@ export class TaskRoutes {
       "/:taskId",
       [
         this.taskMiddlewares.taskIdParamValidation,
-        this.taskMiddlewares.updateTaskDataValidation,
+        this.taskMiddlewares.submitTaskDataValidation,
       ],
       this.controller.updateData,
     );
@@ -51,7 +51,7 @@ export class TaskRoutes {
       "/:taskId/status-column",
       [
         this.taskMiddlewares.taskIdParamValidation,
-        this.taskMiddlewares.updateTaskColumnDataValidation,
+        this.taskMiddlewares.submitTaskDataValidation,
       ],
       this.controller.updateStatusColumn,
     );

@@ -3,7 +3,7 @@ import {
   TaskRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { CreateTaskDto } from "../../dtos";
+import { SubmitTaskDto } from "../../dtos";
 
 interface ClassDependencies {
   statusColumnRepository: StatusColumnRepository;
@@ -13,7 +13,7 @@ interface ClassDependencies {
 interface ExecutionProps {
   userId: number;
   columnId: number;
-  data: CreateTaskDto;
+  data: SubmitTaskDto;
 }
 
 export class CreateTaskUseCase {
@@ -39,6 +39,6 @@ export class CreateTaskUseCase {
         details: null,
       });
     const createdTask = await this.taskRepository.create(columnId, data);
-    return { data: createdTask };
+    return { task: createdTask };
   };
 }

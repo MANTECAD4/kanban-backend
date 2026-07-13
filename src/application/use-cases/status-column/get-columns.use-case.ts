@@ -37,7 +37,7 @@ export class GetStatusColumnsUseCase {
       });
     const columns = await this.statusColumnRepository.getAll(boardId);
     return {
-      data: columns,
+      categories: columns,
 
       meta: { total: columns.length },
     };

@@ -1,4 +1,4 @@
-import { CreateTaskDto } from "../../application/dtos";
+import { SubmitTaskDto } from "../../application/dtos";
 import { TaskEntity } from "../entities/task.entity";
 
 export abstract class TaskRepository {
@@ -12,11 +12,11 @@ export abstract class TaskRepository {
   public abstract getById: (taskId: number) => Promise<TaskEntity | null>;
   public abstract create: (
     columnId: number,
-    data: CreateTaskDto,
+    data: SubmitTaskDto,
   ) => Promise<TaskEntity>;
   public abstract update: (
     taskId: number,
-    data: Record<string, any>,
+    data: SubmitTaskDto,
   ) => Promise<TaskEntity>;
   public abstract delete: (taskId: number) => Promise<TaskEntity>;
 }

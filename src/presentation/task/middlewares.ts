@@ -1,8 +1,4 @@
-import {
-  CreateTaskSchema,
-  UpdateColumnInTaskSchema,
-  UpdateDataInTaskSchema,
-} from "../../application/dtos";
+import { SubmitTaskSchema } from "../../application/dtos";
 import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
@@ -16,21 +12,9 @@ export class TaskMiddlewares {
     RequestValidationTarget.PARAMS,
   );
 
-  public createTaskDataValidation = dataValidationMiddlewareFactory(
-    CreateTaskSchema,
+  public submitTaskDataValidation = dataValidationMiddlewareFactory(
+    SubmitTaskSchema,
     "Invalid data recieved. Task creation failed",
-    RequestValidationTarget.BODY,
-  );
-
-  public updateTaskDataValidation = dataValidationMiddlewareFactory(
-    UpdateDataInTaskSchema,
-    "Invalida data recieved. Task update failed",
-    RequestValidationTarget.BODY,
-  );
-
-  public updateTaskColumnDataValidation = dataValidationMiddlewareFactory(
-    UpdateColumnInTaskSchema,
-    `Invalid data recieved. TaskUpdate failed`,
     RequestValidationTarget.BODY,
   );
 }

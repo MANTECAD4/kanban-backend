@@ -53,13 +53,12 @@ model Board{
   project_id Int 
   project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
   status_colummns StatusColumn[]
-  tags Tag[]
 }
 
 model StatusColumn{
   id Int @id @default(autoincrement())
   name String
-  description String
+  icon String
   board   Board @relation(fields: [board_id], references: [id], onDelete: Cascade) 
   board_id Int
   tasks Task[]
@@ -68,13 +67,13 @@ model StatusColumn{
 model Task{
   id Int @id @default(autoincrement())
   title String
+  slug String
   description String
   priority Priority @default(MEDIUM)
   due_date DateTime
-  order Int
   status_column_id Int
   status_column StatusColumn @relation(fields: [status_column_id], references: [id], onDelete: Cascade)
-  tags Tag[]
+  tags TaskTag[]
   subtasks Subtask[] 
 }
 
@@ -86,14 +85,32 @@ model Subtask {
   task_id Int
 }
 
-model Tag {
-  id Int @id @default(autoincrement())
-  name String
-  color String
-  board Board @relation(fields:[board_id], references: [id], onDelete: Cascade)
-  board_id Int
-  tasks Task[]
+enum TaskTag {
+  UI 
+  UX 
+  Bug 
+  Feature 
+  Refactor 
+  Documentation 
+  Testing 
+  Research 
+  Performance 
+  Security 
+  API 
+  Authentication 
+  Database 
+  Container 
+  Git 
+  CSS 
+  Accessibility 
+  Responsive 
+  Animation 
+  Deployment 
+  Hotfix 
+  Optimization 
+  Cleanup 
 }
+
 
 enum Priority {
   URGENT

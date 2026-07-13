@@ -1,4 +1,4 @@
-import { CreateStatusColumnDto } from "../../application/dtos";
+import { SubmitStatusColumnDto } from "../../application/dtos";
 import { StatusColumnEntity } from "../entities/status-column.entity";
 
 export abstract class StatusColumnRepository {
@@ -21,7 +21,7 @@ export abstract class StatusColumnRepository {
 
   public abstract create: (
     boardId: number,
-    data: CreateStatusColumnDto, // DTO
+    data: SubmitStatusColumnDto, // DTO
   ) => Promise<StatusColumnEntity>;
 
   public abstract update: (

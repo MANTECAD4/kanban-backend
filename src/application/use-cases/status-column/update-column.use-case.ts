@@ -1,7 +1,7 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { StatusColumnRepository } from "../../../domain/repositories";
 import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateStatusColumnDto } from "../../dtos";
+import { SubmitStatusColumnDto } from "../../dtos";
 
 interface ClassDependencies {
   statusColumnRepository: StatusColumnRepository;
@@ -10,7 +10,7 @@ interface ClassDependencies {
 interface ExecutionProps {
   userId: number;
   columnId: number;
-  data: UpdateStatusColumnDto;
+  data: SubmitStatusColumnDto;
 }
 
 export class UpdateStatusColumnUseCase {
@@ -41,7 +41,7 @@ export class UpdateStatusColumnUseCase {
       definedProperties,
     );
     return {
-      data: updatedColumn,
+      category: updatedColumn,
     };
   };
 }

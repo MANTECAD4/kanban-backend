@@ -74,6 +74,9 @@ export class AuthController {
       });
       return res.json({ ok: true, accessToken });
     } catch (error) {
+      // res.clearCookie("refreshToken", {
+      //   path: "/",
+      // });
       return CustomError.handleError(error, req, res);
     }
   };

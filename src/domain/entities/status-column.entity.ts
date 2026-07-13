@@ -1,49 +1,31 @@
-import { BoardEntity } from "./board.entity";
-import { TaskEntity } from "./task.entity";
-
 interface ColumnProps {
   id: number;
   name: string;
-  description: string;
+  icon: string;
   boardId: number;
-  board: BoardEntity | null;
-  tasks: TaskEntity[] | null;
 }
 
 export class StatusColumnEntity {
   public id: number;
   public name: string;
-  public description: string;
+  public icon: string;
   public boardId: number;
-  public board: BoardEntity | null;
-  public tasks: TaskEntity[] | null;
 
   constructor(options: ColumnProps) {
-    const {
-      id,
-      name,
-      description,
-      boardId,
-      board = null,
-      tasks = null,
-    } = options;
+    const { id, name, icon, boardId } = options;
     this.id = id;
     this.name = name;
-    this.description = description;
+    this.icon = icon;
     this.boardId = boardId;
-    this.board = board;
-    this.tasks = tasks;
   }
 
   static fromObject = (object: Record<string, any>) => {
-    const { id, _id, name, description, board_id, board, tasks } = object;
+    const { id, _id, name, icon, board_id } = object;
     return new StatusColumnEntity({
       id: id ?? _id,
       name,
-      description,
+      icon,
       boardId: board_id,
-      board,
-      tasks,
     });
   };
 }

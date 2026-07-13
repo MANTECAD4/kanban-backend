@@ -35,7 +35,7 @@ export class StatusColumnsRoutes {
       "/in-board/:boardId",
       [
         this.boardMiddlewares.boardIdParamValidation,
-        this.statusColumnMiddlewares.createStatusColumnDataValidation,
+        this.statusColumnMiddlewares.submitStatusColumnDataValidation,
       ],
       this.controller.create,
     );
@@ -44,7 +44,7 @@ export class StatusColumnsRoutes {
       "/:columnId",
       [
         this.statusColumnMiddlewares.columnIdParamValidation,
-        this.statusColumnMiddlewares.updateStatusColumnDataValidation,
+        this.statusColumnMiddlewares.submitStatusColumnDataValidation,
       ],
       this.controller.update,
     );

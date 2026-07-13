@@ -1,4 +1,4 @@
-import { CreateStatusColumnDto } from "../../application/dtos";
+import { SubmitStatusColumnDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { StatusColumnEntity } from "../../domain/entities";
 import { StatusColumnRepository } from "../../domain/repositories";
@@ -9,7 +9,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
     columnId: number,
   ): Promise<StatusColumnEntity | null> => {
     const column = await prisma.statusColumn.findFirst({
-      where: { id: columnId, board: { user: { id: userId } } },
+      where: { id: columnId, board: { project: { user: { id: userId } } } },
     });
 
     return column ? StatusColumnEntity.fromObject(column) : null;
@@ -51,7 +51,7 @@ export class PostgresStatusColumnRepository implements StatusColumnRepository {
 
   public create = async (
     boardId: number,
-    data: CreateStatusColumnDto,
+    data: SubmitStatusColumnDto,
   ): Promise<StatusColumnEntity> => {
     const createdColumn = await prisma.statusColumn.create({
       data: { ...data, board_id: boardId },

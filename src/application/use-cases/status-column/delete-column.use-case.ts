@@ -32,7 +32,7 @@ export class DeleteStatusColumnUseCase {
       });
     const deletedColumn = await this.statusColumnRepository.delete(columnId);
     return {
-      data: deletedColumn,
+      category: deletedColumn,
     };
   };
 }

@@ -1,6 +1,6 @@
+import { TaskTag } from "../../application/dtos";
 import { StatusColumnEntity } from "./status-column.entity";
 import { SubtaskEntity } from "./subtask.entity";
-import { TagEntity } from "./tag.entity";
 
 export enum Priority {
   URGENT = "URGENT",
@@ -12,50 +12,42 @@ export enum Priority {
 interface TaskProps {
   id: number;
   title: string;
+  slug: string;
   description: string;
   dueDate: Date;
   priority: Priority;
-  order: number;
   statusColumnId: number;
-  statusColumn: StatusColumnEntity | null;
-  subtasks: SubtaskEntity[] | null;
-  tags: TagEntity[] | null;
+  tags: TaskTag[];
 }
 
 export class TaskEntity {
   public id: number;
   public title: string;
+  public slug: string;
   public description: string;
   public dueDate: Date;
   public priority: Priority;
-  public order: number;
   public statusColumnId: number;
-  public statusColumn: StatusColumnEntity | null;
-  public subtasks: SubtaskEntity[] | null;
-  public tags: TagEntity[] | null;
+  public tags: TaskTag[];
 
   constructor(props: TaskProps) {
     const {
       id,
       title,
+      slug,
       description,
       dueDate,
       priority,
-      order,
       statusColumnId,
-      statusColumn = null,
-      subtasks = null,
-      tags = null,
+      tags,
     } = props;
     this.id = id;
     this.title = title;
+    this.slug = slug;
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.order = order;
     this.statusColumnId = statusColumnId;
-    this.statusColumn = statusColumn;
-    this.subtasks = subtasks;
     this.tags = tags;
   }
 
@@ -64,26 +56,22 @@ export class TaskEntity {
       id,
       _id,
       title,
+      slug,
       description,
-      order,
       due_date,
       priority,
       tags,
       status_column_id,
-      status_column,
-      subtasks,
     } = object;
     return new TaskEntity({
       id: id ?? _id,
       title,
+      slug,
       description,
       dueDate: due_date,
       tags,
       priority,
-      order,
       statusColumnId: status_column_id,
-      statusColumn: status_column,
-      subtasks,
     });
   };
 }

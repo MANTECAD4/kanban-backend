@@ -3,7 +3,7 @@ import {
   BoardRepository,
   StatusColumnRepository,
 } from "../../../domain/repositories";
-import { CreateStatusColumnDto } from "../../dtos/status-column.dto";
+import { SubmitStatusColumnDto } from "../../dtos/status-column.dto";
 
 interface ClassDependencies {
   statusColumnRepository: StatusColumnRepository;
@@ -13,7 +13,7 @@ interface ClassDependencies {
 interface ExecutionProps {
   userId: number;
   boardId: number;
-  createStatusColumnDto: CreateStatusColumnDto;
+  createStatusColumnDto: SubmitStatusColumnDto;
 }
 
 export class CreateStatusColumnUseCase {
@@ -63,7 +63,7 @@ export class CreateStatusColumnUseCase {
     );
 
     return {
-      data: createdColumn,
+      category: createdColumn,
     };
   };
 }

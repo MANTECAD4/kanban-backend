@@ -1,4 +1,4 @@
-import { CreateTaskDto } from "../../application/dtos";
+import { SubmitTaskDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { TaskEntity } from "../../domain/entities";
 import { TaskRepository } from "../../domain/repositories";
@@ -12,7 +12,7 @@ export class PostgresTaskRepository implements TaskRepository {
       where: {
         id: taskId,
         status_column: {
-          board: { user: { id: userId } },
+          board: { project: { user: { id: userId } } },
         },
       },
     });
@@ -37,7 +37,7 @@ export class PostgresTaskRepository implements TaskRepository {
 
   public create = async (
     columnId: number,
-    { dueDate, ...rest }: CreateTaskDto,
+    { dueDate, ...rest }: SubmitTaskDto,
   ): Promise<TaskEntity> => {
     const createdTask = await prisma.task.create({
       data: { ...rest, due_date: dueDate, status_column_id: columnId },

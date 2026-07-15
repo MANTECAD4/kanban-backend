@@ -125,7 +125,7 @@ function main() {
     softHashService: softHasher,
     refreshTokenPersistencyService,
   });
-  const boardMiddlewares = new BoardMiddlewares();
+  const boardMiddlewares = new BoardMiddlewares({ boardRepository });
   const categoryMiddlewares = new CategoryMiddlewares();
   const taskMiddlewares = new TaskMiddlewares();
   const subtaskMiddlewares = new SubtaskMiddlewares();
@@ -166,7 +166,6 @@ function main() {
   // BOARDS
   const createBoardUseCase = new CreateBoardUseCase({
     boardRepository,
-    userRepository,
   });
 
   const getBoardsUseCase = new GetBoardsUseCase({

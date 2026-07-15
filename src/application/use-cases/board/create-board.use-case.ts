@@ -1,32 +1,23 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { UserRepository, BoardRepository } from "../../../domain/repositories";
+import { BoardRepository } from "../../../domain/repositories";
 import { SubmitBoardDto } from "../../dtos";
 
 interface ClassDependencies {
   boardRepository: BoardRepository;
-  userRepository: UserRepository;
 }
 export class CreateBoardUseCase {
   private readonly boardRepository: BoardRepository;
-  private readonly userRepository: UserRepository;
 
   constructor(depedencies: ClassDependencies) {
-    const { boardRepository, userRepository } = depedencies;
+    const { boardRepository } = depedencies;
     this.boardRepository = boardRepository;
-    this.userRepository = userRepository;
   }
 
-  public execute = async (userId: number, data: SubmitBoardDto) => {
-    const existingUser = await this.userRepository.getById(userId);
-    if (!existingUser) {
-      throw CustomError.notFound({
-        title: "Board creation failed",
-        message: `User not found`,
-        code: ErrorCodes.NOT_FOUND,
-        details: null,
-      });
-    }
-
+  public execute = async (
+    userId: number,
+    projectId: number,
+    data: SubmitBoardDto,
+  ) => {
     const existingBoardInUserCollection =
       await this.boardRepository.checkCollection(userId, data.slug);
     if (existingBoardInUserCollection)
@@ -36,7 +27,7 @@ export class CreateBoardUseCase {
         code: ErrorCodes.ALREADY_REGISTERED,
         details: null,
       });
-    const createdBoard = await this.boardRepository.create(userId, data);
+    const createdBoard = await this.boardRepository.create(projectId, data);
     return {
       board: createdBoard,
     };

@@ -22,6 +22,7 @@ export class BoardController {
     try {
       const result = await this.createBoardUseCase.execute(
         req.user!.sub.id,
+        req.validatedParams!.projectId,
         req.validatedBody! as SubmitBoardDto,
       );
 
@@ -51,7 +52,7 @@ export class BoardController {
   public getBySlug = async (req: Request, res: Response) => {
     try {
       const result = await this.getBoardBySlugUseCase.execute(
-        req.user!.sub.id,
+        req.validatedParams!.projectId,
         req.validatedParams!.boardSlug,
       );
 

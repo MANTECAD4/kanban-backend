@@ -54,13 +54,12 @@ export class ProjectMiddlewares {
       );
 
       if (!existRelation) {
-        const error = CustomError.forbidden({
+        throw CustomError.forbidden({
           title: "Forbidden",
           message: "User doesn't have access to referenced project",
           code: ErrorCodes.FORBIDDEN,
           details: null,
         });
-        return CustomError.handleError(error, req, res);
       }
       next();
     } catch (error) {

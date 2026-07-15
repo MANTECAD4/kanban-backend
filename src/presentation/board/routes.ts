@@ -26,19 +26,29 @@ export class BoardsRoutes {
 
     router.get(
       "/in-project/:projectId",
-      [this.projectMiddlewares.validateProjectId],
+      [
+        this.projectMiddlewares.validateProjectId,
+        this.projectMiddlewares.validateRelation,
+      ],
       this.controller.getAll,
     );
 
     router.get(
-      "/:boardSlug",
-      [this.boardMiddlewares.boardSlugParamValidation],
+      "/:boardSlug/in-project/:projectId",
+      [
+        this.boardMiddlewares.boardSlugParamValidation,
+        this.projectMiddlewares.validateProjectId,
+        this.projectMiddlewares.validateRelation,
+      ],
       this.controller.getBySlug,
     );
 
     router.post(
       "/in-project/:projectId",
-      [this.projectMiddlewares.validateProjectId],
+      [
+        this.projectMiddlewares.validateProjectId,
+        this.projectMiddlewares.validateRelation,
+      ],
       [this.boardMiddlewares.submitBoardDataValidation],
       this.controller.create,
     );
@@ -47,13 +57,17 @@ export class BoardsRoutes {
       "/:boardId",
       [
         this.boardMiddlewares.boardIdParamValidation,
+        this.boardMiddlewares.validateRelation,
         this.boardMiddlewares.submitBoardDataValidation,
       ],
       this.controller.update,
     );
     router.delete(
       "/:boardId",
-      [this.boardMiddlewares.boardIdParamValidation],
+      [
+        this.boardMiddlewares.boardIdParamValidation,
+        this.boardMiddlewares.validateRelation,
+      ],
       this.controller.delete,
     );
 

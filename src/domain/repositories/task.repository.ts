@@ -4,7 +4,7 @@ import { TaskEntity } from "../entities/task.entity";
 export abstract class TaskRepository {
   public abstract checkRelation: (
     userId: number,
-    taskId: number,
+    searchKey: number | string,
   ) => Promise<TaskEntity | null>;
   public abstract getAllByStatusColumn: (
     columnId: number,

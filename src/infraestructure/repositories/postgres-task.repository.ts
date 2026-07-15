@@ -6,25 +6,32 @@ import { TaskRepository } from "../../domain/repositories";
 export class PostgresTaskRepository implements TaskRepository {
   public checkRelation = async (
     userId: number,
-    taskId: number,
+    searchKey: number | string,
   ): Promise<TaskEntity | null> => {
-    const task = await prisma.task.findFirst({
-      where: {
-        id: taskId,
-        status_column: {
-          board: { project: { user: { id: userId } } },
+    let task;
+
+    if (typeof searchKey === "number") {
+      task = await prisma.task.findFirst({
+        where: {
+          id: searchKey,
+          category: {
+            board: { project: { user: { id: userId } } },
+          },
         },
-      },
-    });
+      });
+    } else {
+      task = await prisma.task.findFirst({ where: { slug: searchKey } });
+    }
+
     return task ? TaskEntity.fromObject(task) : null;
   };
 
   public getAllByStatusColumn = async (
-    columnId: number,
+    categoryId: number,
   ): Promise<TaskEntity[]> => {
     const tasks = await prisma.task.findMany({
       where: {
-        status_column_id: columnId,
+        category_id: categoryId,
       },
     });
     return tasks.map((rawTask) => TaskEntity.fromObject(rawTask));
@@ -36,11 +43,11 @@ export class PostgresTaskRepository implements TaskRepository {
   };
 
   public create = async (
-    columnId: number,
+    categoryId: number,
     { dueDate, ...rest }: SubmitTaskDto,
   ): Promise<TaskEntity> => {
     const createdTask = await prisma.task.create({
-      data: { ...rest, due_date: dueDate, status_column_id: columnId },
+      data: { ...rest, due_date: dueDate, category_id: categoryId },
     });
     return TaskEntity.fromObject(createdTask);
   };
@@ -61,7 +68,7 @@ export class PostgresTaskRepository implements TaskRepository {
   ): Promise<TaskEntity> => {
     const updatedTask = await prisma.task.update({
       where: { id: taskId },
-      data: { status_column_id: categoryId },
+      data: { category_id: categoryId },
     });
     return TaskEntity.fromObject(updatedTask);
   };

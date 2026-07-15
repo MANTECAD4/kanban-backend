@@ -1,6 +1,4 @@
 import { TaskTag } from "../../application/dtos";
-import { CategoryEntity } from "./category.entity";
-import { SubtaskEntity } from "./subtask.entity";
 
 export enum Priority {
   URGENT = "URGENT",
@@ -16,7 +14,7 @@ interface TaskProps {
   description: string;
   dueDate: Date;
   priority: Priority;
-  statusColumnId: number;
+  categoryId: number;
   tags: TaskTag[];
 }
 
@@ -27,7 +25,7 @@ export class TaskEntity {
   public description: string;
   public dueDate: Date;
   public priority: Priority;
-  public statusColumnId: number;
+  public categoryId: number;
   public tags: TaskTag[];
 
   constructor(props: TaskProps) {
@@ -38,7 +36,7 @@ export class TaskEntity {
       description,
       dueDate,
       priority,
-      statusColumnId,
+      categoryId,
       tags,
     } = props;
     this.id = id;
@@ -47,7 +45,7 @@ export class TaskEntity {
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.statusColumnId = statusColumnId;
+    this.categoryId = categoryId;
     this.tags = tags;
   }
 
@@ -71,7 +69,7 @@ export class TaskEntity {
       dueDate: due_date,
       tags,
       priority,
-      statusColumnId: status_column_id,
+      categoryId: status_column_id,
     });
   };
 }

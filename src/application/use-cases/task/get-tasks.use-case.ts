@@ -1,42 +1,18 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import {
-  TaskRepository,
-  CategoryRepository,
-} from "../../../domain/repositories";
+import { TaskRepository } from "../../../domain/repositories";
 
 interface ClassDependencies {
-  statusColumnRepository: CategoryRepository;
   taskRepository: TaskRepository;
 }
 
-interface ExecutionProps {
-  userId: number;
-  columnId: number;
-}
-
 export class GetTasksByColumnUseCase {
-  private readonly statusColumnRepository: CategoryRepository;
   private readonly taskRepository: TaskRepository;
   constructor(dependencies: ClassDependencies) {
-    const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
-      dependencies;
+    const { taskRepository: kanbanTaskRepository } = dependencies;
     this.taskRepository = kanbanTaskRepository;
-    this.statusColumnRepository = statusColumnRepository;
   }
 
-  public execute = async ({ userId, columnId }: ExecutionProps) => {
-    const existRelation = await this.statusColumnRepository.checkRelation(
-      userId,
-      columnId,
-    );
-    if (!existRelation)
-      throw CustomError.forbidden({
-        title: "Task query failed",
-        message: `Relation between entities doesn't exist`,
-        code: ErrorCodes.FORBIDDEN,
-        details: null,
-      });
-    const tasks = await this.taskRepository.getAllByStatusColumn(columnId);
-    return { data: tasks, meta: { total: tasks.length } };
+  public execute = async (categoryId: number) => {
+    const tasks = await this.taskRepository.getAllByStatusColumn(categoryId);
+    return { tasks: tasks, meta: { total: tasks.length } };
   };
 }

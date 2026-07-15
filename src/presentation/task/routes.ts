@@ -25,7 +25,10 @@ export class TaskRoutes {
 
     router.get(
       "/in-category/:categoryId",
-      [this.categoryMiddlewares.categoryIdParamValidation],
+      [
+        this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.validateRelation,
+      ],
       this.controller.getAllByColumn,
     );
 
@@ -33,6 +36,7 @@ export class TaskRoutes {
       "/in-category/:categoryId",
       [
         this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.validateRelation,
         this.taskMiddlewares.submitTaskDataValidation,
       ],
       this.controller.create,
@@ -42,6 +46,7 @@ export class TaskRoutes {
       "/:taskId",
       [
         this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.validateRelation,
         this.taskMiddlewares.submitTaskDataValidation,
       ],
       this.controller.updateData,
@@ -50,6 +55,7 @@ export class TaskRoutes {
       "/:taskId/category",
       [
         this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.validateRelation,
         this.taskMiddlewares.changeCategoryDataValidation,
       ],
       this.controller.updateStatusColumn,
@@ -57,7 +63,10 @@ export class TaskRoutes {
 
     router.delete(
       "/:taskId",
-      [this.taskMiddlewares.taskIdParamValidation],
+      [
+        this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.validateRelation,
+      ],
       this.controller.delete,
     );
 

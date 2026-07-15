@@ -1,44 +1,19 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import {
-  TaskRepository,
-  CategoryRepository,
-} from "../../../domain/repositories";
+import { TaskRepository } from "../../../domain/repositories";
 import { SubmitTaskDto } from "../../dtos";
 
 interface ClassDependencies {
-  statusColumnRepository: CategoryRepository;
   taskRepository: TaskRepository;
 }
 
-interface ExecutionProps {
-  userId: number;
-  columnId: number;
-  data: SubmitTaskDto;
-}
-
 export class CreateTaskUseCase {
-  private readonly statusColumnRepository: CategoryRepository;
   private readonly taskRepository: TaskRepository;
   constructor(dependencies: ClassDependencies) {
-    const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
-      dependencies;
+    const { taskRepository: kanbanTaskRepository } = dependencies;
     this.taskRepository = kanbanTaskRepository;
-    this.statusColumnRepository = statusColumnRepository;
   }
 
-  public execute = async ({ userId, columnId, data }: ExecutionProps) => {
-    const existRelation = await this.statusColumnRepository.checkRelation(
-      userId,
-      columnId,
-    );
-    if (!existRelation)
-      throw CustomError.forbidden({
-        title: "Task creation failed",
-        message: `User doesn't own this staus column`,
-        code: ErrorCodes.FORBIDDEN,
-        details: null,
-      });
-    const createdTask = await this.taskRepository.create(columnId, data);
+  public execute = async (categoryId: number, data: SubmitTaskDto) => {
+    const createdTask = await this.taskRepository.create(categoryId, data);
     return { task: createdTask };
   };
 }

@@ -127,7 +127,7 @@ function main() {
   });
   const boardMiddlewares = new BoardMiddlewares({ boardRepository });
   const categoryMiddlewares = new CategoryMiddlewares({ categoryRepository });
-  const taskMiddlewares = new TaskMiddlewares();
+  const taskMiddlewares = new TaskMiddlewares({ taskRepository });
   const subtaskMiddlewares = new SubtaskMiddlewares();
   const projectMiddlewares = new ProjectMiddlewares({ projectRepository });
 
@@ -207,19 +207,17 @@ function main() {
   const deleteSubtaskUsecase = new DeleteSubtaskUseCase({ subtaskRepository });
   // TASKS
   const getTasksUseCase = new GetTasksByColumnUseCase({
-    statusColumnRepository: categoryRepository,
     taskRepository,
   });
 
   const createTaskUseCase = new CreateTaskUseCase({
-    statusColumnRepository: categoryRepository,
     taskRepository,
   });
 
   const updateDataTask = new UpdateDataInTaskUseCase({ taskRepository });
   const updateColumnTask = new UpdateStatusColumnInTaskUseCase({
     taskRepository,
-    statusColumnRepository: categoryRepository,
+    categoryRepository,
   });
 
   // USERS

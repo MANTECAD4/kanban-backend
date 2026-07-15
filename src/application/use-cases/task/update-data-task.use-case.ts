@@ -1,16 +1,8 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { TaskRepository } from "../../../domain/repositories";
-import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateDataInTaskDto } from "../../dtos";
+import { SubmitTaskDto } from "../../dtos";
 
 interface ClassDependencies {
   taskRepository: TaskRepository;
-}
-
-interface ExecutionProps {
-  userId: number;
-  taskId: number;
-  data: UpdateDataInTaskDto;
 }
 
 export class UpdateDataInTaskUseCase {
@@ -19,26 +11,8 @@ export class UpdateDataInTaskUseCase {
     const { taskRepository: kanbanTaskRepository } = dependencies;
     this.taskRepository = kanbanTaskRepository;
   }
-  public execute = async ({ userId, taskId, data }: ExecutionProps) => {
-    const taskOwnedByUser = await this.taskRepository.checkRelation(
-      userId,
-      taskId,
-    );
-
-    if (!taskOwnedByUser)
-      throw CustomError.forbidden({
-        title: "Task update failed",
-        message: `User doesn't own this task`,
-        code: ErrorCodes.FORBIDDEN,
-        details: null,
-      });
-
-    const definedProperties = getDefinedFields(data);
-
-    const updatedTask = await this.taskRepository.update(
-      taskId,
-      definedProperties,
-    );
+  public execute = async (taskId: number, data: SubmitTaskDto) => {
+    const updatedTask = await this.taskRepository.update(taskId, data);
     return { data: updatedTask };
   };
 }

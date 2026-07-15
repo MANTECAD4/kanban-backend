@@ -5,52 +5,42 @@ import {
 } from "../../../domain/repositories";
 
 interface ClassDependencies {
-  statusColumnRepository: CategoryRepository;
+  categoryRepository: CategoryRepository;
   taskRepository: TaskRepository;
 }
 
-interface ExecutionProps {
-  userId: number;
-  taskId: number;
-  statusColumnId: number;
-}
-
 export class UpdateStatusColumnInTaskUseCase {
-  private readonly statusColumnRepository: CategoryRepository;
+  private readonly categoryRepository: CategoryRepository;
   private readonly taskRepository: TaskRepository;
   constructor(dependencies: ClassDependencies) {
-    const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
+    const { taskRepository: kanbanTaskRepository, categoryRepository } =
       dependencies;
     this.taskRepository = kanbanTaskRepository;
-    this.statusColumnRepository = statusColumnRepository;
+    this.categoryRepository = categoryRepository;
   }
 
-  public execute = async ({
-    userId,
-    taskId,
-    statusColumnId,
-  }: ExecutionProps) => {
-    const taskOwnedByUser = await this.taskRepository.checkRelation(
-      userId,
-      taskId,
-    );
-    if (!taskOwnedByUser)
-      throw CustomError.forbidden({
-        title: "Task update failed",
-        message: "User doesn't own this task",
-        code: ErrorCodes.FORBIDDEN,
+  public execute = async (taskId: number, categoryId: number) => {
+    const nextCategory = await this.categoryRepository.getById(categoryId);
+
+    if (!nextCategory)
+      throw CustomError.notFound({
+        title: "Not Found",
+        message: "New referenced category not found",
+        code: ErrorCodes.NOT_FOUND,
         details: null,
       });
 
-    const currentStatusColumn = await this.statusColumnRepository.getById(
-      taskOwnedByUser.statusColumnId,
-    );
+    const currentCategoryId = (await this.taskRepository.getById(taskId))!
+      .categoryId;
+    const currentCategory =
+      await this.categoryRepository.getById(currentCategoryId);
+    // const
 
-    const statusColumnsInBoard = (
-      await this.statusColumnRepository.getAll(currentStatusColumn!.boardId)
+    const categoriesInBoard = (
+      await this.categoryRepository.getAll(currentCategory!.boardId)
     ).map(({ id }) => id);
 
-    if (!statusColumnsInBoard.includes(statusColumnId))
+    if (!categoriesInBoard.includes(categoryId))
       throw CustomError.badRequest({
         title: "Task update failed",
         message: `New Status column doesn't belong to actual board`,
@@ -60,7 +50,7 @@ export class UpdateStatusColumnInTaskUseCase {
 
     const updatedTask = await this.taskRepository.updateTaskCategory(
       taskId,
-      statusColumnId,
+      categoryId,
     );
     return { data: updatedTask };
   };

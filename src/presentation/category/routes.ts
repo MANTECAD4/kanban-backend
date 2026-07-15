@@ -26,7 +26,10 @@ export class CategoryRoutes {
 
     router.get(
       "/in-board/:boardId",
-      [this.boardMiddlewares.boardIdParamValidation],
+      [
+        this.boardMiddlewares.boardIdParamValidation,
+        this.boardMiddlewares.validateRelation,
+      ],
       this.controller.getAll,
     );
 
@@ -34,6 +37,7 @@ export class CategoryRoutes {
       "/in-board/:boardId",
       [
         this.boardMiddlewares.boardIdParamValidation,
+        this.boardMiddlewares.validateRelation,
         this.categoryMiddlewares.submitCategoryDataValidation,
       ],
       this.controller.create,
@@ -43,6 +47,7 @@ export class CategoryRoutes {
       "/:categoryId",
       [
         this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.validateRelation,
         this.categoryMiddlewares.submitCategoryDataValidation,
       ],
       this.controller.update,
@@ -50,7 +55,10 @@ export class CategoryRoutes {
 
     router.delete(
       "/:categoryId",
-      [this.categoryMiddlewares.categoryIdParamValidation],
+      [
+        this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.validateRelation,
+      ],
       this.controller.delete,
     );
     return router;

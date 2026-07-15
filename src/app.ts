@@ -126,7 +126,7 @@ function main() {
     refreshTokenPersistencyService,
   });
   const boardMiddlewares = new BoardMiddlewares({ boardRepository });
-  const categoryMiddlewares = new CategoryMiddlewares();
+  const categoryMiddlewares = new CategoryMiddlewares({ categoryRepository });
   const taskMiddlewares = new TaskMiddlewares();
   const subtaskMiddlewares = new SubtaskMiddlewares();
   const projectMiddlewares = new ProjectMiddlewares({ projectRepository });

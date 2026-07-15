@@ -22,10 +22,7 @@ export class ProjectRoutes {
     router.get("/", this.controller.getAllByUser);
     router.get(
       "/:projectSlug",
-      [
-        this.projectMiddlewares.validateProjectSlug,
-        this.projectMiddlewares.validateRelation,
-      ],
+      [this.projectMiddlewares.validateProjectSlug],
       this.controller.getByUserAndSlug,
     );
     router.post(

@@ -18,8 +18,10 @@ import {
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 
 import { verifyJwtError } from "../../domain/services/verify-jwt-error.service";
+import { UserRepository } from "../../domain/repositories";
 
 interface ClassDependencies {
+  userRepository: UserRepository;
   tokenProvider: TokenProvider;
   softHashService: HasherService;
   refreshTokenPersistencyService: RefreshTokenPersistencyService;
@@ -27,13 +29,19 @@ interface ClassDependencies {
 
 export class AuthMiddlewares {
   private readonly tokenProvider: TokenProvider;
+  private readonly userRepository: UserRepository;
   private readonly softHashService: HasherService;
   private readonly refreshTokenPersistencyService: RefreshTokenPersistencyService;
   constructor(depedencies: ClassDependencies) {
-    const { tokenProvider, softHashService, refreshTokenPersistencyService } =
-      depedencies;
+    const {
+      tokenProvider,
+      userRepository,
+      softHashService,
+      refreshTokenPersistencyService,
+    } = depedencies;
 
     this.tokenProvider = tokenProvider;
+    this.userRepository = userRepository;
     this.softHashService = softHashService;
     this.refreshTokenPersistencyService = refreshTokenPersistencyService;
   }
@@ -85,6 +93,20 @@ export class AuthMiddlewares {
           title: "Operation denied",
           message: "Invalid token payload",
           code: ErrorCodes.INVALID_TOKEN,
+          details: null,
+        });
+        return CustomError.handleError(error, req, res);
+      }
+
+      const existingUser = await this.userRepository.getById(
+        result.data.sub.id,
+      );
+
+      if (!existingUser) {
+        const error = CustomError.badRequest({
+          title: "Not Found",
+          message: "User not found",
+          code: ErrorCodes.NOT_FOUND,
           details: null,
         });
         return CustomError.handleError(error, req, res);
@@ -171,6 +193,20 @@ export class AuthMiddlewares {
           code: ErrorCodes.BAD_SESSION,
           details: null,
         });
+
+      const existingUser = await this.userRepository.getById(
+        result.data.sub.id,
+      );
+
+      if (!existingUser) {
+        const error = CustomError.badRequest({
+          title: "Not Found",
+          message: "User not found",
+          code: ErrorCodes.NOT_FOUND,
+          details: null,
+        });
+        return CustomError.handleError(error, req, res);
+      }
 
       req.user = result.data;
       next();

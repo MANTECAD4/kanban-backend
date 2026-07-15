@@ -1,4 +1,3 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { ProjectRepository } from "../../../domain/repositories/project.repository";
 
 interface Dependencies {
@@ -12,16 +11,6 @@ export class DeleteProjectUseCase {
   }
 
   public execute = async (projectId: number) => {
-    const existingProject = await this.projectRepository.getById(projectId);
-    if (!existingProject) {
-      throw CustomError.notFound({
-        title: "Not found",
-        message: "Referenced project not found",
-        code: ErrorCodes.NOT_FOUND,
-        details: null,
-      });
-    }
-
     const project = await this.projectRepository.delete(projectId);
 
     return { project };

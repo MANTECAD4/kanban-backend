@@ -45,7 +45,7 @@ export class LoginUseCase {
     const existentUser = await this.userRepository.getByEmail(email);
     if (!existentUser)
       throw CustomError.notFound({
-        title: "Login denied",
+        title: "Login failed",
         message: "Email not found",
         code: ErrorCodes.NOT_FOUND,
         details: null,
@@ -58,7 +58,7 @@ export class LoginUseCase {
 
     if (!passwordMatches)
       throw CustomError.unauthorized({
-        title: "Login denied",
+        title: "Login failed",
         message: "Invalid password",
         code: ErrorCodes.UNAUTHORIZED,
         details: null,

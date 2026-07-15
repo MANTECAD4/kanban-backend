@@ -4,16 +4,6 @@ import { ProjectEntity } from "../../domain/entities/project.entity";
 import { ProjectRepository } from "../../domain/repositories/project.repository";
 
 export class PostgresProjectRepository implements ProjectRepository {
-  // public checkRelation = async (
-  //   userId: number,
-  //   projectId: number,
-  // ): Promise<ProjectEntity | null> => {
-  //   const project = await prisma.project.findUnique({
-  //     where: { id: projectId, user: { id: userId } },
-  //   });
-  //   return project ? ProjectEntity.fromObject(project) : null;
-  // };
-
   public getAll = async (userId: number): Promise<ProjectEntity[]> => {
     const rawProjects = await prisma.project.findMany({
       where: { user_id: userId },

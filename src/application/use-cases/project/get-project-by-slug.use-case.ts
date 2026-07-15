@@ -15,6 +15,8 @@ export class GetProjectBySlugUseCase {
   }
 
   public execute = async (userId: number, slug: string) => {
+    // Used checkRelation here beacuse it works the same as a get by search key in user collection
+    // would do
     const project = await this.projectRepository.checkRelation(userId, slug);
 
     if (!project) {

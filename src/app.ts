@@ -121,6 +121,7 @@ function main() {
   //! MIDDLEWARES
   const authMiddlewares = new AuthMiddlewares({
     tokenProvider,
+    userRepository,
     softHashService: softHasher,
     refreshTokenPersistencyService,
   });
@@ -235,12 +236,10 @@ function main() {
 
   const createProjectUseCase = new CreateProjectUseCase({
     projectRepository,
-    userRepository,
   });
 
   const getUserProjectsUseCase = new GetUserProjectsUseCase({
     projectRepository,
-    userRepository,
   });
 
   const getProjectBySlugUseCase = new GetProjectBySlugUseCase({

@@ -69,7 +69,7 @@ export class TaskController {
       const result = await this.updateColumnInKanbanTaskUseCase.execute({
         userId: req.user!.sub.id,
         taskId: req.validatedParams!.taskId,
-        data: req.validatedBody! as SubmitTaskDto,
+        statusColumnId: req.validatedBody!.categoryId,
       });
       return res.json({
         ok: true,

@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { AuthRoutes } from "./auth/routes";
 import { BoardsRoutes } from "./board/routes";
-import { StatusColumnsRoutes } from "./status-column/routes";
+import { CategoryRoutes } from "./category/routes";
 import { TaskRoutes } from "./task/routes";
 import { SubtaskRoutes } from "./subtask/routes";
 
@@ -15,7 +15,7 @@ export class AppRoutes {
     private readonly authMiddlewares: AuthMiddlewares,
     private readonly authRouter: AuthRoutes,
     private readonly boardRouter: BoardsRoutes,
-    private readonly statusColumnRouter: StatusColumnsRoutes,
+    private readonly categoryRouter: CategoryRoutes,
     private readonly taskRouter: TaskRoutes,
     private readonly subtaskRouter: SubtaskRoutes,
     private readonly userRouter: UserRoutes,
@@ -34,9 +34,9 @@ export class AppRoutes {
     );
 
     router.use(
-      "/api/status-columns",
+      "/api/categories",
       [this.authMiddlewares.validateAccessToken],
-      this.statusColumnRouter.routes,
+      this.categoryRouter.routes,
     );
 
     router.use(

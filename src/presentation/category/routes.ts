@@ -1,25 +1,24 @@
 import { Router } from "express";
-import { StatusColumnMiddlewares } from "./middlewares";
+import { CategoryMiddlewares } from "./middlewares";
 import { BoardMiddlewares } from "../board/middlewares";
-import { StatusColumnController } from "./controller";
+import { CategoryController } from "./controller";
 
 interface ClassDependencies {
-  controller: StatusColumnController;
+  controller: CategoryController;
   boardMiddlewares: BoardMiddlewares;
-  statusColumnMiddlewares: StatusColumnMiddlewares;
+  categoryMiddlewares: CategoryMiddlewares;
 }
 
-export class StatusColumnsRoutes {
-  private readonly controller: StatusColumnController;
+export class CategoryRoutes {
+  private readonly controller: CategoryController;
   private readonly boardMiddlewares: BoardMiddlewares;
-  private readonly statusColumnMiddlewares: StatusColumnMiddlewares;
+  private readonly categoryMiddlewares: CategoryMiddlewares;
 
   constructor(dependencies: ClassDependencies) {
-    const { controller, boardMiddlewares, statusColumnMiddlewares } =
-      dependencies;
+    const { controller, boardMiddlewares, categoryMiddlewares } = dependencies;
     this.controller = controller;
     this.boardMiddlewares = boardMiddlewares;
-    this.statusColumnMiddlewares = statusColumnMiddlewares;
+    this.categoryMiddlewares = categoryMiddlewares;
   }
 
   public get routes() {
@@ -35,23 +34,23 @@ export class StatusColumnsRoutes {
       "/in-board/:boardId",
       [
         this.boardMiddlewares.boardIdParamValidation,
-        this.statusColumnMiddlewares.submitStatusColumnDataValidation,
+        this.categoryMiddlewares.submitCategoryDataValidation,
       ],
       this.controller.create,
     );
 
     router.put(
-      "/:columnId",
+      "/:categoryId",
       [
-        this.statusColumnMiddlewares.columnIdParamValidation,
-        this.statusColumnMiddlewares.submitStatusColumnDataValidation,
+        this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.submitCategoryDataValidation,
       ],
       this.controller.update,
     );
 
     router.delete(
-      "/:columnId",
-      [this.statusColumnMiddlewares.columnIdParamValidation],
+      "/:categoryId",
+      [this.categoryMiddlewares.categoryIdParamValidation],
       this.controller.delete,
     );
     return router;

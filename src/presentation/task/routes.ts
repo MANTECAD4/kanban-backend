@@ -1,23 +1,22 @@
 import { Router } from "express";
 import { TaskController } from "./controller";
 import { TaskMiddlewares } from "./middlewares";
-import { StatusColumnMiddlewares } from "../status-column/middlewares";
+import { CategoryMiddlewares } from "../category/middlewares";
 
 interface ClassDependencies {
   controller: TaskController;
-  statusColumnMiddlewares: StatusColumnMiddlewares;
+  categoryMiddlewares: CategoryMiddlewares;
   taskMiddlewares: TaskMiddlewares;
 }
 
 export class TaskRoutes {
   private readonly controller: TaskController;
-  private readonly statusColumnMiddlewares: StatusColumnMiddlewares;
+  private readonly categoryMiddlewares: CategoryMiddlewares;
   private readonly taskMiddlewares: TaskMiddlewares;
   constructor(dependencies: ClassDependencies) {
-    const { controller, statusColumnMiddlewares, taskMiddlewares } =
-      dependencies;
+    const { controller, categoryMiddlewares, taskMiddlewares } = dependencies;
     this.controller = controller;
-    this.statusColumnMiddlewares = statusColumnMiddlewares;
+    this.categoryMiddlewares = categoryMiddlewares;
     this.taskMiddlewares = taskMiddlewares;
   }
 
@@ -25,15 +24,15 @@ export class TaskRoutes {
     const router = Router({ mergeParams: true });
 
     router.get(
-      "/in-column/:columnId",
-      [this.statusColumnMiddlewares.columnIdParamValidation],
+      "/in-category/:categoryId",
+      [this.categoryMiddlewares.categoryIdParamValidation],
       this.controller.getAllByColumn,
     );
 
     router.post(
-      "/in-column/:columnId",
+      "/in-category/:categoryId",
       [
-        this.statusColumnMiddlewares.columnIdParamValidation,
+        this.categoryMiddlewares.categoryIdParamValidation,
         this.taskMiddlewares.submitTaskDataValidation,
       ],
       this.controller.create,
@@ -48,10 +47,10 @@ export class TaskRoutes {
       this.controller.updateData,
     );
     router.put(
-      "/:taskId/status-column",
+      "/:taskId/category",
       [
         this.taskMiddlewares.taskIdParamValidation,
-        this.taskMiddlewares.submitTaskDataValidation,
+        this.taskMiddlewares.changeCategoryDataValidation,
       ],
       this.controller.updateStatusColumn,
     );

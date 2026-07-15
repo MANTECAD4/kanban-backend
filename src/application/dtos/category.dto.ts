@@ -3,9 +3,9 @@ export interface GetTasksDto {
   boardId: number;
 }
 
-export const SubmitStatusColumnSchema = z.object({
+export const SubmitCategorySchema = z.object({
   name: z.string().trim().min(3),
   icon: z.string().nonempty(),
 });
 
-export type SubmitStatusColumnDto = z.infer<typeof SubmitStatusColumnSchema>;
+export type SubmitCategoryDto = z.infer<typeof SubmitCategorySchema>;

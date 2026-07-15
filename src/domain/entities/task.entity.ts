@@ -1,5 +1,5 @@
 import { TaskTag } from "../../application/dtos";
-import { StatusColumnEntity } from "./status-column.entity";
+import { CategoryEntity } from "./category.entity";
 import { SubtaskEntity } from "./subtask.entity";
 
 export enum Priority {

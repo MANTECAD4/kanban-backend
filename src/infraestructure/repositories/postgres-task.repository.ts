@@ -55,6 +55,16 @@ export class PostgresTaskRepository implements TaskRepository {
     });
     return TaskEntity.fromObject(updatedTask);
   };
+  public updateTaskCategory = async (
+    taskId: number,
+    categoryId: number,
+  ): Promise<TaskEntity> => {
+    const updatedTask = await prisma.task.update({
+      where: { id: taskId },
+      data: { status_column_id: categoryId },
+    });
+    return TaskEntity.fromObject(updatedTask);
+  };
 
   public delete = async (taskId: number): Promise<TaskEntity> => {
     const deletedTask = await prisma.task.delete({ where: { id: taskId } });

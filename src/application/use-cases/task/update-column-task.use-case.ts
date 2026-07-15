@@ -1,23 +1,22 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import {
   TaskRepository,
-  StatusColumnRepository,
+  CategoryRepository,
 } from "../../../domain/repositories";
-import { UpdateColumnInTaskDto } from "../../dtos";
 
 interface ClassDependencies {
-  statusColumnRepository: StatusColumnRepository;
+  statusColumnRepository: CategoryRepository;
   taskRepository: TaskRepository;
 }
 
 interface ExecutionProps {
   userId: number;
   taskId: number;
-  data: UpdateColumnInTaskDto;
+  statusColumnId: number;
 }
 
 export class UpdateStatusColumnInTaskUseCase {
-  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly statusColumnRepository: CategoryRepository;
   private readonly taskRepository: TaskRepository;
   constructor(dependencies: ClassDependencies) {
     const { taskRepository: kanbanTaskRepository, statusColumnRepository } =
@@ -29,7 +28,7 @@ export class UpdateStatusColumnInTaskUseCase {
   public execute = async ({
     userId,
     taskId,
-    data: { statusColumnId },
+    statusColumnId,
   }: ExecutionProps) => {
     const taskOwnedByUser = await this.taskRepository.checkRelation(
       userId,
@@ -59,9 +58,10 @@ export class UpdateStatusColumnInTaskUseCase {
         details: null,
       });
 
-    const updatedTask = await this.taskRepository.update(taskId, {
-      status_column_id: statusColumnId,
-    });
+    const updatedTask = await this.taskRepository.updateTaskCategory(
+      taskId,
+      statusColumnId,
+    );
     return { data: updatedTask };
   };
 }

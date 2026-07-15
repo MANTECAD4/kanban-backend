@@ -1,12 +1,12 @@
 import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import {
   TaskRepository,
-  StatusColumnRepository,
+  CategoryRepository,
 } from "../../../domain/repositories";
 import { SubmitTaskDto } from "../../dtos";
 
 interface ClassDependencies {
-  statusColumnRepository: StatusColumnRepository;
+  statusColumnRepository: CategoryRepository;
   taskRepository: TaskRepository;
 }
 
@@ -17,7 +17,7 @@ interface ExecutionProps {
 }
 
 export class CreateTaskUseCase {
-  private readonly statusColumnRepository: StatusColumnRepository;
+  private readonly statusColumnRepository: CategoryRepository;
   private readonly taskRepository: TaskRepository;
   constructor(dependencies: ClassDependencies) {
     const { taskRepository: kanbanTaskRepository, statusColumnRepository } =

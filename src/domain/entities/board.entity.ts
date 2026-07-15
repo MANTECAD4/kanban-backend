@@ -1,5 +1,5 @@
 import { IconColor } from "../../generated/enums";
-import { StatusColumnEntity } from "./status-column.entity";
+import { CategoryEntity } from "./category.entity";
 import { TagEntity } from "./tag.entity";
 import { ProjectEntity } from "./project.entity";
 
@@ -18,7 +18,7 @@ interface BoardProps {
   iconColor: IconColor;
   project: ProjectEntity | null;
   projectId: number;
-  statusColumns: StatusColumnEntity[] | null;
+  statusColumns: CategoryEntity[] | null;
   tags: TagEntity[] | null;
   meta: BoardMetaData | null;
 }
@@ -32,7 +32,7 @@ export class BoardEntity {
   public readonly iconColor: IconColor;
   public readonly project: ProjectEntity | null;
   public readonly projectId: number;
-  public readonly statusColumns: StatusColumnEntity[] | null;
+  public readonly statusColumns: CategoryEntity[] | null;
   public readonly tags: TagEntity[] | null;
   public readonly meta: BoardMetaData | null;
 

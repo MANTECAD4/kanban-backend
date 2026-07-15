@@ -18,5 +18,9 @@ export abstract class TaskRepository {
     taskId: number,
     data: SubmitTaskDto,
   ) => Promise<TaskEntity>;
+  public abstract updateTaskCategory: (
+    taskId: number,
+    categoryId: number,
+  ) => Promise<TaskEntity>;
   public abstract delete: (taskId: number) => Promise<TaskEntity>;
 }

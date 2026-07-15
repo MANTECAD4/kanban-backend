@@ -6,14 +6,14 @@ import {
   PostgresUserRepository,
   PostgresBoardRepository,
   PostgresRefreshTokenRepository,
-  PostgresStatusColumnRepository,
+  PostgresCategoryRepository,
   PostgresSubtaskRepository,
   PostgresTaskRepository,
 } from "./infraestructure/repositories";
 
 import { AuthMiddlewares } from "./presentation/auth/middlewares";
 import { BoardMiddlewares } from "./presentation/board/middlewares";
-import { StatusColumnMiddlewares } from "./presentation/status-column/middlewares";
+import { CategoryMiddlewares } from "./presentation/category/middlewares";
 import { TaskMiddlewares } from "./presentation/task/middlewares";
 import { SubtaskMiddlewares } from "./presentation/subtask/middlewares";
 
@@ -36,11 +36,11 @@ import {
   UpdateBoardUseCase,
 } from "./application/use-cases/board";
 import {
-  CreateStatusColumnUseCase,
-  DeleteStatusColumnUseCase,
-  GetStatusColumnsUseCase,
-  UpdateStatusColumnUseCase,
-} from "./application/use-cases/status-column";
+  CreateCategoryUseCase,
+  DeleteCategoryUseCase,
+  GetCategoryUseCase,
+  UpdateCategoryUseCase,
+} from "./application/use-cases/category";
 
 import {
   CreateTaskUseCase,
@@ -61,7 +61,7 @@ import { GetUserInfoUseCase } from "./application/use-cases/user/get-me-info.use
 
 import { AuthController } from "./presentation/auth/controller";
 import { BoardController } from "./presentation/board/controller";
-import { StatusColumnController } from "./presentation/status-column/controller";
+import { CategoryController } from "./presentation/category/controller";
 import { TaskController } from "./presentation/task/controller";
 import { SubtaskController } from "./presentation/subtask/controller";
 import { UserController } from "./presentation/user/controller";
@@ -70,7 +70,7 @@ import { ProjectController } from "./presentation/project/controller";
 import { AppRoutes } from "./presentation/routes";
 import { AuthRoutes } from "./presentation/auth/routes";
 import { BoardsRoutes } from "./presentation/board/routes";
-import { StatusColumnsRoutes } from "./presentation/status-column/routes";
+import { CategoryRoutes } from "./presentation/category/routes";
 import { TaskRoutes } from "./presentation/task/routes";
 import { ProjectRoutes } from "./presentation/project/routes";
 import { SubtaskRoutes } from "./presentation/subtask/routes";
@@ -100,7 +100,7 @@ function main() {
   //! REPOSITORIES
   const userRepository = new PostgresUserRepository();
   const boardRepository = new PostgresBoardRepository();
-  const statusColumnRepository = new PostgresStatusColumnRepository();
+  const categoryRepository = new PostgresCategoryRepository();
   const taskRepository = new PostgresTaskRepository();
   const subtaskRepository = new PostgresSubtaskRepository();
   const refreshTokenRepository = new PostgresRefreshTokenRepository();
@@ -125,7 +125,7 @@ function main() {
     refreshTokenPersistencyService,
   });
   const boardMiddlewares = new BoardMiddlewares();
-  const statusColumnMiddlewares = new StatusColumnMiddlewares();
+  const categoryMiddlewares = new CategoryMiddlewares();
   const taskMiddlewares = new TaskMiddlewares();
   const subtaskMiddlewares = new SubtaskMiddlewares();
   const projectMiddlewares = new ProjectMiddlewares({ projectRepository });
@@ -176,22 +176,20 @@ function main() {
   const updateBoardUseCase = new UpdateBoardUseCase({ boardRepository });
   const deleteBoardUseCase = new DeleteBoardUseCase({ boardRepository });
 
-  // STATUS COLUMNS
-  const createStatusColumnUseCase = new CreateStatusColumnUseCase({
-    statusColumnRepository,
-    boardRepository,
+  // Categories
+  const createCategoryUseCase = new CreateCategoryUseCase({
+    categoryRepository,
   });
 
-  const getStatusColumnsUseCase = new GetStatusColumnsUseCase({
-    statusColumnRepository,
-    boardRepository,
+  const getCategoriesUseCase = new GetCategoryUseCase({
+    categoryRepository,
   });
 
-  const updateStatusColumnUsecase = new UpdateStatusColumnUseCase({
-    statusColumnRepository,
+  const updateCategoryUsecase = new UpdateCategoryUseCase({
+    categoryRepository,
   });
-  const deleteStatusColumnUsecase = new DeleteStatusColumnUseCase({
-    statusColumnRepository,
+  const deleteCategoryUsecase = new DeleteCategoryUseCase({
+    categoryRepository,
   });
 
   // SUBTASK
@@ -209,19 +207,19 @@ function main() {
   const deleteSubtaskUsecase = new DeleteSubtaskUseCase({ subtaskRepository });
   // TASKS
   const getTasksUseCase = new GetTasksByColumnUseCase({
-    statusColumnRepository,
+    statusColumnRepository: categoryRepository,
     taskRepository,
   });
 
   const createTaskUseCase = new CreateTaskUseCase({
-    statusColumnRepository,
+    statusColumnRepository: categoryRepository,
     taskRepository,
   });
 
   const updateDataTask = new UpdateDataInTaskUseCase({ taskRepository });
   const updateColumnTask = new UpdateStatusColumnInTaskUseCase({
     taskRepository,
-    statusColumnRepository,
+    statusColumnRepository: categoryRepository,
   });
 
   // USERS
@@ -269,11 +267,11 @@ function main() {
     deleteBoardUseCase,
     getBoardBySlugUseCase,
   );
-  const statusColumnController = new StatusColumnController(
-    getStatusColumnsUseCase,
-    createStatusColumnUseCase,
-    updateStatusColumnUsecase,
-    deleteStatusColumnUsecase,
+  const statusColumnController = new CategoryController(
+    getCategoriesUseCase,
+    createCategoryUseCase,
+    updateCategoryUsecase,
+    deleteCategoryUsecase,
   );
 
   const subtaskController = new SubtaskController(
@@ -313,14 +311,14 @@ function main() {
     authMiddlewares,
     controller: authController,
   });
-  const statusColumnRouter = new StatusColumnsRoutes({
+  const categoryRouter = new CategoryRoutes({
     controller: statusColumnController,
     boardMiddlewares,
-    statusColumnMiddlewares,
+    categoryMiddlewares,
   });
   const taskRouter = new TaskRoutes({
     controller: taskController,
-    statusColumnMiddlewares,
+    categoryMiddlewares,
     taskMiddlewares,
   });
   const subtaskRouter = new SubtaskRoutes({
@@ -343,7 +341,7 @@ function main() {
     authMiddlewares,
     authRouter,
     boardRouter,
-    statusColumnRouter,
+    categoryRouter,
     taskRouter,
     subtaskRouter,
     userRouter,

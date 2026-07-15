@@ -17,4 +17,10 @@ export class TaskMiddlewares {
     "Invalid data recieved. Task creation failed",
     RequestValidationTarget.BODY,
   );
+
+  public changeCategoryDataValidation = dataValidationMiddlewareFactory(
+    ParamsWithIdSchema("categoryId"),
+    "Invalid category id provided",
+    RequestValidationTarget.BODY,
+  );
 }

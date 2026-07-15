@@ -52,10 +52,10 @@ model Board{
   icon_color IconColor
   project_id Int 
   project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
-  status_colummns StatusColumn[]
+  status_colummns Category[]
 }
 
-model StatusColumn{
+model Category{
   id Int @id @default(autoincrement())
   name String
   icon String
@@ -71,8 +71,8 @@ model Task{
   description String
   priority Priority @default(MEDIUM)
   due_date DateTime
-  status_column_id Int
-  status_column StatusColumn @relation(fields: [status_column_id], references: [id], onDelete: Cascade)
+  category_id Int
+  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   tags TaskTag[]
   subtasks Subtask[] 
 }

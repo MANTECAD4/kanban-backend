@@ -27,7 +27,12 @@ export class CreateCategoryUseCase {
         details: null,
       });
 
-    const createdColumn = await this.categoryRepository.create(boardId, data);
+    const numCategories = await this.categoryRepository.getCount(boardId);
+    const lastPosition = numCategories <= 0 ? 0 : numCategories - 1;
+    const createdColumn = await this.categoryRepository.create(boardId, {
+      ...data,
+      order: lastPosition,
+    });
 
     return {
       category: createdColumn,

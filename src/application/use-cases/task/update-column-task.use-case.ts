@@ -52,6 +52,6 @@ export class UpdateStatusColumnInTaskUseCase {
       taskId,
       categoryId,
     );
-    return { data: updatedTask };
+    return { task: updatedTask };
   };
 }

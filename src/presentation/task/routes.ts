@@ -58,7 +58,7 @@ export class TaskRoutes {
         this.taskMiddlewares.validateRelation,
         this.taskMiddlewares.changeCategoryDataValidation,
       ],
-      this.controller.updateStatusColumn,
+      this.controller.updateCategory,
     );
 
     router.delete(

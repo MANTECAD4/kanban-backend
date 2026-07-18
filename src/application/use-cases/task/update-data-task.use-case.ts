@@ -13,6 +13,6 @@ export class UpdateDataInTaskUseCase {
   }
   public execute = async (taskId: number, data: SubmitTaskDto) => {
     const updatedTask = await this.taskRepository.update(taskId, data);
-    return { data: updatedTask };
+    return { task: updatedTask };
   };
 }

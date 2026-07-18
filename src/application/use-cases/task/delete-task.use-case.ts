@@ -12,6 +12,6 @@ export class DeleteTaskUseCase {
   }
   public execute = async (taskId: number) => {
     const deletedTask = await this.taskRepository.delete(taskId);
-    return { data: deletedTask };
+    return { task: deletedTask };
   };
 }

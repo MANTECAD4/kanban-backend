@@ -26,7 +26,7 @@ export class CategoryMiddlewares {
 
   public categoryIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("categoryId"),
-    "Invalid status category id provided.",
+    "Invalid category id provided.",
     RequestValidationTarget.PARAMS,
   );
 

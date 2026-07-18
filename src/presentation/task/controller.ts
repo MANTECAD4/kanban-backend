@@ -18,10 +18,9 @@ export class TaskController {
 
   public getAllByColumn = async (req: Request, res: Response) => {
     try {
-      const result = await this.getTasksUseCase.execute({
-        userId: req.user!.sub.id,
-        columnId: req.validatedParams!.columnId,
-      });
+      const result = await this.getTasksUseCase.execute(
+        req.validatedParams!.categoryId,
+      );
       return res.json({
         ok: true,
         message: "Tasks loaded succesfully",
@@ -34,11 +33,10 @@ export class TaskController {
 
   public create = async (req: Request, res: Response) => {
     try {
-      const result = await this.createTaskUseCase.execute({
-        userId: req.user!.sub.id,
-        columnId: req.validatedParams!.columnId,
-        data: req.validatedBody as SubmitTaskDto,
-      });
+      const result = await this.createTaskUseCase.execute(
+        req.validatedParams!.categoryId,
+        req.validatedBody as SubmitTaskDto,
+      );
       return res
         .status(201)
         .json({ ok: true, message: "Task created succesfully", ...result });
@@ -49,11 +47,10 @@ export class TaskController {
 
   public updateData = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateDataInKanbanTaskUseCase.execute({
-        userId: req.user!.sub.id,
-        taskId: req.validatedParams!.taskId,
-        data: req.validatedBody!,
-      });
+      const result = await this.updateDataInKanbanTaskUseCase.execute(
+        req.validatedParams!.taskId,
+        req.validatedBody! as SubmitTaskDto,
+      );
       return res.json({
         ok: true,
         message: `Task content updated succesfully`,
@@ -64,13 +61,12 @@ export class TaskController {
     }
   };
 
-  public updateStatusColumn = async (req: Request, res: Response) => {
+  public updateCategory = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateColumnInKanbanTaskUseCase.execute({
-        userId: req.user!.sub.id,
-        taskId: req.validatedParams!.taskId,
-        statusColumnId: req.validatedBody!.categoryId,
-      });
+      const result = await this.updateColumnInKanbanTaskUseCase.execute(
+        req.validatedParams!.taskId,
+        req.validatedBody!.categoryId,
+      );
       return res.json({
         ok: true,
         message: "Task status updated succesfully",
@@ -83,10 +79,9 @@ export class TaskController {
 
   public delete = async (req: Request, res: Response) => {
     try {
-      const result = await this.deleteTaskUseCase.execute({
-        userId: req.user!.sub.id,
-        taskId: req.validatedParams!.taskId,
-      });
+      const result = await this.deleteTaskUseCase.execute(
+        req.validatedParams!.taskId,
+      );
       return res.json({
         ok: true,
         message: "Task deleted succesfully",

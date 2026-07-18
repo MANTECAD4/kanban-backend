@@ -26,6 +26,10 @@ export class PostgresTaskRepository implements TaskRepository {
     return task ? TaskEntity.fromObject(task) : null;
   };
 
+  public getCount = async (categoryId: number): Promise<number> => {
+    return await prisma.task.count({ where: { category_id: categoryId } });
+  };
+
   public getAllByStatusColumn = async (
     categoryId: number,
   ): Promise<TaskEntity[]> => {
@@ -33,6 +37,7 @@ export class PostgresTaskRepository implements TaskRepository {
       where: {
         category_id: categoryId,
       },
+      orderBy: { order: "asc" },
     });
     return tasks.map((rawTask) => TaskEntity.fromObject(rawTask));
   };
@@ -44,7 +49,7 @@ export class PostgresTaskRepository implements TaskRepository {
 
   public create = async (
     categoryId: number,
-    { dueDate, ...rest }: SubmitTaskDto,
+    { dueDate, ...rest }: SubmitTaskDto & { order: number },
   ): Promise<TaskEntity> => {
     const createdTask = await prisma.task.create({
       data: { ...rest, due_date: dueDate, category_id: categoryId },

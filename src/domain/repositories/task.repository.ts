@@ -9,10 +9,12 @@ export abstract class TaskRepository {
   public abstract getAllByStatusColumn: (
     columnId: number,
   ) => Promise<TaskEntity[]>;
+
+  public abstract getCount: (categoryId: number) => Promise<number>;
   public abstract getById: (taskId: number) => Promise<TaskEntity | null>;
   public abstract create: (
     columnId: number,
-    data: SubmitTaskDto,
+    data: SubmitTaskDto & { order: number },
   ) => Promise<TaskEntity>;
   public abstract update: (
     taskId: number,

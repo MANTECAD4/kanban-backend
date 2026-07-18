@@ -13,7 +13,13 @@ export class CreateTaskUseCase {
   }
 
   public execute = async (categoryId: number, data: SubmitTaskDto) => {
-    const createdTask = await this.taskRepository.create(categoryId, data);
+    const numTasks = await this.taskRepository.getCount(categoryId);
+
+    const lastPosition = numTasks <= 0 ? 0 : numTasks - 1;
+    const createdTask = await this.taskRepository.create(categoryId, {
+      ...data,
+      order: lastPosition,
+    });
     return { task: createdTask };
   };
 }

@@ -61,6 +61,7 @@ model Category{
   icon String
   board   Board @relation(fields: [board_id], references: [id], onDelete: Cascade) 
   board_id Int
+  order Int
   tasks Task[]
 }
 
@@ -69,6 +70,7 @@ model Task{
   title String
   slug String
   description String
+  order Int
   priority Priority @default(MEDIUM)
   due_date DateTime
   category_id Int

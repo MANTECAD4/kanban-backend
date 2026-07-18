@@ -13,6 +13,7 @@ interface TaskProps {
   slug: string;
   description: string;
   dueDate: Date;
+  order: number;
   priority: Priority;
   categoryId: number;
   tags: TaskTag[];
@@ -24,6 +25,7 @@ export class TaskEntity {
   public slug: string;
   public description: string;
   public dueDate: Date;
+  public readonly order: number;
   public priority: Priority;
   public categoryId: number;
   public tags: TaskTag[];
@@ -35,6 +37,7 @@ export class TaskEntity {
       slug,
       description,
       dueDate,
+      order,
       priority,
       categoryId,
       tags,
@@ -44,6 +47,7 @@ export class TaskEntity {
     this.slug = slug;
     this.description = description;
     this.dueDate = dueDate;
+    this.order = order;
     this.priority = priority;
     this.categoryId = categoryId;
     this.tags = tags;
@@ -57,6 +61,7 @@ export class TaskEntity {
       slug,
       description,
       due_date,
+      order,
       priority,
       tags,
       status_column_id,
@@ -67,6 +72,7 @@ export class TaskEntity {
       slug,
       description,
       dueDate: due_date,
+      order,
       tags,
       priority,
       categoryId: status_column_id,

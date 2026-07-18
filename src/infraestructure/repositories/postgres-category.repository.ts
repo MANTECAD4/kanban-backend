@@ -41,6 +41,7 @@ export class PostgresCategoryRepository implements CategoryRepository {
   ): Promise<CategoryEntity | null> => {
     const category = await prisma.category.findFirst({
       where: { board_id: boardId, name },
+      orderBy: { order: "asc" },
     });
     return !category ? null : CategoryEntity.fromObject(category);
   };
@@ -53,9 +54,13 @@ export class PostgresCategoryRepository implements CategoryRepository {
     return !category ? null : CategoryEntity.fromObject(category);
   };
 
+  public getCount = async (boardId: number): Promise<number> => {
+    return await prisma.category.count({ where: { board_id: boardId } });
+  };
+
   public create = async (
     boardId: number,
-    data: SubmitCategoryDto,
+    data: SubmitCategoryDto & { order: number },
   ): Promise<CategoryEntity> => {
     const createdcategory = await prisma.category.create({
       data: { ...data, board_id: boardId },
@@ -65,7 +70,7 @@ export class PostgresCategoryRepository implements CategoryRepository {
 
   public update = async (
     categoryId: number,
-    data: Record<string, any>,
+    data: SubmitCategoryDto,
   ): Promise<CategoryEntity> => {
     const updatedcategory = await prisma.category.update({
       where: { id: categoryId },

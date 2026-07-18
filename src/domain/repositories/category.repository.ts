@@ -9,6 +9,7 @@ export abstract class CategoryRepository {
   public abstract getAll: (
     boardId: number, // DTO
   ) => Promise<CategoryEntity[]>;
+  public abstract getCount: (boardId: number) => Promise<number>;
 
   public abstract getByBoardAndName: (
     boardId: number,
@@ -19,12 +20,12 @@ export abstract class CategoryRepository {
 
   public abstract create: (
     boardId: number,
-    data: SubmitCategoryDto, // DTO
+    data: SubmitCategoryDto & { order: number }, // DTO
   ) => Promise<CategoryEntity>;
 
   public abstract update: (
     columnId: number,
-    data: Record<string, any>, // DTO
+    data: SubmitCategoryDto, // DTO
   ) => Promise<CategoryEntity>;
 
   public abstract delete: (

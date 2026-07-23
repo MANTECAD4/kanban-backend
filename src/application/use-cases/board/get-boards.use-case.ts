@@ -14,14 +14,14 @@ export class GetBoardsUseCase {
 
   public execute = async (projectId: number) => {
     const boards = await this.boardRepository.getAllByProject(projectId);
-    if (boards.length === 0) {
-      throw CustomError.notFound({
-        title: "Not found",
-        message: "No boards found for this project",
-        code: ErrorCodes.NOT_FOUND,
-        details: null,
-      });
-    }
+    // if (boards.length === 0) {
+    //   throw CustomError.notFound({
+    //     title: "Not found",
+    //     message: "No boards found for this project",
+    //     code: ErrorCodes.NOT_FOUND,
+    //     details: null,
+    //   });
+    // }
     return {
       boards,
 

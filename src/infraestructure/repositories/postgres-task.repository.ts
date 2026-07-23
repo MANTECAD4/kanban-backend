@@ -30,7 +30,7 @@ export class PostgresTaskRepository implements TaskRepository {
     return await prisma.task.count({ where: { category_id: categoryId } });
   };
 
-  public getAllByStatusColumn = async (
+  public getAllByCategory = async (
     categoryId: number,
   ): Promise<TaskEntity[]> => {
     const tasks = await prisma.task.findMany({
@@ -42,18 +42,26 @@ export class PostgresTaskRepository implements TaskRepository {
     return tasks.map((rawTask) => TaskEntity.fromObject(rawTask));
   };
 
+  public getAllByBoard = async (boardId: number): Promise<TaskEntity[]> => {
+    const tasks = await prisma.task.findMany({
+      where: { category: { board_id: boardId } },
+    });
+
+    return tasks.map((task) => TaskEntity.fromObject(task));
+  };
+
   public getById = async (taskId: number): Promise<TaskEntity | null> => {
     const task = await prisma.task.findFirst({ where: { id: taskId } });
     return task ? TaskEntity.fromObject(task) : null;
   };
 
   public getBySlug = async (
-    categoryId: number,
+    boardId: number,
     taskSlug: string,
   ): Promise<TaskEntity | null> => {
     console.log({ taskSlug });
     const task = await prisma.task.findFirst({
-      where: { slug: taskSlug, category_id: categoryId },
+      where: { slug: taskSlug, category: { board_id: boardId } },
     });
     return task ? TaskEntity.fromObject(task) : null;
   };

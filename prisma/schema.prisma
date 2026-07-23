@@ -40,6 +40,7 @@ model Project {
   icon_color IconColor
   user_id Int
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
+  created_at DateTime @default(now())
   boards Board[]
 }
 
@@ -52,6 +53,7 @@ model Board{
   icon_color IconColor
   project_id Int 
   project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
+  created_at DateTime @default(now())
   status_colummns Category[]
 }
 
@@ -71,12 +73,13 @@ model Task{
   slug String
   description String
   order Int
-  priority Priority @default(MEDIUM)
+  priority Priority @default(Medium)
   due_date DateTime
   category_id Int
   category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   tags TaskTag[]
   subtasks Subtask[] 
+  created_at DateTime @default(now())
 }
 
 model Subtask {
@@ -115,10 +118,10 @@ enum TaskTag {
 
 
 enum Priority {
-  URGENT
-  HIGH
-  MEDIUM
-  LOW
+  Low
+  Medium
+  High
+  Urgent
 }
 
 enum IconColor {

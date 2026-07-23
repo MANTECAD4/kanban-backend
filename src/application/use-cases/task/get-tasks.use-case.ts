@@ -13,15 +13,15 @@ export class GetTasksByColumnUseCase {
   }
 
   public execute = async (categoryId: number) => {
-    const tasks = await this.taskRepository.getAllByStatusColumn(categoryId);
-    if (tasks.length === 0) {
-      throw CustomError.notFound({
-        title: "Not found",
-        message: "No tasks found for this category",
-        code: ErrorCodes.NOT_FOUND,
-        details: null,
-      });
-    }
+    const tasks = await this.taskRepository.getAllByCategory(categoryId);
+    // if (tasks.length === 0) {
+    //   throw CustomError.notFound({
+    //     title: "Not found",
+    //     message: "No tasks found for this category",
+    //     code: ErrorCodes.NOT_FOUND,
+    //     details: null,
+    //   });
+    // }
     return { tasks: tasks, meta: { total: tasks.length } };
   };
 }

@@ -1,10 +1,10 @@
 import { TaskTag } from "../../application/dtos";
 
 export enum Priority {
-  URGENT = "URGENT",
-  HIGH = "HIGH",
-  MEDIUM = "MEDIUM",
-  LOW = "LOW",
+  Low = "Low",
+  Medium = "Medium",
+  High = "High",
+  Urgent = "Urgent",
 }
 
 interface TaskProps {
@@ -13,6 +13,7 @@ interface TaskProps {
   slug: string;
   description: string;
   dueDate: Date;
+  createdAt: Date;
   order: number;
   priority: Priority;
   categoryId: number;
@@ -25,6 +26,7 @@ export class TaskEntity {
   public slug: string;
   public description: string;
   public dueDate: Date;
+  public createdAt: Date;
   public readonly order: number;
   public priority: Priority;
   public categoryId: number;
@@ -37,6 +39,7 @@ export class TaskEntity {
       slug,
       description,
       dueDate,
+      createdAt,
       order,
       priority,
       categoryId,
@@ -47,6 +50,7 @@ export class TaskEntity {
     this.slug = slug;
     this.description = description;
     this.dueDate = dueDate;
+    this.createdAt = createdAt;
     this.order = order;
     this.priority = priority;
     this.categoryId = categoryId;
@@ -61,6 +65,7 @@ export class TaskEntity {
       slug,
       description,
       due_date,
+      created_at,
       order,
       priority,
       tags,
@@ -72,6 +77,7 @@ export class TaskEntity {
       slug,
       description,
       dueDate: due_date,
+      createdAt: created_at,
       order,
       tags,
       priority,

@@ -223,6 +223,7 @@ function main() {
 
   const createTaskUseCase = new CreateTaskUseCase({
     taskRepository,
+    categoryRepository,
   });
 
   const updateDataTask = new UpdateDataInTaskUseCase({ taskRepository });
@@ -333,6 +334,7 @@ function main() {
     controller: taskController,
     categoryMiddlewares,
     taskMiddlewares,
+    boardMiddlewares,
   });
   const subtaskRouter = new SubtaskRoutes({
     controller: subtaskController,

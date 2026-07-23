@@ -14,14 +14,14 @@ export class GetUserProjectsUseCase {
 
   public execute = async (userId: number) => {
     const projects = await this.projectRepository.getAll(userId);
-    if (projects.length === 0) {
-      throw CustomError.notFound({
-        title: "Not found",
-        message: "No projects found for this project",
-        code: ErrorCodes.NOT_FOUND,
-        details: null,
-      });
-    }
+    // if (projects.length === 0) {
+    //   throw CustomError.notFound({
+    //     title: "Not found",
+    //     message: "No projects found for this project",
+    //     code: ErrorCodes.NOT_FOUND,
+    //     details: null,
+    //   });
+    // }
     return {
       projects,
     };

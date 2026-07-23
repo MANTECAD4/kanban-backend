@@ -12,8 +12,8 @@ export class GetTaskBySlugUseCase {
     this.taskRepository = taskRepository;
   }
 
-  public execute = async (categoryId: number, taskSlug: string) => {
-    const task = await this.taskRepository.getBySlug(categoryId, taskSlug);
+  public execute = async (boardId: number, taskSlug: string) => {
+    const task = await this.taskRepository.getBySlug(boardId, taskSlug);
     if (!task) {
       throw CustomError.notFound({
         title: "Not found",

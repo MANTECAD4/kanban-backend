@@ -6,20 +6,21 @@ export abstract class TaskRepository {
     userId: number,
     searchKey: number | string,
   ) => Promise<TaskEntity | null>;
-  public abstract getAllByStatusColumn: (
-    columnId: number,
+  public abstract getAllByCategory: (
+    categoryId: number,
   ) => Promise<TaskEntity[]>;
+  public abstract getAllByBoard: (boardId: number) => Promise<TaskEntity[]>;
 
   public abstract getCount: (categoryId: number) => Promise<number>;
   public abstract getById: (taskId: number) => Promise<TaskEntity | null>;
 
   public abstract getBySlug: (
-    categoryId: number,
+    boardId: number,
     taskSlug: string,
   ) => Promise<TaskEntity | null>;
 
   public abstract create: (
-    columnId: number,
+    categoryId: number,
     data: SubmitTaskDto & { order: number },
   ) => Promise<TaskEntity>;
   public abstract update: (

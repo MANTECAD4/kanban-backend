@@ -2,21 +2,31 @@ import { Router } from "express";
 import { TaskController } from "./controller";
 import { TaskMiddlewares } from "./middlewares";
 import { CategoryMiddlewares } from "../category/middlewares";
+import { BoardMiddlewares } from "../board/middlewares";
 
 interface ClassDependencies {
   controller: TaskController;
   categoryMiddlewares: CategoryMiddlewares;
+  boardMiddlewares: BoardMiddlewares;
   taskMiddlewares: TaskMiddlewares;
 }
 
 export class TaskRoutes {
   private readonly controller: TaskController;
   private readonly categoryMiddlewares: CategoryMiddlewares;
+  private readonly boardMiddlewares: BoardMiddlewares;
+
   private readonly taskMiddlewares: TaskMiddlewares;
   constructor(dependencies: ClassDependencies) {
-    const { controller, categoryMiddlewares, taskMiddlewares } = dependencies;
+    const {
+      controller,
+      categoryMiddlewares,
+      taskMiddlewares,
+      boardMiddlewares,
+    } = dependencies;
     this.controller = controller;
     this.categoryMiddlewares = categoryMiddlewares;
+    this.boardMiddlewares = boardMiddlewares;
     this.taskMiddlewares = taskMiddlewares;
   }
 
@@ -32,11 +42,11 @@ export class TaskRoutes {
       this.controller.getAllByCategory,
     );
     router.get(
-      "/:taskSlug/in-category/:categoryId",
+      "/:taskSlug/in-board/:boardId",
       [
         this.taskMiddlewares.taskSlugParamValidation,
-        this.categoryMiddlewares.categoryIdParamValidation,
-        this.categoryMiddlewares.validateRelation,
+        this.boardMiddlewares.boardIdParamValidation,
+        this.taskMiddlewares.validateRelation,
       ],
       this.controller.getBySlug,
     );

@@ -38,7 +38,7 @@ export class TaskController {
   public getBySlug = async (req: Request, res: Response) => {
     try {
       const result = await this.getTaskBySlugUseCase.execute(
-        req.validatedParams!.categoryId,
+        req.validatedParams!.boardId,
         req.validatedParams!.taskSlug,
       );
       return res.json({

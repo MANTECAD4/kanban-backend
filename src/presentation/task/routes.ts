@@ -34,6 +34,7 @@ export class TaskRoutes {
     router.get(
       "/:taskSlug/in-category/:categoryId",
       [
+        this.taskMiddlewares.taskSlugParamValidation,
         this.categoryMiddlewares.categoryIdParamValidation,
         this.categoryMiddlewares.validateRelation,
       ],

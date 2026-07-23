@@ -7,6 +7,7 @@ import {
 import {
   ObjectWithOrderSchema,
   ParamsWithIdSchema,
+  ParamsWithSlugSchema,
 } from "../shared/schemas/shared-schemas";
 import { TaskRepository } from "../../domain/repositories";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
@@ -24,6 +25,11 @@ export class TaskMiddlewares {
   public taskIdParamValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("taskId"),
     `Invalid task id provided`,
+    RequestValidationTarget.PARAMS,
+  );
+  public taskSlugParamValidation = dataValidationMiddlewareFactory(
+    ParamsWithSlugSchema("taskSlug"),
+    `Invalid task slug provided`,
     RequestValidationTarget.PARAMS,
   );
 

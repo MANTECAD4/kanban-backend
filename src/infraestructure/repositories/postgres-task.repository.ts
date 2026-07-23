@@ -51,8 +51,9 @@ export class PostgresTaskRepository implements TaskRepository {
     categoryId: number,
     taskSlug: string,
   ): Promise<TaskEntity | null> => {
+    console.log({ taskSlug });
     const task = await prisma.task.findFirst({
-      where: { category_id: categoryId, slug: taskSlug },
+      where: { slug: taskSlug, category_id: categoryId },
     });
     return task ? TaskEntity.fromObject(task) : null;
   };

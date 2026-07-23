@@ -20,7 +20,8 @@ export class PostgresCategoryRepository implements CategoryRepository {
       where: {
         board_id: boardId,
       },
-      include: { tasks: true },
+      orderBy: [{ order: "asc" }, { id: "asc" }],
+      include: { tasks: { orderBy: { order: "asc" } } },
     });
 
     return rawcategories.map(({ tasks, ...category }) => {
@@ -41,7 +42,6 @@ export class PostgresCategoryRepository implements CategoryRepository {
   ): Promise<CategoryEntity | null> => {
     const category = await prisma.category.findFirst({
       where: { board_id: boardId, name },
-      orderBy: { order: "asc" },
     });
     return !category ? null : CategoryEntity.fromObject(category);
   };
@@ -75,6 +75,17 @@ export class PostgresCategoryRepository implements CategoryRepository {
     const updatedcategory = await prisma.category.update({
       where: { id: categoryId },
       data,
+    });
+    return CategoryEntity.fromObject(updatedcategory);
+  };
+
+  public updateOrder = async (
+    categoryId: number,
+    order: number,
+  ): Promise<CategoryEntity> => {
+    const updatedcategory = await prisma.category.update({
+      where: { id: categoryId },
+      data: { order },
     });
     return CategoryEntity.fromObject(updatedcategory);
   };

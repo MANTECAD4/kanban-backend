@@ -12,6 +12,12 @@ export abstract class TaskRepository {
 
   public abstract getCount: (categoryId: number) => Promise<number>;
   public abstract getById: (taskId: number) => Promise<TaskEntity | null>;
+
+  public abstract getBySlug: (
+    categoryId: number,
+    taskSlug: string,
+  ) => Promise<TaskEntity | null>;
+
   public abstract create: (
     columnId: number,
     data: SubmitTaskDto & { order: number },
@@ -23,6 +29,10 @@ export abstract class TaskRepository {
   public abstract updateTaskCategory: (
     taskId: number,
     categoryId: number,
+  ) => Promise<TaskEntity>;
+  public abstract updateOrder: (
+    taskId: number,
+    order: number,
   ) => Promise<TaskEntity>;
   public abstract delete: (taskId: number) => Promise<TaskEntity>;
 }

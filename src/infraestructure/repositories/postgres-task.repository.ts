@@ -47,6 +47,16 @@ export class PostgresTaskRepository implements TaskRepository {
     return task ? TaskEntity.fromObject(task) : null;
   };
 
+  public getBySlug = async (
+    categoryId: number,
+    taskSlug: string,
+  ): Promise<TaskEntity | null> => {
+    const task = await prisma.task.findFirst({
+      where: { category_id: categoryId, slug: taskSlug },
+    });
+    return task ? TaskEntity.fromObject(task) : null;
+  };
+
   public create = async (
     categoryId: number,
     { dueDate, ...rest }: SubmitTaskDto & { order: number },
@@ -59,14 +69,15 @@ export class PostgresTaskRepository implements TaskRepository {
 
   public update = async (
     taskId: number,
-    data: Record<string, any>,
+    { dueDate, ...rest }: SubmitTaskDto,
   ): Promise<TaskEntity> => {
     const updatedTask = await prisma.task.update({
       where: { id: taskId },
-      data,
+      data: { due_date: dueDate, ...rest },
     });
     return TaskEntity.fromObject(updatedTask);
   };
+
   public updateTaskCategory = async (
     taskId: number,
     categoryId: number,
@@ -74,6 +85,17 @@ export class PostgresTaskRepository implements TaskRepository {
     const updatedTask = await prisma.task.update({
       where: { id: taskId },
       data: { category_id: categoryId },
+    });
+    return TaskEntity.fromObject(updatedTask);
+  };
+
+  public updateOrder = async (
+    taskId: number,
+    order: number,
+  ): Promise<TaskEntity> => {
+    const updatedTask = await prisma.task.update({
+      where: { id: taskId },
+      data: { order },
     });
     return TaskEntity.fromObject(updatedTask);
   };

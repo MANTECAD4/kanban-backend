@@ -2,7 +2,7 @@ import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
 } from "../shared/factories/data-validation-middleware";
-import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
+import { ParamsWithIdSchema } from "../shared/schemas/shared-schemas";
 import {
   CreateSubtaskSchema,
   UpdateSubtaskSchema,

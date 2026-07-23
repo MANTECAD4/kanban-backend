@@ -29,7 +29,15 @@ export class TaskRoutes {
         this.categoryMiddlewares.categoryIdParamValidation,
         this.categoryMiddlewares.validateRelation,
       ],
-      this.controller.getAllByColumn,
+      this.controller.getAllByCategory,
+    );
+    router.get(
+      "/:taskSlug/in-category/:categoryId",
+      [
+        this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.validateRelation,
+      ],
+      this.controller.getBySlug,
     );
 
     router.post(
@@ -51,14 +59,23 @@ export class TaskRoutes {
       ],
       this.controller.updateData,
     );
-    router.put(
-      "/:taskId/category",
+    router.patch(
+      "/:taskId/change-category",
       [
         this.taskMiddlewares.taskIdParamValidation,
         this.taskMiddlewares.validateRelation,
         this.taskMiddlewares.changeCategoryDataValidation,
       ],
       this.controller.updateCategory,
+    );
+    router.patch(
+      "/:taskId/change-order",
+      [
+        this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.validateRelation,
+        this.taskMiddlewares.changeOrderValidation,
+      ],
+      this.controller.updateOrder,
     );
 
     router.delete(

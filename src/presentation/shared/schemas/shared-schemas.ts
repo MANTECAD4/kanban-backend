@@ -13,3 +13,8 @@ export const ParamsWithSlugSchema = (slugPropertyName: string = "slug") =>
   z.object({
     [slugPropertyName]: z.string().trim().lowercase(),
   });
+
+export const ObjectWithOrderSchema = (orderPropertyName = "order") =>
+  z.object({
+    [orderPropertyName]: z.coerce.number().int().min(0),
+  });

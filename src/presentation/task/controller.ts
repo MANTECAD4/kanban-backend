@@ -6,17 +6,21 @@ import { SubmitTaskDto } from "../../application/dtos";
 import { DeleteTaskUseCase } from "../../application/use-cases/task/delete-task.use-case";
 import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/task/update-column-task.use-case";
 import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
+import { UpdateOrderInTaskUseCase } from "../../application/use-cases/task";
+import { GetTaskBySlugUseCase } from "../../application/use-cases/task/get-task-by-slug.use-case";
 
 export class TaskController {
   constructor(
     private readonly getTasksUseCase: GetTasksByColumnUseCase,
+    private readonly getTaskBySlugUseCase: GetTaskBySlugUseCase,
     private readonly createTaskUseCase: CreateTaskUseCase,
-    private readonly updateDataInKanbanTaskUseCase: UpdateDataInTaskUseCase,
-    private readonly updateColumnInKanbanTaskUseCase: UpdateStatusColumnInTaskUseCase,
+    private readonly updateTaskUseCase: UpdateDataInTaskUseCase,
+    private readonly updateTaskCategoryUseCase: UpdateStatusColumnInTaskUseCase,
+    private readonly updateOrderTaskUseCase: UpdateOrderInTaskUseCase,
     private readonly deleteTaskUseCase: DeleteTaskUseCase,
   ) {}
 
-  public getAllByColumn = async (req: Request, res: Response) => {
+  public getAllByCategory = async (req: Request, res: Response) => {
     try {
       const result = await this.getTasksUseCase.execute(
         req.validatedParams!.categoryId,
@@ -24,6 +28,22 @@ export class TaskController {
       return res.json({
         ok: true,
         message: "Tasks loaded succesfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
+
+  public getBySlug = async (req: Request, res: Response) => {
+    try {
+      const result = await this.getTaskBySlugUseCase.execute(
+        req.validatedParams!.categoryId,
+        req.validatedParams!.taskSlug,
+      );
+      return res.json({
+        ok: true,
+        message: "Task loaded successfully",
         ...result,
       });
     } catch (error) {
@@ -47,7 +67,7 @@ export class TaskController {
 
   public updateData = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateDataInKanbanTaskUseCase.execute(
+      const result = await this.updateTaskUseCase.execute(
         req.validatedParams!.taskId,
         req.validatedBody! as SubmitTaskDto,
       );
@@ -63,13 +83,28 @@ export class TaskController {
 
   public updateCategory = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateColumnInKanbanTaskUseCase.execute(
+      const result = await this.updateTaskCategoryUseCase.execute(
         req.validatedParams!.taskId,
         req.validatedBody!.categoryId,
       );
       return res.json({
         ok: true,
         message: "Task status updated succesfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
+  public updateOrder = async (req: Request, res: Response) => {
+    try {
+      const result = await this.updateOrderTaskUseCase.execute(
+        req.validatedParams!.taskId,
+        req.validatedBody!.order,
+      );
+      return res.json({
+        ok: true,
+        message: "Task order updated succesfully",
         ...result,
       });
     } catch (error) {

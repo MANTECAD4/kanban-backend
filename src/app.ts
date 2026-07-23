@@ -47,6 +47,7 @@ import {
   DeleteTaskUseCase,
   GetTasksByColumnUseCase,
   UpdateDataInTaskUseCase,
+  UpdateOrderInTaskUseCase,
   UpdateStatusColumnInTaskUseCase,
 } from "./application/use-cases/task";
 
@@ -83,6 +84,8 @@ import { GetProjectBySlugUseCase } from "./application/use-cases/project/get-pro
 import { UpdateProjectUseCase } from "./application/use-cases/project/update-project.use-case";
 import { DeleteProjectUseCase } from "./application/use-cases/project/delete-project.use-case";
 import { GetBoardBySlugUseCase } from "./application/use-cases/board/get-board-by-slug.use-case";
+import { UpdateCategoryOrderUseCase } from "./application/use-cases/category/update-category-border.use-case";
+import { GetTaskBySlugUseCase } from "./application/use-cases/task/get-task-by-slug.use-case";
 
 (async () => {
   main();
@@ -188,6 +191,11 @@ function main() {
   const updateCategoryUsecase = new UpdateCategoryUseCase({
     categoryRepository,
   });
+
+  const updateCategoryOrderUseCase = new UpdateCategoryOrderUseCase({
+    categoryRepository,
+  });
+
   const deleteCategoryUsecase = new DeleteCategoryUseCase({
     categoryRepository,
   });
@@ -209,6 +217,9 @@ function main() {
   const getTasksUseCase = new GetTasksByColumnUseCase({
     taskRepository,
   });
+  const getTaskBySlugUseCase = new GetTaskBySlugUseCase({
+    taskRepository,
+  });
 
   const createTaskUseCase = new CreateTaskUseCase({
     taskRepository,
@@ -219,6 +230,8 @@ function main() {
     taskRepository,
     categoryRepository,
   });
+
+  const updateTaskOrderUseCase = new UpdateOrderInTaskUseCase(taskRepository);
 
   // USERS
   const getUserInfoUseCase = new GetUserInfoUseCase({
@@ -267,6 +280,7 @@ function main() {
     getCategoriesUseCase,
     createCategoryUseCase,
     updateCategoryUsecase,
+    updateCategoryOrderUseCase,
     deleteCategoryUsecase,
   );
 
@@ -279,9 +293,12 @@ function main() {
 
   const taskController = new TaskController(
     getTasksUseCase,
+    getTaskBySlugUseCase,
     createTaskUseCase,
     updateDataTask,
     updateColumnTask,
+    updateTaskOrderUseCase,
+
     deleteTaskUsecase,
   );
 

@@ -7,7 +7,7 @@ import {
 import {
   ParamsWithIdSchema,
   ParamsWithSlugSchema,
-} from "../shared/schemas/int-id.schema";
+} from "../shared/schemas/shared-schemas";
 import { BoardRepository } from "../../domain/repositories";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 

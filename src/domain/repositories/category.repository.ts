@@ -27,6 +27,10 @@ export abstract class CategoryRepository {
     columnId: number,
     data: SubmitCategoryDto, // DTO
   ) => Promise<CategoryEntity>;
+  public abstract updateOrder: (
+    columnId: number,
+    order: number,
+  ) => Promise<CategoryEntity>;
 
   public abstract delete: (
     columnId: number, // DTO

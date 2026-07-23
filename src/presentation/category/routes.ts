@@ -52,6 +52,15 @@ export class CategoryRoutes {
       ],
       this.controller.update,
     );
+    router.patch(
+      "/:categoryId/change-order",
+      [
+        this.categoryMiddlewares.categoryIdParamValidation,
+        this.categoryMiddlewares.validateRelation,
+        this.categoryMiddlewares.changeOrderValidation,
+      ],
+      this.controller.updateOrder,
+    );
 
     router.delete(
       "/:categoryId",

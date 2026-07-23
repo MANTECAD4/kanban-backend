@@ -4,7 +4,10 @@ import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
 } from "../shared/factories/data-validation-middleware";
-import { ParamsWithIdSchema } from "../shared/schemas/int-id.schema";
+import {
+  ObjectWithOrderSchema,
+  ParamsWithIdSchema,
+} from "../shared/schemas/shared-schemas";
 import { TaskRepository } from "../../domain/repositories";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 
@@ -33,6 +36,12 @@ export class TaskMiddlewares {
   public changeCategoryDataValidation = dataValidationMiddlewareFactory(
     ParamsWithIdSchema("categoryId"),
     "Invalid category id provided",
+    RequestValidationTarget.BODY,
+  );
+
+  public changeOrderValidation = dataValidationMiddlewareFactory(
+    ObjectWithOrderSchema(),
+    "Invalid new order value",
     RequestValidationTarget.BODY,
   );
 

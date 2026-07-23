@@ -27,8 +27,7 @@ export class CreateCategoryUseCase {
         details: null,
       });
 
-    const numCategories = await this.categoryRepository.getCount(boardId);
-    const lastPosition = numCategories <= 0 ? 0 : numCategories - 1;
+    const lastPosition = await this.categoryRepository.getCount(boardId);
     const createdColumn = await this.categoryRepository.create(boardId, {
       ...data,
       order: lastPosition,

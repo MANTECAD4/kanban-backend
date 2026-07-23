@@ -64,7 +64,7 @@ export class TaskEntity {
       order,
       priority,
       tags,
-      status_column_id,
+      category_id,
     } = object;
     return new TaskEntity({
       id: id ?? _id,
@@ -75,7 +75,7 @@ export class TaskEntity {
       order,
       tags,
       priority,
-      categoryId: status_column_id,
+      categoryId: category_id,
     });
   };
 }

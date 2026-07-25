@@ -1,4 +1,4 @@
-import { CreateSubtaskDto } from "../../application/dtos/subtask.dto";
+import { SubmitSubtaskDto } from "../../application/dtos/subtask.dto";
 import { SubtaskEntity } from "../entities/subtask.entity";
 
 export abstract class SubtaskRepository {
@@ -13,12 +13,17 @@ export abstract class SubtaskRepository {
 
   abstract create: (
     taskId: number,
-    data: CreateSubtaskDto,
+    data: SubmitSubtaskDto,
   ) => Promise<SubtaskEntity>;
 
-  abstract update: (
+  abstract updateDescription: (
     subtaskId: number,
-    data: Record<string, any>,
+    description: string,
+  ) => Promise<SubtaskEntity>;
+
+  abstract updateCompletionStatus: (
+    subtaskId: number,
+    status: boolean,
   ) => Promise<SubtaskEntity>;
 
   abstract delete: (subtaskId: number) => Promise<SubtaskEntity>;

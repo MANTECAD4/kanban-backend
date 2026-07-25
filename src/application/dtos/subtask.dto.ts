@@ -1,15 +1,11 @@
 import z from "zod";
 
-export const CreateSubtaskSchema = z.object({
+export const SubmitSubtaskSchema = z.object({
   description: z.string().trim().normalize().nonempty(),
 });
+export const ChangeSubtaskStatusSchema = z.object({
+  isCompleted: z.boolean(),
+});
 
-export const UpdateSubtaskSchema = z
-  .object({
-    description: z.string().trim().normalize().nonempty(),
-    isCompleted: z.boolean(),
-  })
-  .partial();
-
-export type CreateSubtaskDto = z.infer<typeof CreateSubtaskSchema>;
-export type UpdateSubtaskDto = z.infer<typeof UpdateSubtaskSchema>;
+export type SubmitSubtaskDto = z.infer<typeof SubmitSubtaskSchema>;
+export type ChangeSubtaskStatusDto = z.infer<typeof ChangeSubtaskStatusSchema>;

@@ -1,46 +1,22 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { SubtaskRepository } from "../../../domain/repositories/subtask.repository";
-import { getDefinedFields } from "../../../domain/services/get-defined-fields.service";
-import { UpdateSubtaskDto } from "../../dtos/subtask.dto";
 
-interface ClassDepenencies {
+interface Depenencies {
   subtaskRepository: SubtaskRepository;
 }
 
-interface ExecutionProps {
-  userId: number;
-  subtaskId: number;
-  data: UpdateSubtaskDto;
-}
-
-export class UpdateSubtaskUseCase {
+export class UpdateSubtaskDescriptionUseCase {
   private readonly subtaskRepository: SubtaskRepository;
 
-  constructor(dependencies: ClassDepenencies) {
+  constructor(dependencies: Depenencies) {
     const { subtaskRepository } = dependencies;
     this.subtaskRepository = subtaskRepository;
   }
-  public execute = async ({ userId, subtaskId, data }: ExecutionProps) => {
-    const subtaskOwnedByUser = await this.subtaskRepository.checkRelation(
-      userId,
+  public execute = async (subtaskId: number, description: string) => {
+    const updatedSubtask = await this.subtaskRepository.updateDescription(
       subtaskId,
+      description,
     );
 
-    if (!subtaskOwnedByUser)
-      throw CustomError.forbidden({
-        title: "Subtask update failed",
-        message: `User doesn't have access to this subtask`,
-        code: ErrorCodes.FORBIDDEN,
-        details: null,
-      });
-
-    const definedProperties = getDefinedFields(data);
-
-    const updatedSubtask = await this.subtaskRepository.update(
-      subtaskId,
-      definedProperties,
-    );
-
-    return { data: updatedSubtask };
+    return { subtask: updatedSubtask };
   };
 }

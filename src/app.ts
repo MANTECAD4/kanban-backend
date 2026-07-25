@@ -55,7 +55,7 @@ import {
   CreateSubtaskUseCase,
   DeleteSubtaskUseCase,
   GetSubtasksUseCase,
-  UpdateSubtaskUseCase,
+  UpdateSubtaskDescriptionUseCase,
 } from "./application/use-cases/subtask";
 import { RefreshTokenUseCase } from "./application/use-cases/auth/refresh-token.use-case";
 import { GetUserInfoUseCase } from "./application/use-cases/user/get-me-info.use-case";
@@ -131,7 +131,7 @@ function main() {
   const boardMiddlewares = new BoardMiddlewares({ boardRepository });
   const categoryMiddlewares = new CategoryMiddlewares({ categoryRepository });
   const taskMiddlewares = new TaskMiddlewares({ taskRepository });
-  const subtaskMiddlewares = new SubtaskMiddlewares();
+  const subtaskMiddlewares = new SubtaskMiddlewares({ subtaskRepository });
   const projectMiddlewares = new ProjectMiddlewares({ projectRepository });
 
   //////////////// ! USE CASES ////////////////
@@ -208,10 +208,11 @@ function main() {
 
   const createSubtaskUsecase = new CreateSubtaskUseCase({
     subtaskRepository,
-    taskRepository,
   });
 
-  const updateSubtaskUsecase = new UpdateSubtaskUseCase({ subtaskRepository });
+  const updateSubtaskUsecase = new UpdateSubtaskDescriptionUseCase({
+    subtaskRepository,
+  });
   const deleteSubtaskUsecase = new DeleteSubtaskUseCase({ subtaskRepository });
   // TASKS
   const getTasksUseCase = new GetTasksByColumnUseCase({

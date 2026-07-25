@@ -73,7 +73,7 @@ export class TaskController {
       );
       return res.json({
         ok: true,
-        message: `Task content updated succesfully`,
+        message: `Task properties updated succesfully`,
         ...result,
       });
     } catch (error) {

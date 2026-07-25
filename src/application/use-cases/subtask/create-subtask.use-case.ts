@@ -1,43 +1,21 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
-import { TaskRepository } from "../../../domain/repositories";
 import { SubtaskRepository } from "../../../domain/repositories/subtask.repository";
-import { CreateSubtaskDto } from "../../dtos/subtask.dto";
+import { SubmitSubtaskDto } from "../../dtos/subtask.dto";
 
 interface ClassDependencies {
   subtaskRepository: SubtaskRepository;
-  taskRepository: TaskRepository;
-}
-
-interface ExecutionProps {
-  userId: number;
-  taskId: number;
-  data: CreateSubtaskDto;
 }
 
 export class CreateSubtaskUseCase {
   private readonly subtaskRepository: SubtaskRepository;
-  private readonly taskRepository: TaskRepository;
   constructor(dependencies: ClassDependencies) {
-    const { subtaskRepository, taskRepository } = dependencies;
+    const { subtaskRepository } = dependencies;
     this.subtaskRepository = subtaskRepository;
-    this.taskRepository = taskRepository;
   }
 
-  public execute = async ({ userId, taskId, data }: ExecutionProps) => {
-    const taskOwnedByUser = await this.taskRepository.checkRelation(
-      userId,
-      taskId,
-    );
-    if (!taskOwnedByUser)
-      throw CustomError.forbidden({
-        title: "Subtask creation failed",
-        message: `User doesn't have access to specified task`,
-        code: ErrorCodes.FORBIDDEN,
-        details: null,
-      });
+  public execute = async (taskId: number, data: SubmitSubtaskDto) => {
     const createdSubtask = await this.subtaskRepository.create(taskId, data);
     return {
-      data: createdSubtask,
+      subtask: createdSubtask,
     };
   };
 }

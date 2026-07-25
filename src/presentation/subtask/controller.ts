@@ -1,19 +1,16 @@
 import { Request, Response } from "express";
 import { GetSubtasksUseCase } from "../../application/use-cases/subtask/get-subtasks.use-case";
 import { CreateSubtaskUseCase } from "../../application/use-cases/subtask/create-subtask.use-case";
-import { UpdateSubtaskUseCase } from "../../application/use-cases/subtask/update-subtask.use-case";
+import { UpdateSubtaskDescriptionUseCase } from "../../application/use-cases/subtask/update-subtask.use-case";
 import { DeleteSubtaskUseCase } from "../../application/use-cases/subtask/delete-subtask.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
-import {
-  CreateSubtaskDto,
-  UpdateSubtaskDto,
-} from "../../application/dtos/subtask.dto";
+import { SubmitSubtaskDto } from "../../application/dtos/subtask.dto";
 
 export class SubtaskController {
   constructor(
     private readonly getSubtasksUseCase: GetSubtasksUseCase,
     private readonly createSubtaskUsecase: CreateSubtaskUseCase,
-    private readonly updateSubtaskUseCase: UpdateSubtaskUseCase,
+    private readonly updateSubtaskDescriptionUseCase: UpdateSubtaskDescriptionUseCase,
     private readonly deleteSubtaskUseCase: DeleteSubtaskUseCase,
   ) {}
 
@@ -34,11 +31,10 @@ export class SubtaskController {
   };
   public create = async (req: Request, res: Response) => {
     try {
-      const result = await this.createSubtaskUsecase.execute({
-        userId: req.user!.sub.id,
-        taskId: req.validatedParams!.taskId,
-        data: req.validatedBody! as CreateSubtaskDto,
-      });
+      const result = await this.createSubtaskUsecase.execute(
+        req.validatedParams!.taskId,
+        req.validatedBody! as SubmitSubtaskDto,
+      );
       return res.json({
         ok: true,
         message: "Subtask created succesfully",
@@ -48,16 +44,15 @@ export class SubtaskController {
       return CustomError.handleError(error, req, res);
     }
   };
-  public update = async (req: Request, res: Response) => {
+  public updateDescription = async (req: Request, res: Response) => {
     try {
-      const result = await this.updateSubtaskUseCase.execute({
-        userId: req.user!.sub.id,
-        subtaskId: req.validatedParams!.subtaskId,
-        data: req.validatedBody as UpdateSubtaskDto,
-      });
+      const result = await this.updateSubtaskDescriptionUseCase.execute(
+        req.validatedParams!.subtaskId,
+        req.validatedBody!.description,
+      );
       return res.json({
         ok: true,
-        message: "Subtask updated succesfully",
+        message: "Subtask description updated succesfully",
         ...result,
       });
     } catch (error) {

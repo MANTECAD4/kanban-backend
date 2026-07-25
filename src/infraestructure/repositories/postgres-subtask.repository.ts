@@ -1,4 +1,4 @@
-import { CreateSubtaskDto } from "../../application/dtos/subtask.dto";
+import { SubmitSubtaskDto } from "../../application/dtos/subtask.dto";
 import { prisma } from "../../data/init-postgres";
 import { SubtaskEntity } from "../../domain/entities/subtask.entity";
 import { SubtaskRepository } from "../../domain/repositories/subtask.repository";
@@ -11,7 +11,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     const subtask = await prisma.subtask.findFirst({
       where: {
         id: subtaskId,
-        task: { status_column: { board: { user: { id: userId } } } },
+        task: { category: { board: { project: { user: { id: userId } } } } },
       },
     });
     return subtask ? SubtaskEntity.fromObject(subtask) : null;
@@ -33,7 +33,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
 
   public create = async (
     taskId: number,
-    data: CreateSubtaskDto,
+    data: SubmitSubtaskDto,
   ): Promise<SubtaskEntity> => {
     const createdSubtask = await prisma.subtask.create({
       data: { ...data, task_id: taskId, is_completed: false },
@@ -41,14 +41,23 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     return SubtaskEntity.fromObject(createdSubtask);
   };
 
-  public update = async (
+  public updateDescription = async (
     subtaskId: number,
-    data: Record<string, any>,
+    description: string,
   ): Promise<SubtaskEntity> => {
-    const { isCompleted, ...rest } = data;
     const updatedSubtask = await prisma.subtask.update({
       where: { id: subtaskId },
-      data: { ...rest, is_completed: isCompleted },
+      data: { description },
+    });
+    return SubtaskEntity.fromObject(updatedSubtask);
+  };
+  public updateCompletionStatus = async (
+    subtaskId: number,
+    status: boolean,
+  ): Promise<SubtaskEntity> => {
+    const updatedSubtask = await prisma.subtask.update({
+      where: { id: subtaskId },
+      data: { is_completed: status },
     });
     return SubtaskEntity.fromObject(updatedSubtask);
   };

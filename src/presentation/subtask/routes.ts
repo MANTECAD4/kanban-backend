@@ -25,7 +25,10 @@ export class SubtaskRoutes {
 
     router.get(
       "/in-task/:taskId",
-      [this.taskMiddlewares.taskIdParamValidation],
+      [
+        this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.validateRelation,
+      ],
       this.controller.getAllByTask,
     );
 
@@ -33,23 +36,27 @@ export class SubtaskRoutes {
       "/in-task/:taskId",
       [
         this.taskMiddlewares.taskIdParamValidation,
+        this.taskMiddlewares.validateRelation,
         this.subtaskMiddlewares.createSubtaskDataValidation,
       ],
       this.controller.create,
     );
 
     router.put(
-      "/:subtaskId",
+      "/:subtaskId/change-description",
       [
         this.subtaskMiddlewares.subtaskIdParamValidation,
-        this.subtaskMiddlewares.updateSubtaskDataValidation,
+        this.subtaskMiddlewares.validateRelation,
       ],
-      this.controller.update,
+      this.controller.updateDescription,
     );
 
     router.delete(
       "/:subtaskId",
-      [this.subtaskMiddlewares.subtaskIdParamValidation],
+      [
+        this.subtaskMiddlewares.subtaskIdParamValidation,
+        this.subtaskMiddlewares.validateRelation,
+      ],
       this.controller.delete,
     );
 

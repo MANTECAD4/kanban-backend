@@ -1,4 +1,7 @@
-import { SubmitSubtaskDto } from "../../application/dtos/subtask.dto";
+import {
+  ChangeSubtaskStatusDto,
+  SubmitSubtaskDto,
+} from "../../application/dtos/subtask.dto";
 import { prisma } from "../../data/init-postgres";
 import { SubtaskEntity } from "../../domain/entities/subtask.entity";
 import { SubtaskRepository } from "../../domain/repositories/subtask.repository";
@@ -43,21 +46,21 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
 
   public updateDescription = async (
     subtaskId: number,
-    description: string,
+    data: SubmitSubtaskDto,
   ): Promise<SubtaskEntity> => {
     const updatedSubtask = await prisma.subtask.update({
       where: { id: subtaskId },
-      data: { description },
+      data,
     });
     return SubtaskEntity.fromObject(updatedSubtask);
   };
   public updateCompletionStatus = async (
     subtaskId: number,
-    status: boolean,
+    { isCompleted }: ChangeSubtaskStatusDto,
   ): Promise<SubtaskEntity> => {
     const updatedSubtask = await prisma.subtask.update({
       where: { id: subtaskId },
-      data: { is_completed: status },
+      data: { is_completed: isCompleted },
     });
     return SubtaskEntity.fromObject(updatedSubtask);
   };

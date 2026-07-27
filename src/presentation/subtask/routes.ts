@@ -37,18 +37,28 @@ export class SubtaskRoutes {
       [
         this.taskMiddlewares.taskIdParamValidation,
         this.taskMiddlewares.validateRelation,
-        this.subtaskMiddlewares.createSubtaskDataValidation,
+        this.subtaskMiddlewares.submitSubtaskDataValidation,
       ],
       this.controller.create,
     );
 
-    router.put(
+    router.patch(
       "/:subtaskId/change-description",
       [
         this.subtaskMiddlewares.subtaskIdParamValidation,
         this.subtaskMiddlewares.validateRelation,
+        this.subtaskMiddlewares.submitSubtaskDataValidation,
       ],
       this.controller.updateDescription,
+    );
+    router.patch(
+      "/:subtaskId/change-status",
+      [
+        this.subtaskMiddlewares.subtaskIdParamValidation,
+        this.subtaskMiddlewares.validateRelation,
+        this.subtaskMiddlewares.changeSubtaskStatusValidation,
+      ],
+      this.controller.updateCompletionStatus,
     );
 
     router.delete(

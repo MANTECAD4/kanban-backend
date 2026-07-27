@@ -1,20 +1,21 @@
 import { SubtaskRepository } from "../../../domain/repositories/subtask.repository";
+import { ChangeSubtaskStatusDto } from "../../dtos";
 
 interface Depenencies {
   subtaskRepository: SubtaskRepository;
 }
 
-export class UpdateSubtaskDescriptionUseCase {
+export class UpdateSubtaskStatusUseCase {
   private readonly subtaskRepository: SubtaskRepository;
 
   constructor(dependencies: Depenencies) {
     const { subtaskRepository } = dependencies;
     this.subtaskRepository = subtaskRepository;
   }
-  public execute = async (subtaskId: number, description: string) => {
-    const updatedSubtask = await this.subtaskRepository.updateDescription(
+  public execute = async (subtaskId: number, data: ChangeSubtaskStatusDto) => {
+    const updatedSubtask = await this.subtaskRepository.updateCompletionStatus(
       subtaskId,
-      description,
+      data,
     );
 
     return { subtask: updatedSubtask };

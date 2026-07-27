@@ -86,6 +86,7 @@ import { DeleteProjectUseCase } from "./application/use-cases/project/delete-pro
 import { GetBoardBySlugUseCase } from "./application/use-cases/board/get-board-by-slug.use-case";
 import { UpdateCategoryOrderUseCase } from "./application/use-cases/category/update-category-border.use-case";
 import { GetTaskBySlugUseCase } from "./application/use-cases/task/get-task-by-slug.use-case";
+import { UpdateSubtaskStatusUseCase } from "./application/use-cases/subtask/update-subtask-status.use-case";
 
 (async () => {
   main();
@@ -203,14 +204,16 @@ function main() {
   // SUBTASK
   const getSubtasksUsecase = new GetSubtasksUseCase({
     subtaskRepository,
-    taskRepository,
   });
 
   const createSubtaskUsecase = new CreateSubtaskUseCase({
     subtaskRepository,
   });
 
-  const updateSubtaskUsecase = new UpdateSubtaskDescriptionUseCase({
+  const updateSubtaskDescriptionUsecase = new UpdateSubtaskDescriptionUseCase({
+    subtaskRepository,
+  });
+  const updateSubtaskStatusUsecase = new UpdateSubtaskStatusUseCase({
     subtaskRepository,
   });
   const deleteSubtaskUsecase = new DeleteSubtaskUseCase({ subtaskRepository });
@@ -289,7 +292,8 @@ function main() {
   const subtaskController = new SubtaskController(
     getSubtasksUsecase,
     createSubtaskUsecase,
-    updateSubtaskUsecase,
+    updateSubtaskDescriptionUsecase,
+    updateSubtaskStatusUsecase,
     deleteSubtaskUsecase,
   );
 

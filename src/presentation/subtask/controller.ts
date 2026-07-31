@@ -80,10 +80,9 @@ export class SubtaskController {
   };
   public delete = async (req: Request, res: Response) => {
     try {
-      const result = await this.deleteSubtaskUseCase.execute({
-        userId: req.user!.sub.id,
-        subtaskId: req.validatedParams!.subtaskId,
-      });
+      const result = await this.deleteSubtaskUseCase.execute(
+        req.validatedParams!.subtaskId,
+      );
       return res.json({
         ok: true,
         message: "Subtask deleted succesfully",

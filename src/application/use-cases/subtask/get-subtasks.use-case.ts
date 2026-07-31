@@ -13,9 +13,12 @@ export class GetSubtasksUseCase {
 
   public execute = async (taskId: number) => {
     const subtasks = await this.subtaskRepository.getAllByTask(taskId);
+    const numberCompletedSubtasks = subtasks.filter(
+      (subtask) => subtask.isCompleted,
+    ).length;
     return {
       subtasks,
-      meta: { total: subtasks.length },
+      meta: { total: subtasks.length, completed: numberCompletedSubtasks },
     };
   };
 }

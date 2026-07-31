@@ -87,6 +87,9 @@ import { GetBoardBySlugUseCase } from "./application/use-cases/board/get-board-b
 import { UpdateCategoryOrderUseCase } from "./application/use-cases/category/update-category-border.use-case";
 import { GetTaskBySlugUseCase } from "./application/use-cases/task/get-task-by-slug.use-case";
 import { UpdateSubtaskStatusUseCase } from "./application/use-cases/subtask/update-subtask-status.use-case";
+import { AttachmentRoutes } from "./presentation/attachment/routes";
+import { AttachmentController } from "./presentation/attachment/controller";
+import { AttachmentMiddlewares } from "./presentation/attachment/middlewares";
 
 (async () => {
   main();
@@ -134,6 +137,7 @@ function main() {
   const taskMiddlewares = new TaskMiddlewares({ taskRepository });
   const subtaskMiddlewares = new SubtaskMiddlewares({ subtaskRepository });
   const projectMiddlewares = new ProjectMiddlewares({ projectRepository });
+  const attatchmentMiddlewares = new AttachmentMiddlewares({});
 
   //////////////// ! USE CASES ////////////////
   // AUTH
@@ -320,6 +324,8 @@ function main() {
     deleteProjectUseCase,
   );
 
+  const attatchmentController = new AttachmentController({});
+
   //! ROUTERS
   const boardRouter = new BoardsRoutes({
     controller: boardController,
@@ -357,6 +363,12 @@ function main() {
     projectMiddlewares,
   });
 
+  const attatchmentRouter = new AttachmentRoutes({
+    controller: attatchmentController,
+    attachmentMiddlewares: attatchmentMiddlewares,
+    taskMiddlewares,
+  });
+
   const appRouter = new AppRoutes(
     authMiddlewares,
     authRouter,
@@ -366,6 +378,7 @@ function main() {
     subtaskRouter,
     userRouter,
     projectRoutes,
+    attatchmentRouter,
   );
 
   // !SERVER INIT

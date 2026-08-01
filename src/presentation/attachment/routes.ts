@@ -1,10 +1,7 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Router } from "express";
 import { TaskMiddlewares } from "../task/middlewares";
 import { AttachmentMiddlewares } from "./middlewares";
 import { AttachmentController } from "./controller";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
 
 interface Dependencies {
   controller: AttachmentController;

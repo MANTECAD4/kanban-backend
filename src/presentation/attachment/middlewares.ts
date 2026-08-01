@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   dataValidationMiddlewareFactory,
   RequestValidationTarget,
@@ -7,7 +7,6 @@ import { ParamsWithIdSchema } from "../shared/schemas/shared-schemas";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 
 interface Dependencies {}
 
@@ -57,19 +56,20 @@ export class AttachmentMiddlewares {
   };
 
   private initUpload = () => {
-    const uploadsDir = path.join(__dirname, "../../../uploads");
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir);
-    }
+    // const uploadsDir = path.join(__dirname, "../../../uploads");
+    // if (!fs.existsSync(uploadsDir)) {
+    //   fs.mkdirSync(uploadsDir);
+    // }
 
-    const storage = multer.diskStorage({
-      destination: function (_req, _file, cb) {
-        cb(null, "uploads/");
-      },
-      filename: (_req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-      },
-    });
+    // const storage = multer.diskStorage({
+    //   destination: function (_req, _file, cb) {
+    //     cb(null, "uploads/");
+    //   },
+    //   filename: (_req, file, cb) => {
+    //     cb(null, Date.now() + path.extname(file.originalname));
+    //   },
+    // });
+    const storage = multer.memoryStorage();
 
     this.upload = multer({
       storage,

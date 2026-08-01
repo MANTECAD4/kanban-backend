@@ -11,4 +11,11 @@ export const envs = () => ({
   REFRESH_TOKEN_DURATION: get("REFRESH_TOKEN_DURATION")
     .required()
     .asIntPositive(),
+
+  SUPABASE_URL: get("SUPABASE_URL").required().asString(),
+  SUPABASE_PUBLISHABLE_KEY: get("SUPABASE_PUBLISHABLE_KEY")
+    .required()
+    .asString(),
+  SUPABASE_SECRET_KEY: get("SUPABASE_SECRET_KEY").required().asString(),
+  SUPABASE_JWKS_URL: get("SUPABASE_JWKS_URL").required().asString(),
 });

@@ -61,7 +61,7 @@ export class AppRoutes {
     );
 
     router.use(
-      "/api/attatchments",
+      "/api/attachments",
       [this.authMiddlewares.validateAccessToken],
       this.attatchmentRouter.routes,
     );

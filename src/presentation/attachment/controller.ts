@@ -2,10 +2,12 @@ import { Request, Response } from "express";
 import { UploadAttachmentUseCase } from "../../application/use-cases/attachment/upload-attachment.use-case";
 import { CustomError } from "../../domain/errors/custom-error";
 import { SubmitMulterFileDto } from "../../application/dtos/attatchment.dto";
+import { GetAttachmentsUseCase } from "../../application/use-cases/attachment/get-attachments.use-case";
 
 export class AttachmentController {
   constructor(
     private readonly uploadAttachmentUseCase: UploadAttachmentUseCase,
+    private readonly getAttachmentsUseCase: GetAttachmentsUseCase,
   ) {}
 
   public upload = async (req: Request, res: Response) => {
@@ -30,7 +32,18 @@ export class AttachmentController {
     }
   };
   public getAllByTask = async (req: Request, res: Response) => {
-    return res.json("getAllByTask");
+    try {
+      const taskId = req.validatedParams!.taskId;
+
+      const result = await this.getAttachmentsUseCase.execute(taskId);
+      return res.json({
+        ok: true,
+        message: "Attachments loaded successfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
   };
   public delete = async (req: Request, res: Response) => {
     return res.json("delete");

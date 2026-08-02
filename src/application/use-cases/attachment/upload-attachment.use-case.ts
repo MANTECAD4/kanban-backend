@@ -1,4 +1,3 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AttachmentRepository } from "../../../domain/repositories/attachment.repository";
 import { CloudAttachmentRepository } from "../../../domain/repositories/cloud-attachment.repository";
 import { SubmitMulterFileDto } from "../../dtos/attatchment.dto";
@@ -32,7 +31,7 @@ export class UploadAttachmentUseCase {
         file.mimetype,
       );
 
-      const extension = file.originalname.split(".")[1];
+      const extension = file.originalname.split(".").at(-1);
 
       const attachmentEntity = await this.attachmentRepository.create(taskId, {
         originalName: file.originalname,

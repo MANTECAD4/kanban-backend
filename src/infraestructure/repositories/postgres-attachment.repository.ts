@@ -32,7 +32,13 @@ export class PostgresAttachmentRepository implements AttachmentRepository {
   public delete = async (attatchmentId: number): Promise<AttachmentEntity> => {
     throw "not implemented";
   };
+
   public getAllByTask = async (taskId: number): Promise<AttachmentEntity[]> => {
-    throw "not implemented";
+    const attachments = await prisma.attachment.findMany({
+      where: { task_id: taskId },
+    });
+    return attachments.map((attachment) =>
+      AttachmentEntity.fromObject(attachment),
+    );
   };
 }

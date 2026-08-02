@@ -18,7 +18,7 @@ export class SupabaseAttachmentRepository implements CloudAttachmentRepository {
     } else {
       const sourceUrl = supabase.storage
         .from("kanban-app")
-        .getPublicUrl(data.path);
+        .getPublicUrl(data.path).data.publicUrl;
       return CloudAttachmentEntity.fromObject({ ...data, sourceUrl });
     }
   };

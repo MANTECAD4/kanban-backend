@@ -73,7 +73,7 @@ export class AttachmentMiddlewares {
 
     this.upload = multer({
       storage,
-      limits: { files: 3, fieldSize: 1024 * 1024 * 25 },
+      limits: { files: 3, fieldSize: 1024 * 1024 * 5 },
       fileFilter: (_req, file, cb) => {
         const allowed =
           /jpeg|jpg|png|webp|pdf|txt|doc|docx|xls|xlsx|csv|ppt|pptx|zip|rar|7z/;

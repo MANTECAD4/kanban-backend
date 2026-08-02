@@ -90,6 +90,10 @@ import { UpdateSubtaskStatusUseCase } from "./application/use-cases/subtask/upda
 import { AttachmentRoutes } from "./presentation/attachment/routes";
 import { AttachmentController } from "./presentation/attachment/controller";
 import { AttachmentMiddlewares } from "./presentation/attachment/middlewares";
+import { UploadAttachmentUseCase } from "./application/use-cases/attachment/upload-attachment.use-case";
+import { PostgresAttachmentRepository } from "./infraestructure/repositories/postgres-attachment.repository";
+import { CloudAttachmentRepository } from "./domain/repositories/cloud-attachment.repository";
+import { SupabaseAttachmentRepository } from "./infraestructure/repositories/supabase-attachment.repository";
 
 (async () => {
   main();
@@ -112,6 +116,8 @@ function main() {
   const subtaskRepository = new PostgresSubtaskRepository();
   const refreshTokenRepository = new PostgresRefreshTokenRepository();
   const projectRepository = new PostgresProjectRepository();
+  const attachmentRepository = new PostgresAttachmentRepository();
+  const cloudAttachmentRepository = new SupabaseAttachmentRepository();
 
   //! SERVCIES
   const tokenProvider = new JwtGenerator(TOKEN_SECRET);
@@ -269,6 +275,12 @@ function main() {
 
   const deleteProjectUseCase = new DeleteProjectUseCase({ projectRepository });
 
+  // !Attachments
+  const uploadAttachmentUseCase = new UploadAttachmentUseCase({
+    attachmentRepository,
+    cloudAttachmentRepository,
+  });
+
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -324,7 +336,9 @@ function main() {
     deleteProjectUseCase,
   );
 
-  const attatchmentController = new AttachmentController({});
+  const attatchmentController = new AttachmentController(
+    uploadAttachmentUseCase,
+  );
 
   //! ROUTERS
   const boardRouter = new BoardsRoutes({

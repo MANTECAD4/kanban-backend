@@ -30,7 +30,7 @@ export class AttachmentRoutes {
         this.taskMiddlewares.validateRelation,
         this.attachmentMiddlewares.validateAttachments,
       ],
-      this.controller.create,
+      this.controller.upload,
     );
 
     router.get(

@@ -1,35 +1,33 @@
 import { Request, Response } from "express";
-import { supabase } from "../../data/init-supabase-storage";
-
-interface Dependencies {}
+import { UploadAttachmentUseCase } from "../../application/use-cases/attachment/upload-attachment.use-case";
+import { CustomError } from "../../domain/errors/custom-error";
+import { SubmitMulterFileDto } from "../../application/dtos/attatchment.dto";
 
 export class AttachmentController {
-  constructor(dependencies: Dependencies) {
-    const {} = dependencies;
-  }
+  constructor(
+    private readonly uploadAttachmentUseCase: UploadAttachmentUseCase,
+  ) {}
 
-  public create = async (req: Request, res: Response) => {
-    // @ts-expect-error
+  public upload = async (req: Request, res: Response) => {
+    try {
+      const files = req.files as SubmitMulterFileDto[];
+      const taskId = req.validatedParams!.taskId;
+      const userId = req.user!.sub.id;
 
-    const file = req.files[0];
-    console.log({ file });
-    if (!file) return res.status(500).json("no files found");
-    // const fileDetails = req.files!.map((f) => ({
-    //   [f.originalname]: Object.keys(f),
-    //   types: Object.entries(f).map((field) => typeof field),
-    //   f,
-    // }));
+      const result = await this.uploadAttachmentUseCase.execute(
+        userId,
+        taskId,
+        files,
+      );
 
-    // const { data, error } = await supabase.storage
-    //   .from("kanban-app")
-    //   .upload(`${file.originalname}`, file.buffer, {
-    //     contentType: file.mimetype,
-    //   });
-    // if (error) {
-    //   return res.status(500).json({ error });
-    // } else {
-    // }
-    return res.json({ message: "uploaded successfully" });
+      return res.status(201).json({
+        ok: true,
+        message: "Files uploaded successfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
   };
   public getAllByTask = async (req: Request, res: Response) => {
     return res.json("getAllByTask");

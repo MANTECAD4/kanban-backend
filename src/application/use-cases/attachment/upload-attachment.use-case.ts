@@ -1,3 +1,4 @@
+import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { AttachmentRepository } from "../../../domain/repositories/attachment.repository";
 import { CloudAttachmentRepository } from "../../../domain/repositories/cloud-attachment.repository";
 import { SubmitMulterFileDto } from "../../dtos/attatchment.dto";
@@ -22,16 +23,16 @@ export class UploadAttachmentUseCase {
     taskId: number,
     files: SubmitMulterFileDto[],
   ) => {
-    const attachments = files.map(async (file) => {
+    const attachmentsPromise = files.map(async (file) => {
       const generatedName = crypto.randomUUID();
-      const storePath = `user${userId}/${generatedName}`;
+      const storePath = `user-${userId}/${generatedName}`;
       const cloudAttachment = await this.cloudAttachmentRepository.upload(
         storePath,
         file.buffer,
         file.mimetype,
       );
 
-      const extension = file.originalname.split(".")[-1];
+      const extension = file.originalname.split(".")[1];
 
       const attachmentEntity = await this.attachmentRepository.create(taskId, {
         originalName: file.originalname,
@@ -44,6 +45,8 @@ export class UploadAttachmentUseCase {
 
       return attachmentEntity;
     });
+
+    const attachments = await Promise.all(attachmentsPromise);
 
     return { attachments, meta: { total: attachments.length } };
   };

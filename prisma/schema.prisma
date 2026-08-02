@@ -79,6 +79,7 @@ model Task{
   category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   tags TaskTag[]
   subtasks Subtask[] 
+  attachments Attachment[]
   created_at DateTime @default(now())
 }
 
@@ -88,6 +89,20 @@ model Subtask {
   is_completed Boolean @default(false)
   task Task @relation(fields:[task_id], references: [id], onDelete: Cascade)
   task_id Int
+}
+
+model Attachment {
+  id Int @id @default(autoincrement())
+  original_name String
+  stored_path String
+  extension String
+  mime_type String
+  size Int
+  source_url String
+  created_at DateTime @default(now())
+  task_id Int
+  task Task @relation(fields:[task_id], references: [id],onDelete: Cascade)
+  
 }
 
 enum TaskTag {

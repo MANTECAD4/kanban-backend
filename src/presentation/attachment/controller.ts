@@ -3,11 +3,13 @@ import { UploadAttachmentUseCase } from "../../application/use-cases/attachment/
 import { CustomError } from "../../domain/errors/custom-error";
 import { SubmitMulterFileDto } from "../../application/dtos/attatchment.dto";
 import { GetAttachmentsUseCase } from "../../application/use-cases/attachment/get-attachments.use-case";
+import { DeleteAttachmentUseCase } from "../../application/use-cases/attachment/delete-attachment.use-case";
 
 export class AttachmentController {
   constructor(
     private readonly uploadAttachmentUseCase: UploadAttachmentUseCase,
     private readonly getAttachmentsUseCase: GetAttachmentsUseCase,
+    private readonly deleteAttachmentUseCase: DeleteAttachmentUseCase,
   ) {}
 
   public upload = async (req: Request, res: Response) => {
@@ -46,6 +48,16 @@ export class AttachmentController {
     }
   };
   public delete = async (req: Request, res: Response) => {
-    return res.json("delete");
+    try {
+      const attachmentId = req.validatedParams!.attachmentId;
+      const result = await this.deleteAttachmentUseCase.execute(attachmentId);
+      return res.json({
+        ok: true,
+        message: `Attachment deleted successfully`,
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
   };
 }

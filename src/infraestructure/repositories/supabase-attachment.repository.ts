@@ -2,7 +2,18 @@ import { supabase } from "../../data/init-supabase-storage";
 import { CloudAttachmentEntity } from "../../domain/entities/cloud-attachment.entity";
 import { CloudAttachmentRepository } from "../../domain/repositories/cloud-attachment.repository";
 
-export class SupabaseAttachmentRepository implements CloudAttachmentRepository {
+export default class SupabaseAttachmentRepository implements CloudAttachmentRepository {
+  public deleteAttachment = async (
+    fullAttachmentPath: string,
+  ): Promise<void> => {
+    const { data, error } = await supabase.storage
+      .from("kanban-app")
+      .remove([fullAttachmentPath]);
+    if (error) {
+      throw error;
+    }
+  };
+
   public upload = async (
     storePath: string,
     file: Buffer,

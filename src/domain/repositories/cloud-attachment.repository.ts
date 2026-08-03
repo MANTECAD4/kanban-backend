@@ -6,4 +6,6 @@ export abstract class CloudAttachmentRepository {
     file: Buffer,
     mimeType: string,
   ) => Promise<CloudAttachmentEntity>;
+
+  public abstract deleteAttachment: (attachmentPath: string) => Promise<void>;
 }

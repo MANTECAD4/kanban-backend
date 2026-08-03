@@ -35,7 +35,7 @@ export class UploadAttachmentUseCase {
 
       const attachmentEntity = await this.attachmentRepository.create(taskId, {
         originalName: file.originalname,
-        storedPath: cloudAttachment.fullPath,
+        storedPath: cloudAttachment.path,
         extension: extension!,
         mimeType: file.mimetype,
         size: file.size,

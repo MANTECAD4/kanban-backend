@@ -70,16 +70,21 @@ export class AttachmentMiddlewares {
     //   },
     // });
     const storage = multer.memoryStorage();
-
     this.upload = multer({
       storage,
       limits: { files: 3, fieldSize: 1024 * 1024 * 5 },
       fileFilter: (_req, file, cb) => {
-        const allowed =
+        console.log({
+          ext: path.extname(file.originalname).toLowerCase(),
+          mime: file.mimetype,
+        });
+        const allowedExtensions =
           /jpeg|jpg|png|webp|pdf|txt|doc|docx|xls|xlsx|csv|ppt|pptx|zip|rar|7z/;
-        const ext = allowed.test(path.extname(file.originalname).toLowerCase());
-        const mime = allowed.test(file.mimetype);
-        if (ext && mime) return cb(null, true);
+        const ext = allowedExtensions.test(
+          path.extname(file.originalname).toLowerCase(),
+        );
+        // const mime = allowedExtensions.test(file.mimetype);
+        if (ext) return cb(null, true);
         cb(new Error("Invalid file type."));
       },
     }).array("attachments");

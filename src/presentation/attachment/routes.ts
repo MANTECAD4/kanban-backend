@@ -42,7 +42,7 @@ export class AttachmentRoutes {
       this.controller.getAllByTask,
     );
     router.delete(
-      "/:attatchmentId",
+      "/:attachmentId",
       [this.attachmentMiddlewares.attachmentIdValidation],
       this.controller.delete,
     );

@@ -93,8 +93,9 @@ import { AttachmentMiddlewares } from "./presentation/attachment/middlewares";
 import { UploadAttachmentUseCase } from "./application/use-cases/attachment/upload-attachment.use-case";
 import { PostgresAttachmentRepository } from "./infraestructure/repositories/postgres-attachment.repository";
 import { CloudAttachmentRepository } from "./domain/repositories/cloud-attachment.repository";
-import { SupabaseAttachmentRepository } from "./infraestructure/repositories/supabase-attachment.repository";
+import SupabaseAttachmentRepository from "./infraestructure/repositories/supabase-attachment.repository";
 import { GetAttachmentsUseCase } from "./application/use-cases/attachment/get-attachments.use-case";
+import { DeleteAttachmentUseCase } from "./application/use-cases/attachment/delete-attachment.use-case";
 
 (async () => {
   main();
@@ -286,6 +287,10 @@ function main() {
     attachmentRepository,
   });
 
+  const deleteAttachmentUseCase = new DeleteAttachmentUseCase({
+    attachmentRepository,
+    cloudAttachmentRepository,
+  });
   //////////////// ! CONTROLLERS ////////////////
   const authController = new AuthController(
     registerUserUseCase,
@@ -344,6 +349,7 @@ function main() {
   const attatchmentController = new AttachmentController(
     uploadAttachmentUseCase,
     getAttachmentsUseCase,
+    deleteAttachmentUseCase,
   );
 
   //! ROUTERS

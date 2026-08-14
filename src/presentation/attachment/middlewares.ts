@@ -7,13 +7,18 @@ import { ParamsWithIdSchema } from "../shared/schemas/shared-schemas";
 import { CustomError, ErrorCodes } from "../../domain/errors/custom-error";
 import multer from "multer";
 import path from "path";
+import { AttachmentRepository } from "../../domain/repositories/attachment.repository";
 
-interface Dependencies {}
+interface Dependencies {
+  attachmentRepository: AttachmentRepository;
+}
 
 export class AttachmentMiddlewares {
   private upload: any;
+  private readonly attachmentRepository: AttachmentRepository;
   constructor(dependencies: Dependencies) {
-    const {} = dependencies;
+    const { attachmentRepository } = dependencies;
+    this.attachmentRepository = attachmentRepository;
     this.initUpload();
   }
 
@@ -22,6 +27,35 @@ export class AttachmentMiddlewares {
     "Invalid attachment id provided",
     RequestValidationTarget.PARAMS,
   );
+
+  public validateRelation = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user!.sub.id;
+      const attachmentId = req.validatedParams!.attachmentId;
+
+      const relatedAttachment = await this.attachmentRepository.checkRelation(
+        userId,
+        attachmentId,
+      );
+
+      if (!relatedAttachment) {
+        const error = CustomError.forbidden({
+          title: "Forbidden",
+          message: "User doesn't have access to this attachment",
+          code: ErrorCodes.FORBIDDEN,
+          details: null,
+        });
+        return CustomError.handleError(error, req, res);
+      }
+      next();
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
 
   public validateAttachments = (
     req: Request,

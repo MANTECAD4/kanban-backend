@@ -9,7 +9,7 @@ export class PostgresCategoryRepository implements CategoryRepository {
     categoryId: number,
   ): Promise<CategoryEntity | null> => {
     const category = await prisma.category.findFirst({
-      where: { id: categoryId, board: { project: { user: { id: userId } } } },
+      where: { id: categoryId, board: { user: { id: userId } } },
     });
 
     return category ? CategoryEntity.fromObject(category) : null;

@@ -43,7 +43,10 @@ export class AttachmentRoutes {
     );
     router.delete(
       "/:attachmentId",
-      [this.attachmentMiddlewares.attachmentIdValidation],
+      [
+        this.attachmentMiddlewares.attachmentIdValidation,
+        this.attachmentMiddlewares.validateRelation,
+      ],
       this.controller.delete,
     );
 

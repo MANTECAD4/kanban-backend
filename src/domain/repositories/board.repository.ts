@@ -2,9 +2,7 @@ import { SubmitBoardDto } from "../../application/dtos";
 import { BoardEntity } from "../entities/board.entity";
 
 export abstract class BoardRepository {
-  public abstract getAllByProject: (
-    projectId: number,
-  ) => Promise<BoardEntity[]>;
+  public abstract getAllByUser: (userId: number) => Promise<BoardEntity[]>;
 
   public abstract getById: (boardId: number) => Promise<BoardEntity | null>;
 
@@ -13,10 +11,10 @@ export abstract class BoardRepository {
     searchKey: string | number,
   ) => Promise<BoardEntity | null>;
 
-  public abstract checkCollection: (
-    projectId: number,
-    slug: string,
-  ) => Promise<null | BoardEntity>;
+  // public abstract checkCollection: (
+  //   projectId: number,
+  //   slug: string,
+  // ) => Promise<null | BoardEntity>;
 
   public abstract create: (
     userId: number,

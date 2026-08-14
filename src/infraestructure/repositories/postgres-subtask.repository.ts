@@ -14,7 +14,7 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
     const subtask = await prisma.subtask.findFirst({
       where: {
         id: subtaskId,
-        task: { category: { board: { project: { user: { id: userId } } } } },
+        task: { category: { board: { user: { id: userId } } } },
       },
     });
     return subtask ? SubtaskEntity.fromObject(subtask) : null;

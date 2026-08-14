@@ -1,54 +1,35 @@
 import { Router } from "express";
 import { BoardController } from "./controller";
 import { BoardMiddlewares } from "./middlewares";
-import { ProjectMiddlewares } from "../project/middlewares";
 
 interface ClassDependencies {
   controller: BoardController;
   boardMiddlewares: BoardMiddlewares;
-  projectMiddlewares: ProjectMiddlewares;
 }
 
 export class BoardsRoutes {
   private readonly controller: BoardController;
   private readonly boardMiddlewares: BoardMiddlewares;
-  private readonly projectMiddlewares: ProjectMiddlewares;
 
   constructor(dependencies: ClassDependencies) {
-    const { controller, boardMiddlewares, projectMiddlewares } = dependencies;
+    const { controller, boardMiddlewares } = dependencies;
     this.controller = controller;
     this.boardMiddlewares = boardMiddlewares;
-    this.projectMiddlewares = projectMiddlewares;
   }
 
   public get routes() {
     const router = Router();
 
-    router.get(
-      "/in-project/:projectId",
-      [
-        this.projectMiddlewares.validateProjectId,
-        this.projectMiddlewares.validateRelation,
-      ],
-      this.controller.getAll,
-    );
+    router.get("/", this.controller.getAll);
 
     router.get(
-      "/:boardSlug/in-project/:projectId",
-      [
-        this.boardMiddlewares.boardSlugParamValidation,
-        this.projectMiddlewares.validateProjectId,
-        this.projectMiddlewares.validateRelation,
-      ],
+      "/:boardSlug",
+      [this.boardMiddlewares.boardSlugParamValidation],
       this.controller.getBySlug,
     );
 
     router.post(
-      "/in-project/:projectId",
-      [
-        this.projectMiddlewares.validateProjectId,
-        this.projectMiddlewares.validateRelation,
-      ],
+      "/",
       [this.boardMiddlewares.submitBoardDataValidation],
       this.controller.create,
     );

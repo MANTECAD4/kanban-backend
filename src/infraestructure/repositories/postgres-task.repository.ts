@@ -15,7 +15,7 @@ export class PostgresTaskRepository implements TaskRepository {
         where: {
           id: searchKey,
           category: {
-            board: { project: { user: { id: userId } } },
+            board: { user: { id: userId } },
           },
         },
       });

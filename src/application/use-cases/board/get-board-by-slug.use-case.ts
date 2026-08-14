@@ -12,11 +12,8 @@ export class GetBoardBySlugUseCase {
     this.boardRepository = boardRepository;
   }
 
-  public execute = async (projectId: number, boardSlug: string) => {
-    const board = await this.boardRepository.checkCollection(
-      projectId,
-      boardSlug,
-    );
+  public execute = async (userId: number, boardSlug: string) => {
+    const board = await this.boardRepository.checkRelation(userId, boardSlug);
     if (!board)
       throw CustomError.notFound({
         title: "Not found",

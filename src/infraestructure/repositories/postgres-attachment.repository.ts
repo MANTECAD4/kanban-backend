@@ -11,7 +11,7 @@ export class PostgresAttachmentRepository implements AttachmentRepository {
     const attachment = await prisma.attachment.findUnique({
       where: {
         id: attachmentId,
-        task: { category: { board: { project: { user: { id: userId } } } } },
+        task: { category: { board: { user: { id: userId } } } },
       },
     });
 

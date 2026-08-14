@@ -13,13 +13,9 @@ export class CreateBoardUseCase {
     this.boardRepository = boardRepository;
   }
 
-  public execute = async (
-    userId: number,
-    projectId: number,
-    data: SubmitBoardDto,
-  ) => {
+  public execute = async (userId: number, data: SubmitBoardDto) => {
     const existingBoardInUserCollection =
-      await this.boardRepository.checkCollection(userId, data.slug);
+      await this.boardRepository.checkRelation(userId, data.slug);
     if (existingBoardInUserCollection)
       throw CustomError.badRequest({
         title: "Board creation failed",
@@ -27,7 +23,7 @@ export class CreateBoardUseCase {
         code: ErrorCodes.ALREADY_REGISTERED,
         details: null,
       });
-    const createdBoard = await this.boardRepository.create(projectId, data);
+    const createdBoard = await this.boardRepository.create(userId, data);
     return {
       board: createdBoard,
     };

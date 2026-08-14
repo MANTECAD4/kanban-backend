@@ -18,7 +18,7 @@ model User {
   email String @unique
   name String
   password String
-  projects Project[]
+  boards Board[]
   refresh_tokens RefreshToken[]
 }
 
@@ -31,18 +31,18 @@ model RefreshToken{
   user_id Int
 }
 
-model Project {
-  id Int @id @default(autoincrement())
-  name String
-  slug String
-  description String
-  icon String
-  icon_color IconColor
-  user_id Int
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
-  created_at DateTime @default(now())
-  boards Board[]
-}
+// model Project {
+//   id Int @id @default(autoincrement())
+//   name String
+//   slug String
+//   description String
+//   icon String
+//   icon_color IconColor
+//   user_id Int
+//   user User @relation(fields: [user_id], references: [id], onDelete: Cascade) 
+//   created_at DateTime @default(now())
+//   boards Board[]
+// }
 
 model Board{
   id Int @id @default(autoincrement())
@@ -51,8 +51,8 @@ model Board{
   description String
   icon String
   icon_color IconColor
-  project_id Int 
-  project Project @relation(fields:[project_id], references:[id], onDelete: Cascade)
+  user_id Int 
+  user User @relation(fields:[user_id], references:[id], onDelete: Cascade)
   created_at DateTime @default(now())
   status_colummns Category[]
 }

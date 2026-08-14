@@ -1,4 +1,3 @@
-import { CustomError, ErrorCodes } from "../../../domain/errors/custom-error";
 import { BoardRepository } from "../../../domain/repositories";
 
 interface ClassDependencies {
@@ -12,19 +11,10 @@ export class GetBoardsUseCase {
     this.boardRepository = boardRepository;
   }
 
-  public execute = async (projectId: number) => {
-    const boards = await this.boardRepository.getAllByProject(projectId);
-    // if (boards.length === 0) {
-    //   throw CustomError.notFound({
-    //     title: "Not found",
-    //     message: "No boards found for this project",
-    //     code: ErrorCodes.NOT_FOUND,
-    //     details: null,
-    //   });
-    // }
+  public execute = async (userId: number) => {
+    const boards = await this.boardRepository.getAllByUser(userId);
     return {
       boards,
-
       meta: { total: boards.length },
     };
   };

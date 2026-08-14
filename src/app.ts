@@ -145,7 +145,9 @@ function main() {
   const taskMiddlewares = new TaskMiddlewares({ taskRepository });
   const subtaskMiddlewares = new SubtaskMiddlewares({ subtaskRepository });
   const projectMiddlewares = new ProjectMiddlewares({ projectRepository });
-  const attatchmentMiddlewares = new AttachmentMiddlewares({});
+  const attatchmentMiddlewares = new AttachmentMiddlewares({
+    attachmentRepository,
+  });
 
   //////////////// ! USE CASES ////////////////
   // AUTH
@@ -356,7 +358,7 @@ function main() {
   const boardRouter = new BoardsRoutes({
     controller: boardController,
     boardMiddlewares,
-    projectMiddlewares,
+    userMiddlewares: projectMiddlewares,
   });
   const authRouter = new AuthRoutes({
     authMiddlewares,

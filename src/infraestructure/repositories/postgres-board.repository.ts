@@ -4,11 +4,9 @@ import { BoardEntity } from "../../domain/entities";
 import { BoardRepository } from "../../domain/repositories";
 
 export class PostgresBoardRepository implements BoardRepository {
-  public getAllByProject = async (
-    projectId: number,
-  ): Promise<BoardEntity[]> => {
+  public getAllByUser = async (userId: number): Promise<BoardEntity[]> => {
     const rawBoards = await prisma.board.findMany({
-      where: { project_id: projectId },
+      where: { user_id: userId },
     });
     return rawBoards.map((board) => BoardEntity.fromObject(board));
   };
@@ -25,11 +23,11 @@ export class PostgresBoardRepository implements BoardRepository {
     let board;
     if (typeof searchKey === "string") {
       board = await prisma.board.findFirst({
-        where: { slug: searchKey, project: { user_id: userId } },
+        where: { slug: searchKey, user_id: userId },
       });
     } else {
       board = await prisma.board.findUnique({
-        where: { id: searchKey, project: { user_id: userId } },
+        where: { id: searchKey, user_id: userId },
       });
     }
     return board === null ? null : BoardEntity.fromObject(board);
@@ -47,14 +45,14 @@ export class PostgresBoardRepository implements BoardRepository {
   };
 
   public create = async (
-    projectId: number,
+    userId: number,
     { iconColor, ...rest }: SubmitBoardDto,
   ): Promise<BoardEntity> => {
     const createdBoard = await prisma.board.create({
       data: {
         icon_color: iconColor,
         ...rest,
-        project_id: projectId,
+        user_id: userId,
       },
     });
     return BoardEntity.fromObject(createdBoard);

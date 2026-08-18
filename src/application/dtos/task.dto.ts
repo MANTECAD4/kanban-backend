@@ -1,5 +1,5 @@
 import z from "zod";
-import { Priority } from "../../domain/entities";
+import { TaskPriority } from "../../domain/entities";
 
 export enum TaskTag {
   UI = "UI",
@@ -31,8 +31,34 @@ export const SubmitTaskSchema = z.object({
   slug: z.string(),
   description: z.string().normalize().nonempty(),
   dueDate: z.coerce.date(),
-  priority: z.enum(Priority),
+  priority: z.enum(TaskPriority),
   tags: z.array(z.enum(TaskTag)),
 });
 
 export type SubmitTaskDto = z.infer<typeof SubmitTaskSchema>;
+
+export const UpcomingTaskSchema = z.object({
+  task: z.object({
+    id: z.int().min(1),
+    title: z.string(),
+    slug: z.string(),
+    dueDate: z.date(),
+  }),
+  board: z.object({
+    id: z.int().min(1),
+    name: z.string(),
+    slug: z.string(),
+  }),
+});
+
+export type UpcomingTaskDto = z.infer<typeof UpcomingTaskSchema>;
+
+export const TasksMetaByPrioritySchema = z.object({
+  total: z.int().min(1),
+  low: z.int().min(1),
+  medium: z.int().min(1),
+  high: z.int().min(1),
+  urgent: z.int().min(1),
+});
+
+export type TasksMetaByPriorityDto = z.infer<typeof TasksMetaByPrioritySchema>;

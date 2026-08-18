@@ -92,10 +92,11 @@ import { AttachmentController } from "./presentation/attachment/controller";
 import { AttachmentMiddlewares } from "./presentation/attachment/middlewares";
 import { UploadAttachmentUseCase } from "./application/use-cases/attachment/upload-attachment.use-case";
 import { PostgresAttachmentRepository } from "./infraestructure/repositories/postgres-attachment.repository";
-import { CloudAttachmentRepository } from "./domain/repositories/cloud-attachment.repository";
-import SupabaseAttachmentRepository from "./infraestructure/repositories/supabase-attachment.repository";
+import { SupabaseAttachmentRepository } from "./infraestructure/repositories/supabase-attachment.repository";
 import { GetAttachmentsUseCase } from "./application/use-cases/attachment/get-attachments.use-case";
 import { DeleteAttachmentUseCase } from "./application/use-cases/attachment/delete-attachment.use-case";
+import { GetUpcomingTasksUseCase } from "./application/use-cases/task/get-upcoming-tasks.use-case";
+import { GetTasksMetaPrioritiesUseCase } from "./application/use-cases/task/get-tasks-meta-priorities.use-case";
 
 (async () => {
   main();
@@ -252,6 +253,14 @@ function main() {
 
   const updateTaskOrderUseCase = new UpdateOrderInTaskUseCase(taskRepository);
 
+  const getUpcomingTasksUseCase = new GetUpcomingTasksUseCase({
+    taskRepository,
+  });
+
+  const getTasksMetaByPriorityUseCase = new GetTasksMetaPrioritiesUseCase({
+    taskRepository,
+  });
+
   // USERS
   const getUserInfoUseCase = new GetUserInfoUseCase({
     userRepository,
@@ -332,8 +341,9 @@ function main() {
     updateDataTask,
     updateColumnTask,
     updateTaskOrderUseCase,
-
     deleteTaskUsecase,
+    getUpcomingTasksUseCase,
+    getTasksMetaByPriorityUseCase,
   );
 
   const userController = new UserController({
@@ -358,7 +368,6 @@ function main() {
   const boardRouter = new BoardsRoutes({
     controller: boardController,
     boardMiddlewares,
-    userMiddlewares: projectMiddlewares,
   });
   const authRouter = new AuthRoutes({
     authMiddlewares,

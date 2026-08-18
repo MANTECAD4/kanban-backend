@@ -1,6 +1,6 @@
 import { TaskTag } from "../../application/dtos";
 
-export enum Priority {
+export enum TaskPriority {
   Low = "Low",
   Medium = "Medium",
   High = "High",
@@ -15,7 +15,7 @@ interface TaskProps {
   dueDate: Date;
   createdAt: Date;
   order: number;
-  priority: Priority;
+  priority: TaskPriority;
   categoryId: number;
   tags: TaskTag[];
 }
@@ -28,7 +28,7 @@ export class TaskEntity {
   public dueDate: Date;
   public createdAt: Date;
   public readonly order: number;
-  public priority: Priority;
+  public priority: TaskPriority;
   public categoryId: number;
   public tags: TaskTag[];
 

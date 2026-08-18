@@ -8,6 +8,8 @@ import { UpdateStatusColumnInTaskUseCase } from "../../application/use-cases/tas
 import { UpdateDataInTaskUseCase } from "../../application/use-cases/task/update-data-task.use-case";
 import { UpdateOrderInTaskUseCase } from "../../application/use-cases/task";
 import { GetTaskBySlugUseCase } from "../../application/use-cases/task/get-task-by-slug.use-case";
+import { GetUpcomingTasksUseCase } from "../../application/use-cases/task/get-upcoming-tasks.use-case";
+import { GetTasksMetaPrioritiesUseCase } from "../../application/use-cases/task/get-tasks-meta-priorities.use-case";
 
 export class TaskController {
   constructor(
@@ -18,6 +20,8 @@ export class TaskController {
     private readonly updateTaskCategoryUseCase: UpdateStatusColumnInTaskUseCase,
     private readonly updateOrderTaskUseCase: UpdateOrderInTaskUseCase,
     private readonly deleteTaskUseCase: DeleteTaskUseCase,
+    private readonly getUpcomingTasksUseCase: GetUpcomingTasksUseCase,
+    private readonly getTasksMetaPrioritiesUseCase: GetTasksMetaPrioritiesUseCase,
   ) {}
 
   public getAllByCategory = async (req: Request, res: Response) => {
@@ -120,6 +124,34 @@ export class TaskController {
       return res.json({
         ok: true,
         message: "Task deleted succesfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
+
+  public getUpcomingTasks = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user!.sub.id;
+      const result = await this.getUpcomingTasksUseCase.execute(userId);
+      return res.json({
+        ok: true,
+        message: "Upcoming tasks loaded successfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
+
+  public getMetaByPriority = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user!.sub.id;
+      const result = await this.getTasksMetaPrioritiesUseCase.execute(userId);
+      return res.json({
+        ok: true,
+        message: "Tasks meta by priority loaded successfully",
         ...result,
       });
     } catch (error) {

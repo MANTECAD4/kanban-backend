@@ -98,6 +98,8 @@ export class TaskRoutes {
       this.controller.delete,
     );
 
+    router.get("/upcoming", this.controller.getUpcomingTasks);
+    router.get("/meta-priority", this.controller.getMetaByPriority);
     return router;
   }
 }

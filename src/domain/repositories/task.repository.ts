@@ -1,4 +1,8 @@
-import { SubmitTaskDto } from "../../application/dtos";
+import {
+  SubmitTaskDto,
+  TasksMetaByPriorityDto,
+  UpcomingTaskDto,
+} from "../../application/dtos";
 import { TaskEntity } from "../entities/task.entity";
 
 export abstract class TaskRepository {
@@ -36,4 +40,12 @@ export abstract class TaskRepository {
     order: number,
   ) => Promise<TaskEntity>;
   public abstract delete: (taskId: number) => Promise<TaskEntity>;
+
+  public abstract getUpcomingTasks: (
+    userId: number,
+  ) => Promise<UpcomingTaskDto[]>;
+
+  public abstract getMetaByPriority: (
+    userId: number,
+  ) => Promise<TasksMetaByPriorityDto>;
 }

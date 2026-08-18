@@ -1,6 +1,5 @@
-import { IconColor } from "../../generated/enums";
+import { IconColor, TaskTag } from "../../generated/enums";
 import { CategoryEntity } from "./category.entity";
-import { TagEntity } from "./tag.entity";
 import { ProjectEntity } from "./project.entity";
 
 export interface BoardMetaData {
@@ -19,7 +18,7 @@ interface BoardProps {
   project: ProjectEntity | null;
   projectId: number;
   statusColumns: CategoryEntity[] | null;
-  tags: TagEntity[] | null;
+  tags: TaskTag[] | null;
   meta: BoardMetaData | null;
 }
 
@@ -33,7 +32,7 @@ export class BoardEntity {
   public readonly project: ProjectEntity | null;
   public readonly projectId: number;
   public readonly statusColumns: CategoryEntity[] | null;
-  public readonly tags: TagEntity[] | null;
+  public readonly tags: TaskTag[] | null;
   public readonly meta: BoardMetaData | null;
 
   constructor(options: BoardProps) {

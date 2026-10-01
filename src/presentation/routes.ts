@@ -10,6 +10,7 @@ import { AuthMiddlewares } from "./auth/middlewares";
 import { UserRoutes } from "./user/routes";
 import { ProjectRoutes } from "./project/routes";
 import { AttachmentRoutes } from "./attachment/routes";
+import { SeedController } from "./shared/seed/controller";
 
 export class AppRoutes {
   constructor(
@@ -22,12 +23,14 @@ export class AppRoutes {
     private readonly userRouter: UserRoutes,
     private readonly projectRouter: ProjectRoutes,
     private readonly attatchmentRouter: AttachmentRoutes,
+    private readonly seedController: SeedController,
   ) {}
 
   public get routes(): Router {
     const router = Router();
 
     //! MAIN ENDPOINTS
+    router.get("/api/seed", this.seedController.seedDatabase);
     router.use("/api/auth", this.authRouter.routes);
     router.use(
       "/api/boards",

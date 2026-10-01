@@ -10,6 +10,7 @@ import { UpdateOrderInTaskUseCase } from "../../application/use-cases/task";
 import { GetTaskBySlugUseCase } from "../../application/use-cases/task/get-task-by-slug.use-case";
 import { GetUpcomingTasksUseCase } from "../../application/use-cases/task/get-upcoming-tasks.use-case";
 import { GetTasksMetaPrioritiesUseCase } from "../../application/use-cases/task/get-tasks-meta-priorities.use-case";
+import { GetTasksMetaByCompletionUseCase } from "../../application/use-cases/task/get-tasks-meta-completion.use-case";
 
 export class TaskController {
   constructor(
@@ -22,6 +23,7 @@ export class TaskController {
     private readonly deleteTaskUseCase: DeleteTaskUseCase,
     private readonly getUpcomingTasksUseCase: GetUpcomingTasksUseCase,
     private readonly getTasksMetaPrioritiesUseCase: GetTasksMetaPrioritiesUseCase,
+    private readonly getTasksMetaCompletionUseCase: GetTasksMetaByCompletionUseCase,
   ) {}
 
   public getAllByCategory = async (req: Request, res: Response) => {
@@ -152,6 +154,19 @@ export class TaskController {
       return res.json({
         ok: true,
         message: "Tasks meta by priority loaded successfully",
+        ...result,
+      });
+    } catch (error) {
+      return CustomError.handleError(error, req, res);
+    }
+  };
+  public getMetaByCompletion = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user!.sub.id;
+      const result = await this.getTasksMetaCompletionUseCase.execute(userId);
+      return res.json({
+        ok: true,
+        message: "Tasks meta by completion loaded successfully",
         ...result,
       });
     } catch (error) {

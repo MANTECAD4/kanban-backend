@@ -97,6 +97,9 @@ import { GetAttachmentsUseCase } from "./application/use-cases/attachment/get-at
 import { DeleteAttachmentUseCase } from "./application/use-cases/attachment/delete-attachment.use-case";
 import { GetUpcomingTasksUseCase } from "./application/use-cases/task/get-upcoming-tasks.use-case";
 import { GetTasksMetaPrioritiesUseCase } from "./application/use-cases/task/get-tasks-meta-priorities.use-case";
+import { GetTasksMetaByCompletionUseCase } from "./application/use-cases/task/get-tasks-meta-completion.use-case";
+import { SeedController } from "./presentation/shared/seed/controller";
+import { SeedDatabaseUseCase } from "./application/use-cases/shared/seed-db.use-case";
 
 (async () => {
   main();
@@ -126,6 +129,16 @@ function main() {
   const tokenProvider = new JwtGenerator(TOKEN_SECRET);
   const strongHasher = new BycryptHasher();
   const softHasher = new CryptoHasher();
+
+  //! SEED
+  const seedDatabaseUseCase = new SeedDatabaseUseCase({
+    boardRepository,
+    categoryRepository,
+    subtaskRepository,
+    taskRepository,
+    userRepository,
+    strongHasher,
+  });
 
   //! APPLICATION SERVICES
   const refreshTokenPersistencyService = new RefreshTokenPersistencyService({
@@ -189,6 +202,7 @@ function main() {
 
   const getBoardsUseCase = new GetBoardsUseCase({
     boardRepository,
+    taskRepository,
   });
 
   const getBoardBySlugUseCase = new GetBoardBySlugUseCase({ boardRepository });
@@ -258,6 +272,9 @@ function main() {
   });
 
   const getTasksMetaByPriorityUseCase = new GetTasksMetaPrioritiesUseCase({
+    taskRepository,
+  });
+  const getTasksMetaByCompletionUseCase = new GetTasksMetaByCompletionUseCase({
     taskRepository,
   });
 
@@ -344,6 +361,7 @@ function main() {
     deleteTaskUsecase,
     getUpcomingTasksUseCase,
     getTasksMetaByPriorityUseCase,
+    getTasksMetaByCompletionUseCase,
   );
 
   const userController = new UserController({
@@ -406,6 +424,8 @@ function main() {
     taskMiddlewares,
   });
 
+  const seedController = new SeedController(seedDatabaseUseCase);
+
   const appRouter = new AppRoutes(
     authMiddlewares,
     authRouter,
@@ -416,6 +436,7 @@ function main() {
     userRouter,
     projectRoutes,
     attatchmentRouter,
+    seedController,
   );
 
   // !SERVER INIT

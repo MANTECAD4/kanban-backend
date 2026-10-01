@@ -3,6 +3,8 @@ import { CategoryEntity } from "./category.entity";
 import { ProjectEntity } from "./project.entity";
 
 export interface BoardMetaData {
+  total: number;
+  numNotApplicableTasks: number;
   numCompletedTasks: number;
   numStartedTasks: number;
   numNotStartedTasks: number;

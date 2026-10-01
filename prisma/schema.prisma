@@ -104,7 +104,7 @@ model Attachment {
   task Task @relation(fields:[task_id], references: [id],onDelete: Cascade)
   
 }
-
+// 4, 17, 29, 8, 23, 11, 2, 26, 14, 30
 enum TaskTag {
   UI 
   UX 

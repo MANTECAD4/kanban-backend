@@ -8,8 +8,11 @@ export const RegisterUserSchema = z.object({
     .trim()
     .min(8)
     .regex(/\d/, { error: "Must contain at least one number" })
-    .regex(/[a-zA-Z]/, {
-      error: "Must contain at least one letter",
+    .regex(/[A-Z]/, {
+      error: "Must contain at least one upper letter",
+    })
+    .regex(/[a-z]/, {
+      error: "Must contain at least one lower letter",
     })
     .regex(/[^a-zA-Z0-9]/, {
       error: "Must contain at least one special character",

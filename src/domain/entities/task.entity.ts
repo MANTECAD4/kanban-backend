@@ -1,4 +1,5 @@
 import { TaskTag } from "../../application/dtos";
+import { SubtaskEntity } from "./subtask.entity";
 
 export enum TaskPriority {
   Low = "Low",
@@ -18,6 +19,7 @@ interface TaskProps {
   priority: TaskPriority;
   categoryId: number;
   tags: TaskTag[];
+  subtasks: SubtaskEntity[] | null;
 }
 
 export class TaskEntity {
@@ -31,6 +33,7 @@ export class TaskEntity {
   public priority: TaskPriority;
   public categoryId: number;
   public tags: TaskTag[];
+  subtasks: SubtaskEntity[] | null;
 
   constructor(props: TaskProps) {
     const {
@@ -44,6 +47,7 @@ export class TaskEntity {
       priority,
       categoryId,
       tags,
+      subtasks = null,
     } = props;
     this.id = id;
     this.title = title;
@@ -55,6 +59,7 @@ export class TaskEntity {
     this.priority = priority;
     this.categoryId = categoryId;
     this.tags = tags;
+    this.subtasks = subtasks;
   }
 
   static fromObject = (object: Record<string, any>): TaskEntity => {
@@ -70,6 +75,7 @@ export class TaskEntity {
       priority,
       tags,
       category_id,
+      subtasks,
     } = object;
     return new TaskEntity({
       id: id ?? _id,
@@ -82,6 +88,7 @@ export class TaskEntity {
       tags,
       priority,
       categoryId: category_id,
+      subtasks,
     });
   };
 }

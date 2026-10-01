@@ -36,10 +36,10 @@ export class PostgresSubtaskRepository implements SubtaskRepository {
 
   public create = async (
     taskId: number,
-    data: SubmitSubtaskDto,
+    { isCompleted, ...data }: SubmitSubtaskDto,
   ): Promise<SubtaskEntity> => {
     const createdSubtask = await prisma.subtask.create({
-      data: { ...data, task_id: taskId, is_completed: false },
+      data: { ...data, task_id: taskId, is_completed: isCompleted ?? false },
     });
     return SubtaskEntity.fromObject(createdSubtask);
   };

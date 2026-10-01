@@ -100,6 +100,7 @@ export class TaskRoutes {
 
     router.get("/upcoming", this.controller.getUpcomingTasks);
     router.get("/meta-priority", this.controller.getMetaByPriority);
+    router.get("/meta-completion", this.controller.getMetaByCompletion);
     return router;
   }
 }

@@ -11,7 +11,6 @@ import {
   RefreshTokenPayload,
   RegisterUserDto,
 } from "../../application/dtos";
-import { RefreshTokenGetPayload } from "../../generated/models";
 
 export class AuthController {
   constructor(
@@ -87,7 +86,7 @@ export class AuthController {
       res.clearCookie("refreshToken", {
         path: "/",
       });
-      return res.json({ ok: true, message: "Logout succesfull" });
+      return res.json({ ok: true, message: "Logout successfull" });
     } catch (error) {
       return CustomError.handleError(error, req, res);
     }

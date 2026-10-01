@@ -62,3 +62,16 @@ export const TasksMetaByPrioritySchema = z.object({
 });
 
 export type TasksMetaByPriorityDto = z.infer<typeof TasksMetaByPrioritySchema>;
+
+export const TasksMetaByCompletionSchema = z.object({
+  total: z.int().min(1),
+  na: z.int().min(1),
+  notStarted: z.int().min(1),
+  started: z.int().min(1),
+  inProgress: z.int().min(1),
+  completed: z.int().min(1),
+});
+
+export type TasksMetaByCompletionDto = z.infer<
+  typeof TasksMetaByCompletionSchema
+>;

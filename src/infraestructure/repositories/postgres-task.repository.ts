@@ -5,6 +5,7 @@ import {
 } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
 import { TaskEntity, TaskPriority } from "../../domain/entities";
+import { SubtaskEntity } from "../../domain/entities/subtask.entity";
 import { TaskRepository } from "../../domain/repositories";
 
 export class PostgresTaskRepository implements TaskRepository {
@@ -156,27 +157,42 @@ export class PostgresTaskRepository implements TaskRepository {
     return upcomingTasks;
   };
 
-  public getMetaByPriority = async (
-    userId: number,
-  ): Promise<TasksMetaByPriorityDto> => {
+  public getAllByUser = async (userId: number): Promise<TaskEntity[]> => {
     const tasks = await prisma.task.findMany({
       where: { category: { board: { user_id: userId } } },
     });
 
-    const total = tasks.length;
-    const low = tasks.filter(
-      (task) => task.priority === TaskPriority.Low,
-    ).length;
-    const medium = tasks.filter(
-      (task) => task.priority === TaskPriority.Medium,
-    ).length;
-    const high = tasks.filter(
-      (task) => task.priority === TaskPriority.High,
-    ).length;
-    const urgent = tasks.filter(
-      (task) => task.priority === TaskPriority.Urgent,
-    ).length;
+    return tasks.map((task) => TaskEntity.fromObject(task));
+  };
 
-    return { total, low, medium, high, urgent };
+  public getAllByUserWithSubtasks = async (
+    userId: number,
+  ): Promise<TaskEntity[]> => {
+    const tasks = await prisma.task.findMany({
+      where: { category: { board: { user_id: userId } } },
+      include: { subtasks: true },
+    });
+
+    return tasks.map(({ subtasks: rawSubtasks, ...rest }) => {
+      const subtasks = rawSubtasks.map((subtask) =>
+        SubtaskEntity.fromObject(subtask),
+      );
+      return TaskEntity.fromObject({ ...rest, subtasks });
+    });
+  };
+
+  public getAllByBoardWithSubtasks = async (
+    boardId: number,
+  ): Promise<TaskEntity[]> => {
+    const tasks = await prisma.task.findMany({
+      where: { category: { board_id: boardId } },
+      include: { subtasks: true },
+    });
+    return tasks.map(({ subtasks: rawSubtasks, ...rest }) => {
+      const subtasks = rawSubtasks.map((subtask) =>
+        SubtaskEntity.fromObject(subtask),
+      );
+      return TaskEntity.fromObject({ ...rest, subtasks });
+    });
   };
 }

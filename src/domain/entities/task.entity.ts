@@ -8,6 +8,12 @@ export enum TaskPriority {
   Urgent = "Urgent",
 }
 
+export interface TaskMeta {
+  totalSubtasks: number;
+  completedSubtasks: number;
+  numAttatchments: number;
+}
+
 interface TaskProps {
   id: number;
   title: string;
@@ -20,6 +26,7 @@ interface TaskProps {
   categoryId: number;
   tags: TaskTag[];
   subtasks: SubtaskEntity[] | null;
+  meta: TaskMeta | null;
 }
 
 export class TaskEntity {
@@ -34,6 +41,7 @@ export class TaskEntity {
   public categoryId: number;
   public tags: TaskTag[];
   subtasks: SubtaskEntity[] | null;
+  public readonly meta: TaskMeta | null;
 
   constructor(props: TaskProps) {
     const {
@@ -48,6 +56,7 @@ export class TaskEntity {
       categoryId,
       tags,
       subtasks = null,
+      meta = null,
     } = props;
     this.id = id;
     this.title = title;
@@ -60,6 +69,7 @@ export class TaskEntity {
     this.categoryId = categoryId;
     this.tags = tags;
     this.subtasks = subtasks;
+    this.meta = meta;
   }
 
   static fromObject = (object: Record<string, any>): TaskEntity => {
@@ -76,6 +86,7 @@ export class TaskEntity {
       tags,
       category_id,
       subtasks,
+      meta,
     } = object;
     return new TaskEntity({
       id: id ?? _id,
@@ -89,6 +100,7 @@ export class TaskEntity {
       priority,
       categoryId: category_id,
       subtasks,
+      meta,
     });
   };
 }

@@ -18,7 +18,7 @@ export class UserRoutes {
   public get routes(): Router {
     const router = Router();
 
-    router.get(
+    router.post(
       "/me",
       [this.authMiddlewares.validateRefreshToken],
       this.controller.getMeInfo,

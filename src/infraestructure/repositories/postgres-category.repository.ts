@@ -1,6 +1,6 @@
 import { SubmitCategoryDto } from "../../application/dtos";
 import { prisma } from "../../data/init-postgres";
-import { CategoryEntity, TaskEntity } from "../../domain/entities";
+import { CategoryEntity, TaskEntity, TaskMeta } from "../../domain/entities";
 import { CategoryRepository } from "../../domain/repositories";
 
 export class PostgresCategoryRepository implements CategoryRepository {
@@ -21,11 +21,27 @@ export class PostgresCategoryRepository implements CategoryRepository {
         board_id: boardId,
       },
       orderBy: [{ order: "asc" }, { id: "asc" }],
-      include: { tasks: { orderBy: { order: "asc" } } },
+      include: {
+        tasks: {
+          orderBy: { order: "asc" },
+          include: {
+            subtasks: { select: { id: true, is_completed: true } },
+            attachments: { select: { id: true } },
+          },
+        },
+      },
     });
 
     return rawcategories.map(({ tasks, ...category }) => {
-      const taskEntities = tasks.map((task) => TaskEntity.fromObject(task));
+      const taskEntities = tasks.map(({ attachments, subtasks, ...rest }) => {
+        const meta: TaskMeta = {
+          totalSubtasks: subtasks.length,
+          completedSubtasks: subtasks.filter((subtask) => subtask.is_completed)
+            .length,
+          numAttatchments: attachments.length,
+        };
+        return TaskEntity.fromObject({ meta, ...rest });
+      });
       return CategoryEntity.fromObject({ ...category, tasks: taskEntities });
     });
   };
